@@ -1,54 +1,108 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
-import { useEffect, useState } from 'react';
+import { RefObject, useEffect, useRef, useState } from 'react';
+import GoodBye from '../public/goodbye.gif';
+import Boom from '../public/boom.gif';
+import Link from "next/link";
+import axios from "axios";
 // import MirimLogo from '../public/mirim.jpg';
 
 const Home: NextPage = () => {
-
   const [leftHours, setLeftHours] = useState<String>();
+  const [timeFormat, setTimeFormat] = useState<String>("hours");
+  const [isFinished, setIsFinished] = useState<Boolean>(false);
+
+  const lastDate = new Date('2022-12-28 17:59:59').getTime();
+  const diff = lastDate - Date.now();
+
+  let diffDays: number = 0;
+  let diffHour: number = 0;
+  let diffMin: number = 0;
+  let diffSec: number = 0;
 
   useEffect(() => {
-    setInterval(() => {
-      const lastDate = new Date('2022-12-28').getTime();
-      const diff = lastDate - Date.now();
+    let timeout: any;
+    if (diff < 0) {
+      setIsFinished(true);
+      setLeftHours(`${ diffHour }시간 ${ diffMin }분 ${ diffSec }초`);
+    }
+    else {
+      if (timeFormat === 'hours') {
+        timeout = setTimeout(() => {
+          diffHour = Math.floor((diff / (1000 * 60 * 60)));
+          diffMin = Math.floor((diff / (1000 * 60)) % 60);
+          diffSec = Math.floor(diff / 1000 % 60);
 
-      const diffHour = Math.floor((diff / (1000*60*60)));
-      const diffMin = Math.floor((diff / (1000*60)) % 60);
-      const diffSec = Math.floor(diff / 1000 % 60);
+          setLeftHours(`${ diffHour }시간 ${ diffMin }분 ${ diffSec }초`);
+        }, 1000);
+      } else {
+        timeout = setTimeout(() => {
+          diffDays = Math.floor((diff / (1000 * 60 * 60 * 24)));
+          diffHour = Math.floor((diff / (1000 * 60 * 60)) % 24);
+          diffMin = Math.floor((diff / (1000 * 60)) % 60);
+          diffSec = Math.floor(diff / 1000 % 60);
 
-      setLeftHours(`${diffHour}시간 ${diffMin}분 ${diffSec}초`);
-    }, 1000);
-  }, [leftHours]);
+          setLeftHours(`${ diffDays }일 ${ diffHour }시간 ${ diffMin }분 ${ diffSec }초`);
+        }, 1000);
+      }
+    }
+
+    return () => clearTimeout(timeout);
+  }, [leftHours, timeFormat]);
+
+
+  const onClickFormat = () => {
+    if (timeFormat === 'hours') {
+      setTimeFormat('days');
+    } else {
+      setTimeFormat('hours');
+    }
+  }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-2">
+    <div className={ "flex min-h-screen flex-col items-center justify-center py-2" }>
       <Head>
         <title>전역일 카운트 다운</title>
-        <link rel="icon" href="https://static.vecteezy.com/system/resources/previews/001/200/449/non_2x/clock-png.png" />
         <link href='https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap' rel='stylesheet'/>
       </Head>
 
-      <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
+      <main className={ "flex w-full flex-1 flex-col items-center justify-center px-20 text-center" }>
         {/*<Image src={MirimLogo} />*/}
         <h1 className="mt-4 text-6xl font-bold text-yellow-500 underline underline-offset-8 select-none">전역일까지</h1>
-        <h1 className="mt-10 text-6xl font-bold animate-bounce hover:text-blue-400 hover:duration-200 active:text-blue-600 select-none">
+        <h1 className="mt-10 text-6xl font-bold animate-bounce hover:text-blue-400 hover:duration-200 active:text-blue-600 select-none" onClick={ onClickFormat }>
           { leftHours }
         </h1>
-        <h1 className="mt-5 text-5xl font-bold text-blue-400">
+        <h1 className="mt-5 text-5xl font-bold text-blue-400 select-none">
           남았습니다.
         </h1>
 
+        {
+          isFinished ?
+              <div className={'mt-8 flex flex-col'}>
+                <div>
+                  <Image src={ GoodBye } />
+                </div>
+                <div className={ 'select-none' }>
+                  <span className='text-6xl font-bold text-red-500'>★경★</span>
+                  <span className='text-6xl font-bold'> 전역했습니다! 모두들 안녕! </span>
+                  <span className='text-6xl font-bold text-red-500'>★축★</span>
+                </div>
+              </div> :
+              null
+        }
+
         <div className="mt-6 flex max-w-4xl flex-wrap items-center justify-around sm:w-full">
-          <a
-            href="#"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600 hover:duration-200"
-          >
-            <h3 className="text-2xl font-bold">함께한 사람들 &rarr;</h3>
-            <p className="mt-4 text-xl">
-              신사업개발팀부터 솔루션개발팀까지
-            </p>
-          </a>
+          <Link href={'/people'}>
+            <a
+                className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600 hover:duration-200"
+            >
+              <h3 className="text-2xl font-bold">함께한 사람들 &rarr;</h3>
+              <p className="mt-4 text-xl">
+                신사업개발팀부터 솔루션개발팀까지
+              </p>
+            </a>
+          </Link>
 
           <a
             href="#"
@@ -82,7 +136,7 @@ const Home: NextPage = () => {
         </div>
       </main>
 
-      <footer className="flex h-24 w-full items-center justify-center border-t">
+      <footer className="mt-10 flex h-24 w-full items-center justify-center border-t">
         <a
           className="flex items-center justify-center gap-2"
           href="https://github.com/dinb1242"
