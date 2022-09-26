@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import { useEffect, useState } from 'react';
-import MirimLogo from '../public/mirim.jpg';
+// import MirimLogo from '../public/mirim.jpg';
 
 const Home: NextPage = () => {
 
@@ -30,7 +30,7 @@ const Home: NextPage = () => {
       </Head>
 
       <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
-        <Image src={MirimLogo} />
+        {/*<Image src={MirimLogo} />*/}
         <h1 className="mt-4 text-6xl font-bold text-yellow-500 underline underline-offset-8 select-none">전역일까지</h1>
         <h1 className="mt-10 text-6xl font-bold animate-bounce hover:text-blue-400 hover:duration-200 active:text-blue-600 select-none">
           { leftHours }
