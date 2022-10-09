@@ -2,8 +2,8 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import { RefObject, useEffect, useRef, useState } from 'react';
-import GoodBye from '../public/goodbye.gif';
-import Boom from '../public/boom.gif';
+// import GoodBye from '../public/goodbye.gif';
+// import Boom from '../public/boom.gif';
 import Link from "next/link";
 import axios from "axios";
 // import MirimLogo from '../public/mirim.jpg';
@@ -81,7 +81,7 @@ const Home: NextPage = () => {
           isFinished ?
               <div className={'mt-8 flex flex-col'}>
                 <div>
-                  <Image src={ GoodBye } />
+                  {/*<Image src={ GoodBye } />*/}
                 </div>
                 <div className={ 'select-none' }>
                   <span className='text-6xl font-bold text-red-500'>★경★</span>
