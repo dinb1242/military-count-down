@@ -2,6 +2,7 @@ import { NextPage } from "next";
 import Head from "next/head";
 import Link from 'next/link';
 import { HiArrowCircleLeft, HiPlusCircle } from 'react-icons/hi'
+import BtnBack from '../../components/buttons/btn-back';
 
 const People: NextPage = () => {
 
@@ -12,11 +13,7 @@ const People: NextPage = () => {
             </Head>
 
             {/* TODO: 뒤로가기 버튼 공통 컴포넌트 만들 것. */}
-            <Link href={'/'}>
-                <a className={'ring-1 flex justify-center items-center w-32 px-2 py-2 font-bold text-center text-xl select-none hover:ring-2 hover:duration-200 hover:cursor-pointer active:ring-4'}>
-                    <HiArrowCircleLeft/> 뒤로가기
-                </a>
-            </Link>
+            <BtnBack where={'/'} />
 
             <div className={'mt-32 flex items-center flex-col'}>
                 {/* 상단 타이틀 */}
