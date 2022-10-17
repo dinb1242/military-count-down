@@ -23,11 +23,11 @@ export const SignIn = () => {
                 </div>
                 <Link href={'/'}>
                     <a className={ 'mt-4' }>
-                        <HiArrowCircleRight className={ 'w-12 h-12 transition ease-in-out rounded-full cursor-pointer text-emerald-500 hover:scale-110 hover:-translate-y-1 hover:text-emerald-600 active:text-emerald-700 hover:duration-200' } />
+                        <HiArrowCircleRight className={ 'w-12 h-12 transition hover:duration-200 ease-in-out rounded-full cursor-pointer text-emerald-500 hover:scale-110 hover:-translate-y-1 hover:text-emerald-600 active:text-emerald-700 hover:duration-200' } />
                     </a>
                 </Link>
                 <Link href={ '/auth/sign-up/agree' }>
-                    <a className={ 'my-4 text-blue-500 font-bold transition hover:-translate-y-1 hover:scale-110' }>아직 회원이 아니신가요?</a>
+                    <a className={ 'my-4 text-blue-500 font-bold transition hover:duration-200 hover:-translate-y-1 hover:scale-110' }>아직 회원이 아니신가요?</a>
                 </Link>
             </div>
         </div>
