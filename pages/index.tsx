@@ -2,10 +2,12 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import { RefObject, useEffect, useRef, useState } from 'react';
-// import GoodBye from '../public/goodbye.gif';
-// import Boom from '../public/boom.gif';
+import GoodBye from '../public/goodbye.gif';
+import Boom from '../public/boom.gif';
 import Link from "next/link";
 import axios from "axios";
+import BtnBack from "../components/buttons/btn-back";
+import BtnSignOut from "../components/buttons/btn-sign-out";
 // import MirimLogo from '../public/mirim.jpg';
 
 const Home: NextPage = () => {
@@ -61,13 +63,17 @@ const Home: NextPage = () => {
   }
 
   return (
-    <div className={ "flex min-h-screen flex-col items-center justify-center py-2" }>
+    <div className={ "flex min-h-screen flex-col items-center justify-center p-8" }>
       <Head>
         <title>전역일 카운트 다운</title>
         <link href='https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap' rel='stylesheet'/>
       </Head>
 
-      <main className={ "flex w-full flex-1 flex-col items-center justify-center px-20 text-center" }>
+      <div className={ 'w-full flex flex-row justify-end' }>
+        <BtnSignOut />
+      </div>
+
+      <main className={ "flex w-full flex-1 flex-col items-center justify-center px-12 text-center" }>
         {/*<Image src={MirimLogo} />*/}
         <h1 className="mt-4 text-6xl font-bold text-yellow-500 underline underline-offset-8 select-none">전역일까지</h1>
         <h1 className="mt-10 text-6xl font-bold animate-bounce hover:text-blue-400 hover:duration-200 active:text-blue-600 select-none" onClick={ onClickFormat }>
@@ -81,7 +87,7 @@ const Home: NextPage = () => {
           isFinished ?
               <div className={'mt-8 flex flex-col'}>
                 <div>
-                  {/*<Image src={ GoodBye } />*/}
+                  <Image src={ GoodBye } />
                 </div>
                 <div className={ 'select-none' }>
                   <span className='text-6xl font-bold text-red-500'>★경★</span>
@@ -97,7 +103,7 @@ const Home: NextPage = () => {
             <a
                 className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600 hover:duration-200"
             >
-              <h3 className="text-2xl font-bold">함께한 사람들 &rarr;</h3>
+              <h3 className="text-2xl font-bold">함께한 개발자들 &rarr;</h3>
               <p className="mt-4 text-xl">
                 신사업개발팀부터 솔루션개발팀까지
               </p>

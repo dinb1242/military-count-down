@@ -2,7 +2,7 @@ import { NextPage } from "next";
 import { ChangeEvent, useState } from "react";
 
 const Login: NextPage = () => {
-    const [id, setId] = useState<String>();
+    const [id, setId] = useState<any>();
 
     const onChangeId = (event: ChangeEvent<HTMLInputElement>) => {
         event.preventDefault();
@@ -17,7 +17,7 @@ const Login: NextPage = () => {
             </div>
             <div className={ 'flex flex-col w-96 h-96 border-2 border-black items-center' }>
                 <div>
-                    ID: <I np className={'border-2'} value={'asd'}  onChange={ (event) => onChangeId(event) }></I np>
+                    ID: <input className={ 'border-2' } value={ id } onChange={ (event) => onChangeId(event) }/>
                 </div>
             </div>
         </div>
