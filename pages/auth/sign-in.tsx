@@ -6,7 +6,7 @@ export const SignIn = () => {
         <div className={ 'min-h-screen p-8 flex flex-col justify-center items-center' }>
             <div className={ 'border rounded w-80 h-auto flex flex-col items-center' }>
                 <div className={ 'flex flex-col items-center mt-8' }>
-                    <HiUserCircle className={ 'w-16 h-16' } />
+                    <HiUserCircle className={ 'w-16 h-16 text-gray-500' } />
                     <h1 className={ 'text-2xl font-bold' }>로그인</h1>
                 </div>
 
