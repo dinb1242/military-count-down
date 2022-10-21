@@ -8,6 +8,7 @@ import Link from "next/link";
 import axios from "axios";
 import BtnBack from "../components/buttons/btn-back";
 import BtnSignOut from "../components/buttons/btn-sign-out";
+import { AiFillGithub, AiFillProfile, AiOutlineUser } from "react-icons/ai";
 // import MirimLogo from '../public/mirim.jpg';
 
 const Home: NextPage = () => {
@@ -142,9 +143,9 @@ const Home: NextPage = () => {
         </div>
       </main>
 
-      <footer className="mt-10 flex h-24 w-full items-center justify-center border-t">
+      <footer className="mt-10 flex flex-col h-32 w-full items-center justify-center border-t">
         <a
-          className="flex items-center justify-center gap-2"
+          className="flex items-center justify-center gap-2 font-bold"
           href="https://github.com/dinb1242"
           target="_blank"
           rel="noopener noreferrer"
@@ -154,6 +155,18 @@ const Home: NextPage = () => {
           </svg>
           Made by 정지현
         </a>
+        <div className={ 'flex flex-row mt-4 gap-x-2' }>
+          <Link href={ 'https://github.com/dinb1242' }>
+            <a className="btn gap-2" target="_blank" rel="noopener noreferrer">
+              <AiFillGithub /> Github
+            </a>
+          </Link>
+          <Link href={ '/profile' }>
+            <a className="btn gap-2">
+              <AiOutlineUser /> Profile
+            </a>
+          </Link>
+        </div>
       </footer>
     </div>
   )

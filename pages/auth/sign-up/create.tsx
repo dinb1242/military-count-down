@@ -1,6 +1,8 @@
 import BtnBack from "../../../components/buttons/btn-back";
 import Bonobono from '../../../public/bonobono.jpg';
 import Image from 'next/image';
+import Link from "next/link";
+import { HiArrowRight } from "react-icons/hi";
 
 export const SignUpCreate = () => {
     return (
@@ -65,8 +67,29 @@ export const SignUpCreate = () => {
                             <label className={ 'label' }>
                                 <span className={ 'label-text font-bold text-lg' }>휴대번호</span>
                             </label>
-                            <input type={ 'text' } className={ 'input input-bordered w-full' } />
+                            <div className={ 'flex flex-row items-center w-full' }>
+                                <select name={ 'phone1' } className="select select-bordered w-1/3 max-w-xs">
+                                    <option selected>010</option>
+                                    <option>011</option>
+                                    <option>019</option>
+                                </select>
+                                 <span className={ 'mx-1' }> - </span>
+                                <input name={ 'phone2' } type={ 'text' } className={ 'input input-bordered w-1/3' } />
+                                <span className={ 'mx-1' }> - </span>
+                                <input name={ 'phone3' } type={ 'text' } className={ 'input input-bordered w-1/3' } />
+                            </div>
                         </div>
+                    </div>
+                    {/* 가입 버튼 */}
+                    <div className={ 'mt-4 flex justify-end w-full' }>
+                        <Link href={ '/auth/sign-up/complete' }>
+                            <a
+                                className={ 'justify-center lg:m-0 m-auto bg-emerald-500 lg:px-4 p-2 rounded text-white font-bold text-xl flex flex-row items-center hover:bg-emerald-600 hover:duration-200 active:bg-emerald-700' }
+                                // onClick={ (event) =>  onClickCanNextStep(event) }
+                            >
+                                다음 <HiArrowRight className={ 'ml-2' } />
+                            </a>
+                        </Link>
                     </div>
                 </div>
             </div>
