@@ -16,7 +16,8 @@ const Home: NextPage = () => {
   const [timeFormat, setTimeFormat] = useState<String>("hours");
   const [isFinished, setIsFinished] = useState<Boolean>(false);
 
-  const lastDate = new Date('2022-12-28 17:59:59').getTime();
+  // 2022 12 28 17 59 59
+  const lastDate = new Date(2022, 12, 28, 17, 59, 59).getTime();
   const diff = lastDate - Date.now();
 
   let diffDays: number = 0;
