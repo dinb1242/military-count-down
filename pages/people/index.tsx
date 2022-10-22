@@ -1,9 +1,10 @@
 import { NextPage } from "next";
 import Head from "next/head";
 import Link from 'next/link';
-import { HiArrowCircleLeft, HiPlusCircle, HiUserCircle } from 'react-icons/hi'
+import { HiPlusCircle, HiUserCircle } from 'react-icons/hi'
 import BtnBack from '../../components/buttons/btn-back';
 import BtnSignOut from "../../components/buttons/btn-sign-out";
+import Card from "../../components/cards/card";
 
 const People: NextPage = () => {
 
@@ -33,69 +34,17 @@ const People: NextPage = () => {
 
                 {/* 본문 */}
                 <div className={ 'grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4' }>
-                    <div className="card w-80 bg-base-100 shadow-xl hover:bg-gray-200 hover:duration-200 active:bg-gray-300">
-                        <figure><HiUserCircle className={ 'w-64 h-64' }/></figure>
-                        <div className="card-body">
-                            <h2 className="card-title">
-                                백형서
-                                <div className="badge badge-info">풀스택 개발자</div>
-                            </h2>
-                            <div className="card-actions mt-2">
-                                <div className="badge badge-outline">충남교통연수원</div>
-                                <div className="badge badge-outline">미림미디어랩 신 LMS</div>
-                                <div className="badge badge-outline">네이버 추천엔진 리드개발</div>
-                                <div className="badge badge-outline">카카오 서버 관리 통합 시스템 구축</div>
-                            </div>
-                        </div>
-                    </div>
+                    <Link href={ '/people/wiki/1' }>
+                        <>
+                            <Card    name={ '백형서' } badgeDesc={ '풀스택 개발자' } badgeColor={ 'badge-primary' }  />
+                        </>
+                    </Link>
 
-                    <div className="card w-80 bg-base-100 shadow-xl hover:bg-gray-200 hover:duration-200 active:bg-gray-300">
-                        <figure><HiUserCircle className={ 'w-64 h-64' }/></figure>
-                        <div className="card-body">
-                            <h2 className="card-title">
-                                최용호
-                                <div className="badge badge-secondary">백엔드 개발자</div>
-                            </h2>
-                            <div className="card-actions mt-2">
-                                <div className="badge badge-outline">충남교통연수원</div>
-                                <div className="badge badge-outline">카카오 전자세금</div>
-                                <div className="badge badge-outline">배달의민족 전산관리시스템</div>
-                                <div className="badge badge-outline">구글 검색엔진 최적화</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="card w-80 bg-base-100 shadow-xl hover:bg-gray-200 hover:duration-200 active:bg-gray-300">
-                        <figure><HiUserCircle className={ 'w-64 h-64' }/></figure>
-                        <div className="card-body">
-                            <h2 className="card-title">
-                                이세정
-                                <div className="badge badge-primary">프론트엔드 개발자</div>
-                            </h2>
-                            <div className="card-actions mt-2">
-                                <div className="badge badge-outline">충남교통연수원</div>
-                                <div className="badge badge-outline">카카오 전자세금</div>
-                                <div className="badge badge-outline">미림미디어랩 신 LMS</div>
-                                <div className="badge badge-outline">당근마켓 모니터링 시스템</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="card w-80 bg-base-100 shadow-xl hover:bg-gray-200 hover:duration-200 active:bg-gray-300">
-                        <figure><HiUserCircle className={ 'w-64 h-64' }/></figure>
-                        <div className="card-body">
-                            <h2 className="card-title">
-                                이제호
-                                <div className="badge badge-primary">프론트엔드 개발자</div>
-                            </h2>
-                            <div className="card-actions mt-2">
-                                <div className="badge badge-outline">충남교통연수원</div>
-                                <div className="badge badge-outline">카카오 전자세금</div>
-                                <div className="badge badge-outline">미림미디어랩 신 LMS</div>
-                                <div className="badge badge-outline">당근마켓 모니터링 시스템</div>
-                            </div>
-                        </div>
-                    </div>
+                    <Link href={ '/people/wiki/1' }>
+                        <>
+                            <Card icon={ <HiUserCircle className={ 'w-64 h-64' }/> } name={ '백형서' } badgeDesc={ '풀스택 개발자' } tags={ ['dsfsdjfiajsdif', 'dsfjsidafjasdifjasdiof', 'dsafijsadfiosadjfoisad'] }  />
+                        </>
+                    </Link>
                 </div>
             </div>
         </div>
