@@ -99,9 +99,7 @@ const Home: NextPage = () => {
 
         <div className="mt-6 flex max-w-4xl flex-wrap items-center justify-around sm:w-full">
           <Link href={'/people'}>
-            <a
-                className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600 hover:duration-200"
-            >
+            <a className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600 hover:duration-200">
               <h3 className="text-2xl font-bold">함께한 개발자들 &rarr;</h3>
               <p className="mt-4 text-xl">
                 신사업개발팀부터 솔루션개발팀까지
@@ -109,15 +107,14 @@ const Home: NextPage = () => {
             </a>
           </Link>
 
-          <a
-            href="#"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-rose-500 focus:text-rose-900 hover:duration-200"
-          >
-            <h3 className="text-2xl font-bold">진행한 프로젝트 &rarr;</h3>
-            <p className="mt-4 text-xl">
-              미림미디어랩에서 진행한 프로젝트
-            </p>
-          </a>
+          <Link href="/projects">
+            <a className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600 hover:duration-200">
+              <h3 className="text-2xl font-bold">진행한 프로젝트 &rarr;</h3>
+              <p className="mt-4 text-xl">
+                미림미디어랩에서 진행한 프로젝트
+              </p>
+            </a>
+          </Link>
 
           <a
             href="#"
