@@ -1,5 +1,5 @@
 import BtnBack from "../../../components/buttons/btn-back";
-import Bonobono from '../../../public/bonobono.jpg';
+import Bonobono from '../../../public/bonobono.jpeg';
 import Image from 'next/image';
 import Link from "next/link";
 import { HiArrowRight } from "react-icons/hi";
