@@ -1,8 +1,17 @@
 import BtnBack from "../components/buttons/btn-back";
 import BtnSignOut from "../components/buttons/btn-sign-out";
-import { HiUserCircle } from "react-icons/hi";
-import Jihyun from '../public/jihyun.jpg';
+import Jihyun from '../public/jihyun.jpeg';
 import Image from 'next/image';
+import {
+    SiFastapi,
+    SiJava,
+    SiNestjs,
+    SiNumpy, SiPandas,
+    SiPython,
+    SiScikitlearn,
+    SiSpringboot, SiTensorflow,
+    SiTypescript
+} from 'react-icons/si';
 
 export const Profile = () => {
     return (
@@ -42,10 +51,62 @@ export const Profile = () => {
 
                         <hr className={ 'mt-4' } />
 
+                        {/* 관심 분야 */}
+                        <div className={ 'flex flex-col items-center my-8' }>
+                            <p className={ 'font-bold text-3xl ' }>관심 분야</p>
+                            <div className={ 'border w-4/5 p-4 flex flex-col mt-2 rounded-xl gap-y-2' }>
+                                <p>Artificial Intelligence, Recommendation System, Event Driven Arch., Domain Driven Development, Test Driven Development, Clean Arch., Hibernate, Cloud Computing, Full-stack Development</p>
+                            </div>
+                        </div>
+
+                        <hr className={ 'mt-4' } />
+
+                        {/* 기술 스택 */}
+                        <div className={ 'flex flex-col items-center my-8' }>
+                            <p className={ 'font-bold text-3xl ' }>기술 스택</p>
+                            <div className={ 'border w-4/5 p-4 flex flex-row flex-wrap justify-center mt-2 rounded-xl gap-2' }>
+                                <span className={ 'border w-auto px-4 flex flex-row items-center bg-pink-500 text-white' }>
+                                    <SiJava className={ 'mr-1' } /> Java
+                                </span>
+                                <span className={ 'border w-auto px-4 flex flex-row items-center bg-sky-700 text-white' }>
+                                    <SiPython className={ 'mr-1' } /> Python
+                                </span>
+                                <span className={ 'border w-auto px-4 flex flex-row items-center bg-blue-700 text-white' }>
+                                    <SiTypescript className={ 'mr-1' } /> TypeScript
+                                </span>
+                                <span className={ 'border w-auto px-4 flex flex-row items-center bg-emerald-500 text-white' }>
+                                    <SiSpringboot className={ 'mr-1' } /> Spring Boot
+                                </span>
+                                <span className={ 'border w-auto px-4 flex flex-row items-center bg-red-600 text-white' }>
+                                    <SiNestjs className={ 'mr-1' } /> Nest.js
+                                </span>
+                                <span className={ 'border w-auto px-4 flex flex-row items-center bg-teal-600 text-white' }>
+                                    <SiFastapi className={ 'mr-1' } /> FastAPI
+                                </span>
+                                <span className={ 'border w-auto px-4 flex flex-row items-center bg-cyan-900 text-white' }>
+                                    <SiNumpy className={ 'mr-1' } /> Numpy
+                                </span>
+                                <span className={ 'border w-auto px-4 flex flex-row items-center bg-cyan-900 text-white' }>
+                                    <SiPandas className={ 'mr-1' } /> Pandas
+                                </span>
+                                <span className={ 'border w-auto px-4 flex flex-row items-center bg-green-900 text-white' }>
+                                    Matplotlib
+                                </span>
+                                <span className={ 'border w-auto px-4 flex flex-row items-center bg-amber-500 text-white' }>
+                                    <SiScikitlearn className={ 'mr-1' } /> Scikit-Learn
+                                </span>
+                                <span className={ 'border w-auto px-4 flex flex-row items-center bg-orange-500 text-white' }>
+                                    <SiTensorflow className={ 'mr-1' } /> Tensorflow
+                                </span>
+                            </div>
+                        </div>
+
+                        <hr className={ 'mt-4' } />
+
                         {/* 학력 */}
                         <div className={ 'flex flex-col items-center my-8' }>
                             <p className={ 'font-bold text-3xl ' }>학력</p>
-                            <div className={ 'border w-1/2 py-2 flex flex-col items-center mt-2 rounded-xl gap-y-2' }>
+                            <div className={ 'border w-1/2 py-2 flex flex-col p-4 mt-2 rounded-xl gap-y-2' }>
                                 <p>성남초등학교(2005 ~ 2011)</p>
                                 <p>성일중학교(2011 ~ 2014)</p>
                                 <p>성남외국어고등학교 중국어과(2014 ~ 2017)</p>
@@ -55,7 +116,7 @@ export const Profile = () => {
 
                         <hr className={ 'mt-4' } />
 
-                        {/* 경력 */}
+                        {/* 논문 */}
                         <div className={ 'flex flex-col items-center my-8' }>
                             <p className={ 'font-bold text-3xl ' }>논문</p>
                             <div className={ 'border w-4/5 p-4 flex flex-col mt-2 rounded-xl gap-y-2' }>
@@ -67,6 +128,43 @@ export const Profile = () => {
                                 <p>An Incremental Recommendation Technique to Improve Product Recommendation Accuracy (2021.)</p>
                                 <p>A Design and Implementation of Recommendation Learning Model Generation Tool Based on Data Analysis (2021.)</p>
                                 <p>Design of Python Block Coding Platform based on Web Assembly for Artificial Intelligence Education (2021.)</p>
+                            </div>
+                        </div>
+
+                        <hr className={ 'mt-4' } />
+
+                        {/* 경력 */}
+                        <div className={ 'flex flex-col items-center my-8' }>
+                            <p className={ 'font-bold text-3xl ' }>경력</p>
+                            <div className={ 'border w-4/5 p-4 flex flex-col mt-2 rounded-xl gap-y-2' }>
+                                <p>인하공업전문대학 추천 시스템 연구실 LSTM 기반 Session-based 추천 시스템 개발, 2019 ~ 2020.</p>
+                                <p>인하공업전문대학 추천 시스템 연구실 일반화 추천 시스템 개발 및 저작권 등록, 2020.</p>
+                                <p>인하공업전문대학 유사모 연구실 D.I.Y 블록 코딩 툴 개발 (CodeB Block Coding Tool 전신), 2020.</p>
+                                <p>K-Digital 사업 최초 통과 (CodeB Block Coding Tool), 2021.</p>
+                                <p>K-Credit 코알못 과정 개발, 2021.</p>
+                                <p>K-Credit 어서와 파이썬 처음이지 과정 개발, 2021.</p>
+                                <p>4cSoft LMS 인수 및 서버 구축, 2021.</p>
+                                <p>Non-Programming 데이터 분석 툴 프로토타입 개발, 2021.</p>
+                                <p>4cSoft LMS 기반 인하공전 CodeB Block Coding Tool LMS 구축, 2021.</p>
+                                <p>인하공전 LMS 내 CodeB Tool 상호 연동 시스템 개발, 2021.</p>
+                                <p>4cSoft LMS 기반 청라고등학교 LMS 구축, 2021.</p>
+                                <p>원광대학교 CodeB Tool 서버 구축, 2021.</p>
+                                <p>4cSoft LMS 기반 미림미디어랩 LMS 구축, 2021.</p>
+                                <p>미림미디어랩 LMS 내 메타버스 연동 기능 및 관리자 페이지 내 관리 기능 개발, 2021.</p>
+                                <p>4cSoft LMS 기반 서울산업진흥원(SBA) On-boarding LMS 구축, 2022.</p>
+                                <p>충남교통연수원 LMS 백엔드 신규 개발 및 유지보수, 2022.</p>
+                            </div>
+                        </div>
+
+                        <hr className={ 'mt-4' } />
+
+                        {/* 외주 */}
+                        <div className={ 'flex flex-col items-center my-8' }>
+                            <p className={ 'font-bold text-3xl ' }>외주</p>
+                            <p className={ 'text-xl ' }>과제성 외주 및 소규모 프로젝트는 제외</p>
+                            <div className={ 'border w-4/5 p-4 flex flex-col mt-2 rounded-xl gap-y-2' }>
+                                <p>운동 루틴 관리를 위한 허리업 앱 외주 백엔드 개발 (Nest.js), 2021.</p>
+                                <p>오늘식탁(오늘회) 수산물업자용 관리 앱 외주 백엔드 개발 (Spring Boot), 2021.</p>
                             </div>
                         </div>
                     </div>
