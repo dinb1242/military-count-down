@@ -1,23 +1,20 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
-import { RefObject, useEffect, useRef, useState } from 'react';
-import GoodBye from '../public/goodbye.gif';
-import Boom from '../public/boom.gif';
+import { useEffect, useState } from 'react';
 import Link from "next/link";
-import axios from "axios";
-import BtnBack from "../components/buttons/btn-back";
 import BtnSignOut from "../components/buttons/btn-sign-out";
-import { AiFillGithub, AiFillProfile, AiOutlineUser } from "react-icons/ai";
-// import MirimLogo from '../public/mirim.jpg';
+import { AiFillGithub, AiOutlineUser } from "react-icons/ai";
+import GoodBye from '../public/goodbye.gif';
 
 const Home: NextPage = () => {
+
   const [leftHours, setLeftHours] = useState<String>();
   const [timeFormat, setTimeFormat] = useState<String>("hours");
   const [isFinished, setIsFinished] = useState<Boolean>(false);
 
-  // 2022 12 28 17 59 59
-  const lastDate = new Date(2022, 12, 28, 17, 59, 59).getTime();
+  // Date 에 인자를 직접 지정하면 month 의 경우, 0~11 까지의 값을 가진다.
+  const lastDate = new Date(2022, 11, 28, 17, 59, 59).getTime();
   const diff = lastDate - Date.now();
 
   let diffDays: number = 0;
