@@ -1,8 +1,8 @@
 {
   "name": "military-count-down-server",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "A military count down and mirim wiki server application",
+  "author": "Jihyun, Jeong",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {

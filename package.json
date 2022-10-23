@@ -1,0 +1,23 @@
+{
+  "name": "military-count-down",
+  "version": "1.0.0",
+  "description": "A root project of military count down and mirim wiki",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix web\" \"npm run start:dev --prefix server\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dinb1242/military-count-down.git"
+  },
+  "author": "Jihyun, Jeong",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dinb1242/military-count-down/issues"
+  },
+  "homepage": "https://github.com/dinb1242/military-count-down#readme",
+  "dependencies": {
+    "concurrently": "^7.5.0"
+  }
+}

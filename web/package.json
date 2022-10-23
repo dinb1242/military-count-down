@@ -10,6 +10,7 @@
     "@heroicons/react": "^2.0.11",
     "autoprefixer": "^10.4.12",
     "axios": "^0.27.2",
+    "concurrently": "^7.5.0",
     "daisyui": "^2.31.0",
     "md-editor-rt": "^2.3.0",
     "next": "latest",
