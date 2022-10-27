@@ -35,7 +35,7 @@ export const Profile = () => {
                                     <h1 className="text-4xl font-bold break-words">정지현</h1>
                                     <h1 className="text-3xl font-bold break-words">(잡기술 개발자)</h1>
                                     <p className="py-6 whitespace-pre-line">
-                                        언제나 고통받던 정지현은 이제 <b>2022년 이후로 미림미디어랩에 없습니다.</b>
+                                        언제나 고통받던 행복한 정지현은 이제 <b>2022년 이후로 미림미디어랩에 없습니다.</b>
                                         <br/>
                                         왜냐하면 그는 긴 IT산업기능요원의 생활에 마침표를 찍었기 때문이죠.
                                         <br/>
