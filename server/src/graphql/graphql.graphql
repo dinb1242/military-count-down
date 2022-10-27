@@ -1,0 +1,24 @@
+type Graphql {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input CreateGraphqlInput {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input UpdateGraphqlInput {
+  id: Int!
+}
+
+type Query {
+  graphql: [Graphql]!
+  graphql(id: Int!): Graphql
+}
+
+type Mutation {
+  createGraphql(createGraphqlInput: CreateGraphqlInput!): Graphql!
+  updateGraphql(updateGraphqlInput: UpdateGraphqlInput!): Graphql!
+  removeGraphql(id: Int!): Graphql
+}
