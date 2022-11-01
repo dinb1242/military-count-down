@@ -1,17 +1,32 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ConfigModule } from '@nestjs/config';
+import { ExampleModule } from './example/example.module';
+
+// 환경 변수 별 상수 설정
+let envFilename = '';
+if (process.env.NODE_ENV === 'local') {
+  Logger.log('로컬 환경으로 실행되었습니다.');
+  envFilename = '.env-local';
+} else if (process.env.NODE_ENV === 'dev') {
+  Logger.log('개발 환경으로 실행되었습니다.');
+  envFilename = '.env-dev';
+}
 
 @Module({
   imports: [
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      typePaths: ['./**/*.graphql'],
-      // debug: false,
-      // playground: false,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: envFilename,
     }),
+    // GraphQLModule.forRoot<ApolloDriverConfig>({
+    //   driver: ApolloDriver,
+    //   typePaths: ['./**/*.graphql'],
+    //   debug: false,
+    //   playground: false,
+    // }),
+    ExampleModule,
   ],
   controllers: [AppController],
   providers: [AppService],
