@@ -5,6 +5,6 @@ export class CreateExampleDto {
   private content: string;
 
   toEntity() {
-    return Example.from(this.title, this.content);
+    return new Example(this.title, this.content);
   }
 }
