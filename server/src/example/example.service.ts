@@ -2,8 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { CreateExampleDto } from './dto/create-example.dto';
 import { UpdateExampleDto } from './dto/update-example.dto';
 import { DATA_SOURCE } from '../constants/repository.constants';
-import { DataSource, Repository } from 'typeorm';
-import { Example } from './entities/example.entity';
+import { DataSource } from 'typeorm';
 
 @Injectable()
 export class ExampleService {
@@ -21,9 +20,7 @@ export class ExampleService {
     await queryRunner.startTransaction();
 
     try {
-      const exampleRepository: Repository<Example> = await queryRunner.manager.getRepository(Example);
-      await exampleRepository.save(createExampleDto.toEntity());
-      // throw new InternalServerErrorException();
+      await queryRunner.manager.save(createExampleDto.toEntity()); // 바로 이 코드!
       await queryRunner.commitTransaction();
 
       return null;
@@ -44,6 +41,7 @@ export class ExampleService {
   }
 
   update(id: number, updateExampleDto: UpdateExampleDto) {
+    console.log(updateExampleDto);
     return `This action updates a #${id} example`;
   }
 
