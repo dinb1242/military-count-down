@@ -1,0 +1,5 @@
+export const DATA_SOURCE = 'DATA_SOURCE';
+
+export const REPOSITORIES = {
+  EXAMPLE_REPOSITORY: 'EXAMPLE_REPOSITORY',
+} as const;
