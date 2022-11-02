@@ -8,11 +8,11 @@ export class Example {
   }
 
   @PrimaryGeneratedColumn()
-  private id: number;
+  readonly id: number;
 
   @Column({ nullable: true })
-  private title: string;
+  readonly title: string;
 
   @Column({ nullable: true })
-  private content: string;
+  readonly content: string;
 }
