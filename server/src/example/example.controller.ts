@@ -1,15 +1,7 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { ExampleService } from './example.service';
-import { CreateExampleDto } from './dto/create-example.dto';
-import { UpdateExampleDto } from './dto/update-example.dto';
+import { CreateExampleDto } from './dto/request/create-example.dto';
+import { UpdateExampleDto } from './dto/request/update-example.dto';
 
 @Controller('example')
 export class ExampleController {

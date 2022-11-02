@@ -1,14 +1,14 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { CreateExampleDto } from './dto/create-example.dto';
-import { UpdateExampleDto } from './dto/update-example.dto';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
+import { CreateExampleDto } from './dto/request/create-example.dto';
+import { UpdateExampleDto } from './dto/request/update-example.dto';
 import { DATA_SOURCE } from '../constants/repository.constants';
 import { DataSource } from 'typeorm';
+import { Example } from './entities/example.entity';
+import { ExampleResponseDto } from './dto/response/example-response.dto';
 
 @Injectable()
 export class ExampleService {
   constructor(
-    // @Inject(REPOSITORIES.EXAMPLE_REPOSITORY)
-    // private readonly exampleRepository: Repository<Example>,
     @Inject(DATA_SOURCE)
     private dataSource: DataSource,
   ) {}
@@ -20,13 +20,16 @@ export class ExampleService {
     await queryRunner.startTransaction();
 
     try {
-      await queryRunner.manager.save(createExampleDto.toEntity()); // 바로 이 코드!
+      const example: Example = await queryRunner.manager.save(createExampleDto.toEntity());
+      throw new HttpException('하이', 999);
       await queryRunner.commitTransaction();
 
-      return null;
+      return new ExampleResponseDto(example);
     } catch (err) {
-      console.log(err);
       await queryRunner.rollbackTransaction();
+
+      // 예외 catch 시, intanceof 를 통한 타입 명시적 변환하여 예외 반환
+      if (err instanceof HttpException) throw new HttpException(err.message, err.getStatus());
     } finally {
       await queryRunner.release();
     }
@@ -37,15 +40,15 @@ export class ExampleService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} example`;
+    return `This action returns a #${ id } example`;
   }
 
   update(id: number, updateExampleDto: UpdateExampleDto) {
     console.log(updateExampleDto);
-    return `This action updates a #${id} example`;
+    return `This action updates a #${ id } example`;
   }
 
   remove(id: number) {
-    return `This action removes a #${id} example`;
+    return `This action removes a #${ id } example`;
   }
 }
