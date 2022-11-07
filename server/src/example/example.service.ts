@@ -1,7 +1,7 @@
 import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { CreateExampleDto } from './dto/request/create-example.dto';
 import { UpdateExampleDto } from './dto/request/update-example.dto';
-import { DATA_SOURCE } from '../constants/repository.constants';
+import { DATA_SOURCE } from '../commons/constants/repository.constants';
 import { DataSource } from 'typeorm';
 import { Example } from './entities/example.entity';
 import { ExampleResponseDto } from './dto/response/example-response.dto';
