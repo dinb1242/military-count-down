@@ -11,6 +11,9 @@ export interface CommonResponse<T> {
   data: T;
 }
 
+/**
+ * 모든 API 에 대하여 공통 Response 를 생성하여 반환하기 위한 Interceptor
+ */
 @Injectable()
 export class ResponseInterceptor<T> implements NestInterceptor<T, CommonResponse<T>> {
   intercept(context: ExecutionContext, next: CallHandler<T>): Observable<CommonResponse<T>> | Promise<Observable<CommonResponse<T>>> {
