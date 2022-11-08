@@ -3,6 +3,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { ExampleModule } from './example/example.module';
+import { UserModule } from './user/user.module';
+import { PostModule } from './post/post.module';
 
 // 환경 변수 별 상수 설정
 let envFilename = '';
@@ -27,6 +29,8 @@ if (process.env.NODE_ENV === 'local') {
     //   playground: false,
     // }),
     ExampleModule,
+    UserModule,
+    PostModule,
   ],
   controllers: [AppController],
   providers: [AppService],
