@@ -18,14 +18,8 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
-    // '@typescript-eslint/no-var-requires': 0,
-    'prettier/prettier': [
-      'error',
-      {
-        endOfLine: 'auto',
-      },
-    ],
     indent: ['error', 2],
     'max-len': 0,
+    'newline-per-chained-call': 1,
   },
 };
