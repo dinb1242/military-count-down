@@ -2,7 +2,9 @@ import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 import { PostService } from './post.service';
 import { Post as PostModel } from '@prisma/client';
 import { CreatePostDto } from './dto/create-post.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('게시글 API')
 @Controller('post')
 export class PostController {
   constructor(private readonly postService: PostService) {}

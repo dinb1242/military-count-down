@@ -2,7 +2,9 @@ import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/commo
 import { ExampleService } from './example.service';
 import { CreateExampleDto } from './dto/request/create-example.dto';
 import { UpdateExampleDto } from './dto/request/update-example.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('예제 API')
 @Controller('example')
 export class ExampleController {
   constructor(private readonly exampleService: ExampleService) {}
