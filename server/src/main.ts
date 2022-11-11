@@ -1,9 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import { ResponseInterceptor } from './commons/interceptors/response.interceptor';
-import { HttpExceptionFilter } from './commons/filters/http-exception.filter';
-import { PrismaService } from './commons/prisma/service/prisma.service';
+import { ResponseInterceptor } from './common/interceptor/response.interceptor';
+import { HttpExceptionFilter } from './common/filter/http-exception.filter';
+import { PrismaService } from './common/prisma/prisma.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
