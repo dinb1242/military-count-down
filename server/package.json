@@ -29,6 +29,7 @@
     "@nestjs/graphql": "^10.1.5",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/swagger": "^6.1.3",
     "@nestjs/typeorm": "^9.0.1",
     "@prisma/client": "^4.5.0",
     "apollo-server-express": "^3.10.3",
