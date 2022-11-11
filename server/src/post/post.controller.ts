@@ -1,34 +1,62 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { PostService } from './post.service';
+import { Post as PostModel } from '@prisma/client';
 import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
 
 @Controller('post')
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
-  @Post()
-  create(@Body() createPostDto: CreatePostDto) {
-    return this.postService.create(createPostDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.postService.findAll();
-  }
-
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.postService.findOne(+id);
+  async getPostById(@Param('id') id: string): Promise<PostModel> {
+    return await this.postService.post({ id: Number(id) });
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postService.update(+id, updatePostDto);
+  @Get('feed')
+  async getPublishedPosts(): Promise<PostModel[]> {
+    return await this.postService.posts({ where: { published: true } });
+  }
+
+  @Get('filter/:searchString')
+  async getFilteredPosts(@Param('searchString') searchString: string): Promise<PostModel[]> {
+    return await this.postService.posts({
+      where: {
+        OR: [
+          {
+            title: { contains: searchString },
+          },
+          {
+            content: { contains: searchString },
+          },
+        ],
+      },
+    });
+  }
+
+  @Post()
+  async draftPost(@Body() postData: CreatePostDto): Promise<PostModel> {
+    const { title, content, authorEmail } = postData;
+    return await this.postService.createPost({
+      title,
+      content,
+      author: {
+        connect: { email: authorEmail },
+      },
+    });
+  }
+
+  @Put('publish/:id')
+  async publishPost(@Param('id') id: string): Promise<PostModel> {
+    return await this.postService.updatePost({
+      where: { id: Number(id) },
+      data: { published: true },
+    });
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.postService.remove(+id);
+  async deletePost(@Param('id') id: string): Promise<PostModel> {
+    return await this.postService.deletePost({
+      id: Number(id),
+    });
   }
 }
