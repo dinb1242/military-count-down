@@ -18,9 +18,9 @@ async function bootstrap() {
 
   // 스웨거 설정
   const config = new DocumentBuilder()
-    .setTitle('멋쟁이 명세 문서 구축 전투')
-    .setDescription('모든 남조선 개발자 인민들은 미제국주의의 멋쟁이 명세 문서를 낱낱이 파악하라.')
-    .setVersion('1.11')
+    .setTitle('전역일 계산기 및 미림 위키 Swagger')
+    .setDescription('전역일 계산기 및 미림 위키에 대한 OAS')
+    .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
