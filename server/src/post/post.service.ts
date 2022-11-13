@@ -12,7 +12,13 @@ export class PostService {
     });
   }
 
-  async posts(params: { skip?: number; take?: number; cursor?: Prisma.PostWhereUniqueInput; where?: Prisma.PostWhereInput; orderBy?: Prisma.PostOrderByWithRelationInput }): Promise<Post[]> {
+  async posts(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.PostWhereUniqueInput;
+    where?: Prisma.PostWhereInput;
+    orderBy?: Prisma.PostOrderByWithRelationInput;
+  }): Promise<Post[]> {
     const { skip, take, cursor, where, orderBy } = params;
     return await this.prisma.post.findMany({
       skip,
