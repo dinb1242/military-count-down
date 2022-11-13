@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Example as ExampleModel, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 
+// PR 테스트
 @Injectable()
 export class ExampleService {
   constructor(private readonly prismaSerivce: PrismaService) {}
