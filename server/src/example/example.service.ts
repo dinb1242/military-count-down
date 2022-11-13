@@ -1,28 +1,31 @@
 import { Injectable } from '@nestjs/common';
-import { CreateExampleDto } from './dto/request/create-example.dto';
-import { UpdateExampleDto } from './dto/request/update-example.dto';
+import { Example as ExampleModel, Prisma } from '@prisma/client';
+import { PrismaService } from 'src/common/prisma/prisma.service';
 
 @Injectable()
 export class ExampleService {
-  async create(createExampleDto: CreateExampleDto) {
-    console.log(createExampleDto);
-    return 'Hello, World!';
+  constructor(private readonly prismaSerivce: PrismaService) {}
+
+  async findExample(exampleWhereUniqueInput: Prisma.ExampleWhereUniqueInput): Promise<ExampleModel> {
+    return await this.prismaSerivce.example.findUnique({
+      where: exampleWhereUniqueInput,
+    });
   }
 
-  findAll() {
-    return `This action returns all example`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} example`;
-  }
-
-  update(id: number, updateExampleDto: UpdateExampleDto) {
-    console.log(updateExampleDto);
-    return `This action updates a #${id} example`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} example`;
+  async findExamples(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.ExampleWhereUniqueInput;
+    where?: Prisma.ExampleWhereInput;
+    orderBy?: Prisma.ExampleOrderByWithRelationInput;
+  }) {
+    const { skip, take, cursor, where, orderBy } = params;
+    return await this.prismaSerivce.example.findMany({
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy,
+    });
   }
 }
