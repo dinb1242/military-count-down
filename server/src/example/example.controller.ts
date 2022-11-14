@@ -10,27 +10,18 @@ export class ExampleController {
   constructor(private readonly exampleService: ExampleService) {}
 
   @Post()
-  async create(@Body() createExampleDto: CreateExampleDto) {
-    return await this.exampleService.create(createExampleDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.exampleService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.exampleService.findOne(+id);
+  async createExample(@Body() data: { title: string; content?: string }) {
+    return await this.exampleService.createExample(data);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateExampleDto: UpdateExampleDto) {
-    return this.exampleService.update(+id, updateExampleDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.exampleService.remove(+id);
+  async updateExample(
+    @Param('id') id: number,
+    @Body() data: {
+      title: string;
+      content?: string;
+    },
+  ) {
+    return await this.exampleService.updateExample(id, data);
   }
 }
