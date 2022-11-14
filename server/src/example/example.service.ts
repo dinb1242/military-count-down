@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Example as ExampleModel, Prisma } from '@prisma/client';
+import { Prisma, Example as ExampleModel, Example } from '@prisma/client';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 
 // PR 테스트
@@ -27,6 +27,19 @@ export class ExampleService {
       cursor,
       where,
       orderBy,
+    });
+  }
+
+  async createExample(example: Prisma.ExampleCreateInput): Promise<ExampleModel> {
+    return await this.prismaSerivce.example.create({
+      data: example,
+    });
+  }
+
+  async updateExample(id: Prisma.ExampleWhereUniqueInput | number, data: Prisma.ExampleUpdateInput) {
+    return await this.prismaSerivce.example.update({
+      where: { id: Number(id) },
+      data: data,
     });
   }
 }
