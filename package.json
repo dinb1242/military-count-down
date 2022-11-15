@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "description": "A root project of military count down and mirim wiki",
   "main": "index.js",
+  "prisma": {
+    "schema": "./server/prisma/schema.prisma"
+  },
   "scripts": {
+    "prisma:mig-dev": "npx --prefix server prisma migrate dev",
+    "prisma:gen": "npx --prefix server prisma generate",
     "start:local": "concurrently \"npm run dev --prefix web\" \"cross-env NODE_ENV=local npm run start:dev --prefix server\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
