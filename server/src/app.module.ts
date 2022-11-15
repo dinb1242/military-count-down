@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ExampleModule } from './example/example.module';
 import { UserModule } from './user/user.module';
 import { PostModule } from './post/post.module';
+import { AuthModule } from './auth/auth.module';
 
 // 환경 변수 별 상수 설정
 let envFilename = '';
@@ -31,6 +32,7 @@ if (process.env.NODE_ENV === 'local') {
     ExampleModule,
     UserModule,
     PostModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
