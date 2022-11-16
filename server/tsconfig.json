@@ -5,7 +5,7 @@
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
+    "allowSyntheticDefaultImports": false, // 기존 true
     "target": "ES2021",
     "sourceMap": true,
     "outDir": "./dist",
