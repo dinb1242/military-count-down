@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../common/prisma/prisma.service';
 import { Prisma, User } from '@prisma/client';
+import { CipherUtils } from 'src/common/utils/cipher.util';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService, private readonly cipherUtils: CipherUtils) {}
 
   async user(userWhereUniqueInput: Prisma.UserWhereUniqueInput): Promise<User | null> {
     return await this.prismaService.user.findUnique({
@@ -29,7 +30,21 @@ export class UserService {
     });
   }
 
-  async createUser(data: Prisma.UserCreateInput): Promise<User> {
+  /**
+   * 유저 회원가입
+   * @param data 회원가입 대상 유저에 대한 UserCreateInput 객체
+   * @returns 유저에 대한 가입 정보를 리턴한다.
+   */
+  async signUpUser(data: Prisma.UserCreateInput): Promise<User> {
+    const { password, phone } = data;
+    
+    // 비밀번호 해싱 및 휴대 번호를 암호화한다.
+    const hashedPassword = await this.cipherUtils.hash(password);
+    const encPhone = await this.cipherUtils.encodeByAES56(phone);
+
+    data.password = hashedPassword;
+    data.phone = encPhone;
+
     return await this.prismaService.user.create({
       data,
     });
