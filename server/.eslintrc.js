@@ -21,13 +21,11 @@ module.exports = {
     indent: ['error', 2],
     'max-len': 0,
     'newline-per-chained-call': 1,
-    rules: {
-      'prettier/prettier': [
-          'error',
-          {
-              endOfLine: 'auto',
-          },
-      ],
-    },
+    'prettier/prettier': [
+        'error',
+        {
+            endOfLine: 'auto',
+        },
+    ],
   },
 };
