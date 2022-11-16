@@ -68,12 +68,12 @@ export const SignUpCreate = () => {
                                 <span className={ 'label-text font-bold text-lg' }>휴대번호</span>
                             </label>
                             <div className={ 'flex flex-row items-center w-full' }>
-                                <select name={ 'phone1' } className="select select-bordered w-1/3 max-w-xs">
-                                    <option selected>010</option>
+                                <select name={ 'phone1' } defaultValue='010' className="select select-bordered w-1/3 max-w-xs">
+                                    <option>010</option>
                                     <option>011</option>
                                     <option>019</option>
                                 </select>
-                                 <span className={ 'mx-1' }> - </span>
+                                <span className={ 'mx-1' }> - </span>
                                 <input name={ 'phone2' } type={ 'text' } className={ 'input input-bordered w-1/3' } />
                                 <span className={ 'mx-1' }> - </span>
                                 <input name={ 'phone3' } type={ 'text' } className={ 'input input-bordered w-1/3' } />
