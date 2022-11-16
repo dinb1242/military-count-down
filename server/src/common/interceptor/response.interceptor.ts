@@ -16,7 +16,10 @@ export interface CommonResponse<T> {
  */
 @Injectable()
 export class ResponseInterceptor<T> implements NestInterceptor<T, CommonResponse<T>> {
-  intercept(context: ExecutionContext, next: CallHandler<T>): Observable<CommonResponse<T>> | Promise<Observable<CommonResponse<T>>> {
+  intercept(
+    context: ExecutionContext,
+    next: CallHandler<T>,
+  ): Observable<CommonResponse<T>> | Promise<Observable<CommonResponse<T>>> {
     const ctx = context.switchToHttp();
     const request = ctx.getRequest<Request>();
     const response = ctx.getResponse<Response>();

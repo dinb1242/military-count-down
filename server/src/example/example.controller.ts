@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ExampleService } from './example.service';
 import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Example as ExampleModel } from '@prisma/client';
@@ -49,8 +49,14 @@ export class ExampleController {
           ],
         },
       }),
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
     });
+  }
+
+  @Get('test')
+  async testMethod() {
+    console.log(process.env.ENC_KEY);
+    console.log(process.env.JWT_KEY);
   }
 
   @Get(':id')

@@ -1,14 +1,20 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateAuthDto } from './dto/create-auth.dto';
+import { Request } from 'express';
+import { ApiBody } from '@nestjs/swagger';
 import { SigninAuthDto } from './dto/request/signin-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { LocalAuthGuard } from './guards/local-auth.guard';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  async signIn(requestDto: SigninAuthDto): any {
-    return await this.authService.validateUser()
+  @UseGuards(LocalAuthGuard)
+  @Post('sign-in')
+  @ApiBody({
+    type: SigninAuthDto,
+  })
+  async signIn(@Req() request: Request): Promise<any> {
+    return this.authService.signIn(request.user);
   }
 }
