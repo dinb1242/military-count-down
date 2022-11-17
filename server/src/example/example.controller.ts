@@ -1,10 +1,13 @@
-import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ExampleService } from './example.service';
-import { ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Example as ExampleModel } from '@prisma/client';
 import { CreateExampleDto } from './dto/request/create-example.dto';
 import { UpdateExampleDto } from './dto/request/update-example.dto';
 import { PageRequestDto } from 'src/common/dto/request/page-request.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Request } from 'express';
+import { HttpHeaders } from '../common/enums/http-headers.enum';
 
 @ApiTags('예제 API')
 @Controller('example')
@@ -19,6 +22,17 @@ export class ExampleController {
   @Patch(':id')
   async updateExample(@Param('id') id: number, @Body() data: UpdateExampleDto) {
     return await this.exampleService.updateExample({ id: Number(id) }, data);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('jwt-test')
+  @ApiHeader({
+    name: HttpHeaders.AUTHORIZATION,
+    description: 'Bearer JWT',
+    required: true,
+  })
+  async jwtTest(@Req() request: Request) {
+    return request.user;
   }
 
   @Get('pagination')
