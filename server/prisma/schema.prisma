@@ -16,7 +16,7 @@ model User {
   password String
   name String
   phone String
-  posts Post[]
+  authToken AuthToken[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -26,7 +26,7 @@ model Post {
   title String
   content String?
   published Boolean? @default(false)
-  author User? @relation(fields: [authorId], references: [id])
+  // author User? @relation(fields: [authorId], references: [id])
   authorId Int?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -36,6 +36,18 @@ model Example {
   id Int @default(autoincrement()) @id
   title String
   content String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AuthToken {
+  id Int @default(autoincrement()) @id
+  accessToken String @unique
+  refreshToken String @unique
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+  aTExpiredAt DateTime
+  rTExpiredAt DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
