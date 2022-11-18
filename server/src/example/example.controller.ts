@@ -8,11 +8,12 @@ import { PageRequestDto } from 'src/common/dto/request/page-request.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Request } from 'express';
 import { HttpHeaders } from '../common/enums/http-headers.enum';
+import { PrismaService } from '../common/prisma/prisma.service';
 
 @ApiTags('예제 API')
 @Controller('example')
 export class ExampleController {
-  constructor(private readonly exampleService: ExampleService) {}
+  constructor(private readonly exampleService: ExampleService, private readonly prismaService: PrismaService) {}
 
   @Post()
   async createExample(@Body() data: CreateExampleDto) {
@@ -69,8 +70,7 @@ export class ExampleController {
 
   @Get('test')
   async testMethod() {
-    console.log(process.env.ENC_KEY);
-    console.log(process.env.JWT_KEY);
+    console.log(await this.prismaService.authToken.findMany());
   }
 
   @Get(':id')

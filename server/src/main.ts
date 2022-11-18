@@ -5,6 +5,7 @@ import { ResponseInterceptor } from './common/interceptor/response.interceptor';
 import { HttpExceptionFilter } from './common/filter/http-exception.filter';
 import { PrismaService } from './common/prisma/prisma.service';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { DateMiddleware } from './common/prisma/prisma.middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,6 +15,7 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
 
   const prismaService = app.get(PrismaService);
+  prismaService.$use(DateMiddleware);
   await prismaService.enableShutdownHooks(app);
 
   // 스웨거 설정
