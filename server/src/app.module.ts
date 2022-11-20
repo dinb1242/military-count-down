@@ -9,6 +9,8 @@ import { AuthModule } from './auth/auth.module';
 import { CipherUtils } from './common/utils/cipher.util';
 import { CommonUtilsModule } from './common/common-utils.module';
 import { PrismaModule } from './common/prisma/prisma.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 
 // 환경 변수 별 상수 설정
 let envFilename = '';
@@ -34,6 +36,13 @@ if (process.env.NODE_ENV === 'local') {
     PrismaModule,
   ],
   controllers: [AppController],
-  providers: [AppService, CipherUtils],
+  providers: [
+    AppService,
+    CipherUtils,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule {}

@@ -5,12 +5,14 @@ import { ApiBody, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse 
 import { SignInRequestDto } from './dto/request/sign-in-request.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { SignInResponseDto } from './dto/response/sign-in-response.dto';
+import { Public } from './decorators/auth-public.decorator';
 
 @ApiTags('인증 API')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @UseGuards(LocalAuthGuard)
   @Post('sign-in')
   @ApiBody({
