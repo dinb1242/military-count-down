@@ -12,7 +12,6 @@ import { SignInResponseDto } from './dto/response/sign-in-response.dto';
 export class AuthService {
   constructor(
     private readonly userService: UserService,
-    private readonly cipherUtils: CipherUtils,
     private readonly jwtService: JwtService,
     private readonly prismaService: PrismaService,
   ) {}
@@ -33,7 +32,7 @@ export class AuthService {
       throw new SignInUnauthorizedException();
     }
 
-    if (await this.cipherUtils.hashMatches(password, user.password)) {
+    if (await CipherUtils.hashMatches(password, user.password)) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...result } = user;
       return result;
