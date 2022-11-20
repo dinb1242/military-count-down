@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {
   @ApiProperty({ description: '이메일', example: 'example@example.com' })
