@@ -44,13 +44,11 @@ model User {
   status Int @default(1)
 }
 
-model Post {
+model Coworker {
   id Int @default(autoincrement()) @id
-  title String
-  content String?
-  published Boolean? @default(false)
-  // author User? @relation(fields: [authorId], references: [id])
-  authorId Int?
+  name String
+  devPart String
+  projects String[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
