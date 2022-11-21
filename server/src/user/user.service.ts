@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../common/prisma/prisma.service';
 import { Prisma, User } from '@prisma/client';
 import { CipherUtils } from 'src/common/utils/cipher.util';
@@ -34,10 +34,11 @@ export class UserService {
   /**
    * 유저 회원가입을 수행한다.
    * 이메일에 대하여 데이터베이스 내에 이미 존재하는 유저라면 예외를 발생시킨다.
-   * @param data 회원가입 대상 유저에 대한 UserCreateInput 객체
+   * @param _data 회원가입 대상 유저에 대한 UserCreateInput 객체
    * @returns 유저에 대한 가입 정보를 리턴한다.
    */
-  async signUpUser(data: Prisma.UserCreateInput): Promise<UserResponseDto> {
+  async signUpUser(_data: Prisma.UserCreateInput): Promise<UserResponseDto> {
+    const { ...data } = _data;
     const { password, phone } = data;
 
     // 비밀번호 해싱 및 휴대 번호를 암호화한다.
@@ -47,9 +48,29 @@ export class UserService {
     data.password = hashedPassword;
     data.phone = encPhone;
 
+    // 해당 이메일 또는 휴대번호가 존재하는지 확인한다.
+    // 만일 기존 가입된 유저라면, 400 예외를 발생시킨다.
+    await this.prismaService.user
+      .findUnique({
+        where: { email: data.email },
+      })
+      .then((res) => {
+        if (res) throw new BadRequestException('이미 존재하는 이메일입니다.');
+      });
+
+    await this.prismaService.user
+      .findUnique({
+        where: { phone: data.phone },
+      })
+      .then((res) => {
+        if (res) throw new BadRequestException('이미 존재하는 휴대번호입니다.');
+      });
+
+    // 유저를 생성한다.
     const user: User = await this.prismaService.user.create({
       data,
     });
+    Logger.log(`유저가 생성되었습니다. userId=${user.id}`);
 
     return new UserResponseDto(user);
   }

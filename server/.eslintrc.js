@@ -18,7 +18,7 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
-    indent: ['error', 2],
+    'indent': 'off',
     'max-len': 0,
     'newline-per-chained-call': 1,
     'prettier/prettier': [
