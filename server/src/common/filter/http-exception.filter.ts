@@ -1,4 +1,4 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException, Logger } from '@nestjs/common';
 import { Request, Response } from 'express';
 
 /**
@@ -10,10 +10,14 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
+    const exceptionResponse: any = exception.getResponse();
     const path = request.path;
     const statusCode = exception.getStatus();
-    const message = exception.message;
+    const message = exceptionResponse.message;
 
+    Logger.error(`path=${path} exception=${exception}`);
+
+    // 커스텀 예외 발생 시에 대한 cause 조건문 처리
     if (exception.cause) {
       response.statusMessage = exception.cause.message;
     }
