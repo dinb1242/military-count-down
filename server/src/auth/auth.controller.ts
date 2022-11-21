@@ -1,7 +1,7 @@
-import { Controller, HttpCode, HttpStatus, Post, Req, UseGuards } from '@nestjs/common';
+import { Controller, Headers, HttpCode, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { Request } from 'express';
-import { ApiBody, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { Request, Response } from 'express';
+import { ApiBody, ApiHeaders, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { SignInRequestDto } from './dto/request/sign-in-request.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { SignInResponseDto } from './dto/response/sign-in-response.dto';
@@ -33,5 +33,41 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async signIn(@Req() request: Request): Promise<SignInResponseDto> {
     return this.authService.signIn(request.user);
+  }
+
+  @Public()
+  @Post('token-reissue')
+  @ApiOperation({
+    summary: 'Access Token 재발급 API',
+    description:
+      'Access Token 만료 이후, Refresh Token 과 Access Token 를 헤더로 전달받아 Access Token 갱신을 수행한다.<br/>' +
+      '이때, Refresh Token 이 만료되었을 경우 aT 와 rT 를 갱신하여 헤더로 반환한다.<br/>' +
+      'Refresh Token 이 유효할 경우, Access Token 만 헤더로 반환한다.<br/>' +
+      '데이터베이스 내에 존재하는 aT 와 rT 가 일치하지 않을 경우, 예외를 반환한다.',
+  })
+  @ApiHeaders([
+    {
+      name: 'Access-Token',
+      description: '갱신되어야 하는 Access Token',
+    },
+    {
+      name: 'Refresh-Token',
+      description: '유저가 지니고 있는 Refresh Token',
+    },
+  ])
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({ description: '재발급 성공' })
+  @ApiUnauthorizedResponse({ description: '재발급 실패 - DB 내 토큰 불일치' })
+  async tokenReissue(
+    @Res() response: Response,
+    @Headers('Access-Token') accessToken: string,
+    @Headers('Refresh-Token') refreshToken: string,
+  ) {
+    const result: any = await this.authService.tokenReissue(accessToken, refreshToken);
+    return response
+      .status(HttpStatus.OK)
+      .setHeader('Access-Token', result.accessToken)
+      .setHeader('Refresh-Token', result.refreshToken)
+      .send();
   }
 }

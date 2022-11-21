@@ -1,18 +1,20 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { CipherUtils } from 'src/common/utils/cipher.util';
 import { UserService } from 'src/user/user.service';
 import { SignInUnauthorizedException } from '../common/exceptions/sign-in-unauthorized.exception';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../common/prisma/prisma.service';
-import { Prisma } from '@prisma/client';
-import * as dayjs from 'dayjs';
+import { AuthToken, Prisma } from '@prisma/client';
 import { SignInResponseDto } from './dto/response/sign-in-response.dto';
+import { convert, Instant, LocalDateTime, ZoneId } from 'js-joda';
+import { JwtUtils } from '../common/utils/jwt.util';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly jwtUtils: JwtUtils,
     private readonly prismaService: PrismaService,
   ) {}
 
@@ -58,8 +60,14 @@ export class AuthService {
 
     const decAccessToken: any = this.jwtService.decode(accessToken);
     const decRefreshToken: any = this.jwtService.decode(refreshToken);
-    const accessTokenExpiresAt = dayjs(decAccessToken.exp * 1000);
-    const refreshTokenExpiresAt = dayjs(decRefreshToken.exp * 1000);
+    const accessTokenExpiresAt = LocalDateTime.ofInstant(
+      Instant.ofEpochMilli(decAccessToken.exp * 1000),
+      ZoneId.of('UTC+9'),
+    );
+    const refreshTokenExpiresAt = LocalDateTime.ofInstant(
+      Instant.ofEpochMilli(decRefreshToken.exp * 1000),
+      ZoneId.of('UTC+9'),
+    );
 
     const authTokenCreateInput: Prisma.AuthTokenCreateInput = {
       accessToken: accessToken,
@@ -67,8 +75,8 @@ export class AuthService {
       user: {
         connect: { id: user.id },
       },
-      aTExpiredAt: accessTokenExpiresAt.toDate(),
-      rTExpiredAt: refreshTokenExpiresAt.toDate(),
+      aTExpiredAt: convert(accessTokenExpiresAt).toDate(),
+      rTExpiredAt: convert(refreshTokenExpiresAt).toDate(),
     };
 
     await this.prismaService.authToken.create({
@@ -76,5 +84,64 @@ export class AuthService {
     });
 
     return new SignInResponseDto(accessToken, refreshToken);
+  }
+
+  /**
+   * Access Token 을 재발급한다.
+   * 만일, Refresh Token 이 만료되었을 경우, Refresh Token 을 함께 재발급하여 반환한다.
+   * @param _accessToken Access Token
+   * @param _refreshToken Refresh Token
+   * @return 갱신된 Access Token 및 Refresh Token(선택)
+   */
+  async tokenReissue(
+    _accessToken: string,
+    _refreshToken: string,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    let accessToken = _accessToken;
+    let refreshToken = _refreshToken;
+
+    // 전달받은 Access Token 과 Refresh Token 쌍을 데이터베이스 내의 데이터와 비교한다.
+    // 만일 존재하지 않을 경우, 만료된 토큰 혹은 유효하지 않은 토큰으로 간주하고 예외를 발생시킨다.
+    const authTokenResult: AuthToken[] = await this.prismaService.authToken.findMany({
+      where: { accessToken: accessToken, refreshToken: refreshToken },
+    });
+
+    if (authTokenResult.length === 0)
+      throw new UnauthorizedException(
+        '데이터베이스 내 Access Token 과 Refresh Token 에 일치하는 데이터가 없습니다. 유효하지 않거나 조작된 토큰일 수 있습니다.',
+      );
+
+    // Access Token 내의 유저 payload 를 추출하여 재생성한다.
+    const decodedUser: any = this.jwtService.decode(accessToken);
+    const payload: any = {
+      email: decodedUser.email,
+      sub: decodedUser.sub,
+    };
+
+    // Refresh Token 를 체크하여 만료 시, Access Token 과 Refresh Token 을 재발급한다.
+    if (this.jwtUtils.checkExpired(refreshToken)) {
+      Logger.log('Refresh Token 이 만료되었습니다. Refresh Token 과 Access Token 을 재발급합니다.');
+      accessToken = this.jwtService.sign(payload);
+      refreshToken = this.jwtService.sign(payload, {
+        expiresIn: '1d',
+      });
+    } else {
+      Logger.log('Refresh Token 이 만료되지 않았습니다. Access Token 을 재발급합니다.');
+      accessToken = this.jwtService.sign(payload);
+    }
+
+    // 갱신된 토큰을 업데이트한다.
+    await this.prismaService.authToken.update({
+      data: {
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+      },
+      where: { accessToken: _accessToken },
+    });
+
+    return {
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+    };
   }
 }
