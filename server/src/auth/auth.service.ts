@@ -84,7 +84,7 @@ export class AuthService {
       rTExpiredAt: convert(refreshTokenExpiresAt).toDate(),
     };
 
-    await this.prismaService.authToken.create({
+    const createAuthToken = this.prismaService.authToken.create({
       data: authTokenCreateInput,
     });
 
@@ -96,9 +96,11 @@ export class AuthService {
       ip: currentIp,
       device: userAgent,
     };
-    await this.prismaService.accessHistory.create({
+    const createAccessHistory = this.prismaService.accessHistory.create({
       data: accessHistory,
     });
+
+    await this.prismaService.$transaction([createAuthToken, createAccessHistory]);
 
     return new SignInResponseDto(accessToken, refreshToken);
   }
