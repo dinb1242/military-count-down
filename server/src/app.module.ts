@@ -11,6 +11,7 @@ import { CommonUtilsModule } from './common/common-utils.module';
 import { PrismaModule } from './common/prisma/prisma.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { CoworkerModule } from './coworker/coworker.module';
 
 // 환경 변수 별 상수 설정
 let envFilename = '';
@@ -34,6 +35,7 @@ if (process.env.NODE_ENV === 'local') {
     AuthModule,
     CommonUtilsModule,
     PrismaModule,
+    CoworkerModule,
   ],
   controllers: [AppController],
   providers: [
