@@ -1,4 +1,4 @@
-import { Controller, Headers, HttpCode, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Controller, Headers, HttpCode, HttpStatus, Ip, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
 import { ApiBody, ApiHeaders, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
@@ -31,8 +31,12 @@ export class AuthController {
   })
   @ApiUnauthorizedResponse({ description: '로그인 실패 - 아이디 혹은 패스워드 불일치' })
   @HttpCode(HttpStatus.OK)
-  async signIn(@Req() request: Request): Promise<SignInResponseDto> {
-    return this.authService.signIn(request.user);
+  async signIn(
+    @Req() request: Request,
+    @Ip() currentIp: string,
+    @Headers('user-agent') userAgent: string,
+  ): Promise<SignInResponseDto> {
+    return this.authService.signIn(request.user, currentIp, userAgent);
   }
 
   @Public()

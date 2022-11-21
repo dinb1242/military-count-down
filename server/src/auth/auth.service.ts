@@ -46,18 +46,23 @@ export class AuthService {
    * JWT(Access Token, Refresh Token) 를 생성하고, 이를 DB 에 기록한다.
    * 최종적으로 생성한 JWT 토큰들을 반환한다.
    * @param user JWT Strategy 로부터 반환된 Request 객체 내 유저 정보
+   * @param currentIp 접근 유저 아이피
+   * @param userAgent 접근 유저 에이전트
    * @return Access Token 및 갱신을 위한 Refresh Token
    */
-  async signIn(user: any): Promise<SignInResponseDto> {
+  async signIn(user: any, currentIp: string, userAgent: string): Promise<SignInResponseDto> {
     const payload = {
       email: user.email,
       sub: user.id,
     };
+
+    // 토큰을 생성한다.
     const accessToken = this.jwtService.sign(payload);
     const refreshToken = this.jwtService.sign(payload, {
       expiresIn: '1d',
     });
 
+    // 토큰의 만료 일시를 추출한 후, 토큰 관리를 위해 데이터베이스에 저장한다.
     const decAccessToken: any = this.jwtService.decode(accessToken);
     const decRefreshToken: any = this.jwtService.decode(refreshToken);
     const accessTokenExpiresAt = LocalDateTime.ofInstant(
@@ -81,6 +86,18 @@ export class AuthService {
 
     await this.prismaService.authToken.create({
       data: authTokenCreateInput,
+    });
+
+    // 로그인 히스토리에 로그인 정보를 저장한다.
+    const accessHistory: Prisma.AccessHistoryCreateInput = {
+      user: {
+        connect: { id: user.id },
+      },
+      ip: currentIp,
+      device: userAgent,
+    };
+    await this.prismaService.accessHistory.create({
+      data: accessHistory,
     });
 
     return new SignInResponseDto(accessToken, refreshToken);
