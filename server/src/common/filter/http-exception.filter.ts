@@ -13,7 +13,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const exceptionResponse: any = exception.getResponse();
     const path = request.path;
     const statusCode = exception.getStatus();
-    const message = exceptionResponse.message;
+    const message = exceptionResponse.message ? exceptionResponse.message : exception.message;
 
     Logger.error(`path=${path} exception=${exception}`);
 
