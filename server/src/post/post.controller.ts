@@ -1,7 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Put } from '@nestjs/common';
 import { PostService } from './post.service';
 import { Post as PostModel } from '@prisma/client';
-import { CreatePostDto } from './dto/create-post.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('게시글 API')
@@ -35,17 +34,18 @@ export class PostController {
     });
   }
 
-  @Post()
-  async draftPost(@Body() postData: CreatePostDto): Promise<PostModel> {
-    const { title, content, authorEmail } = postData;
-    return await this.postService.createPost({
-      title,
-      content,
-      author: {
-        connect: { email: authorEmail },
-      },
-    });
-  }
+  //
+  // @Post()
+  // async draftPost(@Body() postData: CreatePostDto) {
+  // const { title, content, authorEmail } = postData;
+  // return await this.postService.createPost({
+  //   title,
+  //   content,
+  //   author: {
+  //     connect: { email: authorEmail },
+  //   },
+  // });
+  // }
 
   @Put('publish/:id')
   async publishPost(@Param('id') id: string): Promise<PostModel> {

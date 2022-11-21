@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "description": "A root project of military count down and mirim wiki",
   "main": "index.js",
+  "prisma": {
+    "schema": "./server/prisma/schema.prisma"
+  },
   "scripts": {
+    "prisma:mig-dev": "npx --prefix server prisma migrate dev",
+    "prisma:gen": "npx --prefix server prisma generate",
     "start:local": "concurrently \"npm run dev --prefix web\" \"cross-env NODE_ENV=local npm run start:dev --prefix server\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -18,14 +23,8 @@
   },
   "homepage": "https://github.com/dinb1242/military-count-down#readme",
   "dependencies": {
-    "@nestjs/apollo": "^10.1.4",
-    "@nestjs/graphql": "^10.1.4",
-    "@nestjs/mapped-types": "*",
-    "@nestjs/swagger": "^6.1.3",
-    "apollo-server-express": "^3.10.3",
     "concurrently": "^7.5.0",
     "cross-env": "^7.0.3",
-    "dotenv": "^16.0.3",
-    "graphql": "^16.6.0"
+    "dotenv": "^16.0.3"
   }
 }
