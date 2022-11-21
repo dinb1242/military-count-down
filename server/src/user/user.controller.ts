@@ -1,9 +1,8 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/request/create-user.dto';
-import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Public } from '../auth/decorators/auth-public.decorator';
-import { User } from './entities/user.entity';
 import { UserResponseDto } from './dto/response/user-response.dto';
 
 @ApiTags('유저 API')
@@ -21,7 +20,10 @@ export class UserController {
   })
   @ApiCreatedResponse({
     description: '가입 성공',
-    type: User,
+    type: UserResponseDto,
+  })
+  @ApiBadRequestResponse({
+    description: '가입 실패 - 기존재 이메일',
   })
   async signUpUser(@Body() userData: CreateUserDto): Promise<UserResponseDto> {
     return await this.userService.signUpUser(userData);
