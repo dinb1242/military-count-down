@@ -8,6 +8,7 @@ import { AuthToken, Prisma } from '@prisma/client';
 import { SignInResponseDto } from './dto/response/sign-in-response.dto';
 import { convert, Instant, LocalDateTime, ZoneId } from 'js-joda';
 import { JwtUtils } from '../common/utils/jwt.util';
+import { Request } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -103,6 +104,28 @@ export class AuthService {
     await this.prismaService.$transaction([createAuthToken, createAccessHistory]);
 
     return new SignInResponseDto(accessToken, refreshToken);
+  }
+
+  /**
+   * 로그아웃을 수행한다.
+   * 로그아웃 시, 데이터베이스 내에 존재하는 해당 사용자에 대한 모든 토큰을 제거한다.
+   * @param request
+   */
+  async signOut(request: Request): Promise<boolean> {
+    const user: any = request.user;
+    const { id } = user;
+
+    // 데이터베이스 내에서 사용자의 모든 토큰을 제거한다.
+    await this.prismaService.authToken
+      .deleteMany({
+        where: { userId: id },
+      })
+      .then((res) => {
+        console.log(res);
+      });
+    Logger.log(`사용자 토큰이 데이터베이스에서 제거되었습니다. userId=${id}`);
+
+    return true;
   }
 
   /**
