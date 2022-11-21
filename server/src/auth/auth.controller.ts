@@ -1,11 +1,21 @@
-import { Controller, Headers, HttpCode, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Controller, Headers, HttpCode, HttpStatus, Ip, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
-import { ApiBody, ApiHeaders, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiHeader,
+  ApiHeaders,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { SignInRequestDto } from './dto/request/sign-in-request.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { SignInResponseDto } from './dto/response/sign-in-response.dto';
 import { Public } from './decorators/auth-public.decorator';
+import { HttpHeaders } from '../common/enums/http-headers.enum';
 
 @ApiTags('인증 API')
 @Controller('auth')
@@ -31,8 +41,31 @@ export class AuthController {
   })
   @ApiUnauthorizedResponse({ description: '로그인 실패 - 아이디 혹은 패스워드 불일치' })
   @HttpCode(HttpStatus.OK)
-  async signIn(@Req() request: Request): Promise<SignInResponseDto> {
-    return this.authService.signIn(request.user);
+  async signIn(@Req() request: Request, @Ip() currentIp: string): Promise<SignInResponseDto> {
+    const userAgent = request.headers['user-agent'];
+    return this.authService.signIn(request.user, currentIp, userAgent);
+  }
+
+  @ApiBearerAuth(HttpHeaders.AUTHORIZATION)
+  @Post('sign-out')
+  @ApiOperation({
+    summary: '로그아웃 API',
+    description: '로그아웃을 수행한다. 로그아웃 즉시 데이터베이스 내에 해당하는 모든 Access Token 을 제거한다.',
+  })
+  @ApiHeader({
+    name: HttpHeaders.AUTHORIZATION,
+    description: 'JWT Access Token',
+    required: true,
+  })
+  @ApiOkResponse({
+    description: '로그아웃 성공',
+    type: Boolean,
+  })
+  @ApiUnauthorizedResponse({
+    description: '로그아웃 실패 - 인증 실패',
+  })
+  async signOut(@Req() request: Request): Promise<boolean> {
+    return await this.authService.signOut(request);
   }
 
   @Public()

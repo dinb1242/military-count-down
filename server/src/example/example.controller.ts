@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ExampleService } from './example.service';
-import { ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Example as ExampleModel } from '@prisma/client';
 import { CreateExampleDto } from './dto/request/create-example.dto';
 import { UpdateExampleDto } from './dto/request/update-example.dto';
@@ -10,6 +10,7 @@ import { Request } from 'express';
 import { HttpHeaders } from '../common/enums/http-headers.enum';
 import { PrismaService } from '../common/prisma/prisma.service';
 
+@ApiBearerAuth(HttpHeaders.AUTHORIZATION)
 @ApiTags('예제 API')
 @Controller('example')
 export class ExampleController {
@@ -27,11 +28,6 @@ export class ExampleController {
 
   @UseGuards(JwtAuthGuard)
   @Get('jwt-test')
-  @ApiHeader({
-    name: HttpHeaders.AUTHORIZATION,
-    description: 'Bearer JWT',
-    required: true,
-  })
   async jwtTest(@Req() request: Request) {
     return request.user;
   }

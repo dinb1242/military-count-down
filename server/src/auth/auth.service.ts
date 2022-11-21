@@ -8,6 +8,7 @@ import { AuthToken, Prisma } from '@prisma/client';
 import { SignInResponseDto } from './dto/response/sign-in-response.dto';
 import { convert, Instant, LocalDateTime, ZoneId } from 'js-joda';
 import { JwtUtils } from '../common/utils/jwt.util';
+import { Request } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -46,18 +47,23 @@ export class AuthService {
    * JWT(Access Token, Refresh Token) 를 생성하고, 이를 DB 에 기록한다.
    * 최종적으로 생성한 JWT 토큰들을 반환한다.
    * @param user JWT Strategy 로부터 반환된 Request 객체 내 유저 정보
+   * @param currentIp 접근 유저 아이피
+   * @param userAgent 접근 유저 에이전트
    * @return Access Token 및 갱신을 위한 Refresh Token
    */
-  async signIn(user: any): Promise<SignInResponseDto> {
+  async signIn(user: any, currentIp: string, userAgent: string): Promise<SignInResponseDto> {
     const payload = {
       email: user.email,
       sub: user.id,
     };
+
+    // 토큰을 생성한다.
     const accessToken = this.jwtService.sign(payload);
     const refreshToken = this.jwtService.sign(payload, {
       expiresIn: '1d',
     });
 
+    // 토큰의 만료 일시를 추출한 후, 토큰 관리를 위해 데이터베이스에 저장한다.
     const decAccessToken: any = this.jwtService.decode(accessToken);
     const decRefreshToken: any = this.jwtService.decode(refreshToken);
     const accessTokenExpiresAt = LocalDateTime.ofInstant(
@@ -79,11 +85,47 @@ export class AuthService {
       rTExpiredAt: convert(refreshTokenExpiresAt).toDate(),
     };
 
-    await this.prismaService.authToken.create({
+    const createAuthToken = this.prismaService.authToken.create({
       data: authTokenCreateInput,
     });
 
+    // 로그인 히스토리에 로그인 정보를 저장한다.
+    const accessHistory: Prisma.AccessHistoryCreateInput = {
+      user: {
+        connect: { id: user.id },
+      },
+      ip: currentIp,
+      device: userAgent,
+    };
+    const createAccessHistory = this.prismaService.accessHistory.create({
+      data: accessHistory,
+    });
+
+    await this.prismaService.$transaction([createAuthToken, createAccessHistory]);
+
     return new SignInResponseDto(accessToken, refreshToken);
+  }
+
+  /**
+   * 로그아웃을 수행한다.
+   * 로그아웃 시, 데이터베이스 내에 존재하는 해당 사용자에 대한 모든 토큰을 제거한다.
+   * @param request
+   */
+  async signOut(request: Request): Promise<boolean> {
+    const user: any = request.user;
+    const { id } = user;
+
+    // 데이터베이스 내에서 사용자의 모든 토큰을 제거한다.
+    await this.prismaService.authToken
+      .deleteMany({
+        where: { userId: id },
+      })
+      .then((res) => {
+        console.log(res);
+      });
+    Logger.log(`사용자 토큰이 데이터베이스에서 제거되었습니다. userId=${id}`);
+
+    return true;
   }
 
   /**
