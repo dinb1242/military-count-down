@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, Example as ExampleModel, Example, prisma } from '@prisma/client';
-import { PrismaService } from 'src/common/prisma/prisma.service';
+import { Example as ExampleModel, Prisma } from '@prisma/client';
+import { PrismaService } from '../common/prisma/prisma.service';
 
 // PR 테스트
 @Injectable()
@@ -14,7 +14,10 @@ export class ExampleService {
     });
   }
 
-  async updateExample(exampleWhereUniqueInput: Prisma.ExampleWhereUniqueInput, exampleUpdateInput: Prisma.ExampleUpdateInput) {
+  async updateExample(
+    exampleWhereUniqueInput: Prisma.ExampleWhereUniqueInput,
+    exampleUpdateInput: Prisma.ExampleUpdateInput,
+  ) {
     return await this.prismaSerivce.example.update({
       where: exampleWhereUniqueInput,
       data: exampleUpdateInput,
@@ -35,7 +38,7 @@ export class ExampleService {
     orderBy?: Prisma.ExampleOrderByWithRelationInput;
   }) {
     const { skip, take, cursor, where, orderBy } = params;
-    const [ totalElementCnt, exampleList ] = await this.prismaSerivce.$transaction([
+    const [totalElementCnt, exampleList] = await this.prismaSerivce.$transaction([
       this.prismaSerivce.example.count(),
       this.prismaSerivce.example.findMany({
         skip,
@@ -43,8 +46,8 @@ export class ExampleService {
         cursor,
         where,
         orderBy,
-      })
-    ])
+      }),
+    ]);
     return exampleList;
   }
 }
