@@ -1,6 +1,6 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
-import { CipherUtils } from 'src/common/utils/cipher.util';
-import { UserService } from 'src/user/user.service';
+import { CipherUtils } from '../common/utils/cipher.util';
+import { UserService } from '../user/user.service';
 import { SignInUnauthorizedException } from '../common/exceptions/sign-in-unauthorized.exception';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../common/prisma/prisma.service';
@@ -31,7 +31,7 @@ export class AuthService {
     const user = await this.userService.loadUserByEmail({ email: email });
 
     // 유저 정보가 없을 경우, 예외를 반환한다.
-    if (user === null) {
+    if (!user) {
       throw new SignInUnauthorizedException();
     }
 
@@ -39,6 +39,8 @@ export class AuthService {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...result } = user;
       return result;
+    } else {
+      throw new SignInUnauthorizedException();
     }
   }
 
