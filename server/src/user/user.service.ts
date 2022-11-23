@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../common/prisma/prisma.service';
 import { Prisma, User } from '@prisma/client';
-import { CipherUtils } from 'src/common/utils/cipher.util';
+import { CipherUtils } from '../common/utils/cipher.util';
 import { UserResponseDto } from './dto/response/user-response.dto';
 
 @Injectable()
