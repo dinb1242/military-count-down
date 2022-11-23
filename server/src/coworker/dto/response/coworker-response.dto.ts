@@ -8,7 +8,6 @@ export class CoworkerResponseDto {
     this.name = coworker.name;
     this.devPart = coworker.devPart;
     this.projects = coworker.projects;
-    this.wiki = coworker.wiki;
     this.createdAt = TimeUtils.convertDateToLocalDateTimeStr(coworker.createdAt);
     this.updatedAt = TimeUtils.convertDateToLocalDateTimeStr(coworker.updatedAt);
   }
@@ -24,9 +23,6 @@ export class CoworkerResponseDto {
 
   @ApiProperty({ description: '프로젝트', example: "['a', 'b']" })
   readonly projects: string[];
-
-  @ApiProperty({ description: '위키 내용' })
-  readonly wiki: string;
 
   @ApiProperty({ description: '생성일', example: '2022-01-01 00:00:00' })
   readonly createdAt: string;
