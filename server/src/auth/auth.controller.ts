@@ -4,7 +4,6 @@ import { Request, Response } from 'express';
 import {
   ApiBearerAuth,
   ApiBody,
-  ApiHeader,
   ApiHeaders,
   ApiOkResponse,
   ApiOperation,
@@ -51,11 +50,6 @@ export class AuthController {
   @ApiOperation({
     summary: '로그아웃 API',
     description: '로그아웃을 수행한다. 로그아웃 즉시 데이터베이스 내에 해당하는 모든 Access Token 을 제거한다.',
-  })
-  @ApiHeader({
-    name: HttpHeaders.AUTHORIZATION,
-    description: 'JWT Access Token',
-    required: true,
   })
   @ApiOkResponse({
     description: '로그아웃 성공',
