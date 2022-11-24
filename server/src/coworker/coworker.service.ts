@@ -15,8 +15,9 @@ export class CoworkerService {
   async create(coworkerCreateInput: Prisma.CoworkerCreateInput): Promise<CoworkerResponseDto> {
     const { ...data } = coworkerCreateInput;
 
-    if (!Object.values(DevPart).includes(data.devPart))
+    if (!Object.values(DevPart).includes(data.devPart)) {
       throw new BadRequestException(`Enum 타입이 일치하지 않습니다. devPart=${data.devPart}`);
+    }
 
     // 이미 동일한 개발자가 있는지 체크한다.
     await this.prismaService.coworker
@@ -85,6 +86,17 @@ export class CoworkerService {
   async createWiki(coworkerWikiCreateInput: Prisma.CoworkerWikiCreateInput) {
     return this.prismaService.coworkerWiki.create({
       data: coworkerWikiCreateInput,
+    });
+  }
+
+  async updateWiki(id: number, coworkerWikiUpdateInput: Prisma.CoworkerWikiUpdateInput) {
+    await this.prismaService.coworker.findUniqueOrThrow({ where: { id: id } }).catch(() => {
+      throw new NotFoundException('일치하는 개발자를 찾을 수 없습니다.');
+    });
+
+    return this.prismaService.coworkerWiki.update({
+      where: { id: id },
+      data: coworkerWikiUpdateInput,
     });
   }
 }

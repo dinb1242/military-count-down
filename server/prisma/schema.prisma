@@ -39,6 +39,7 @@ model User {
   phone         String          @unique
   authToken     AuthToken[]
   accessHistory AccessHistory[]
+  coworkerWiki CoworkerWikiRevision[]
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   status        Int             @default(1)
@@ -59,8 +60,17 @@ model CoworkerWiki {
   wiki String?
   coworker Coworker @relation(fields: [coworkerId], references: [id])
   coworkerId Int @unique
+  coworkerWikiRevision CoworkerWikiRevision[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model CoworkerWikiRevision {
+  id Int @default(autoincrement()) @id
+  coworkerWiki CoworkerWiki @relation(fields: [coworkerWikiId], references: [id])
+  coworkerWikiId Int
+  author User @relation(fields: [authorId], references: [id])
+  authorId Int
 }
 
 model Example {

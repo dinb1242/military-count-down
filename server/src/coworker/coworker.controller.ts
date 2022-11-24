@@ -14,6 +14,7 @@ import { CreateCoworkerDto } from './dto/request/create-coworker.dto';
 import { CoworkerResponseDto } from './dto/response/coworker-response.dto';
 import { UpdateCoworkerDto } from './dto/request/update-coworker.dto';
 import { CreateCoworkerWikiDto } from './dto/request/create-coworker-wiki.dto';
+import { UpdateCoworkerWikiDto } from './dto/request/update-coworker-wiki.dto';
 
 @ApiTags('함께한 개발자 API')
 @Controller('coworker')
@@ -112,5 +113,20 @@ export class CoworkerController {
         connect: { id: id },
       },
     });
+  }
+
+  @ApiBearerAuth(HttpHeaders.AUTHORIZATION)
+  @Patch('wiki/:id')
+  @ApiOperation({
+    summary: '위키 수정',
+    description: 'Path Variable 로 개발자 시퀀스를 전달받고, 수정할 위키 내용을 Body 로 전달받아 위키를 수정한다.',
+  })
+  @ApiOkResponse({
+    description: '수정 성공',
+    type: CoworkerResponseDto,
+  })
+  @ApiNotFoundResponse({ description: '수정 실패 - 시퀀스 미조회' })
+  async updateWiki(@Param('id') id: number, @Body() requestDto: UpdateCoworkerWikiDto) {
+    return this.coworkerService.updateWiki(id, {});
   }
 }
