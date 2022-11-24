@@ -49,6 +49,16 @@ model Coworker {
   name      String   @unique
   devPart   DevPart
   projects  String[]
+  coworkerWiki CoworkerWiki?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CoworkerWiki {
+  id Int @default(autoincrement()) @id
+  wiki String?
+  coworker Coworker @relation(fields: [coworkerId], references: [id])
+  coworkerId Int @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
