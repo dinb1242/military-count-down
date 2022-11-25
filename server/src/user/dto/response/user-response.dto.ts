@@ -4,12 +4,14 @@ import { TimeUtils } from '../../../common/utils/time.util';
 
 export class UserResponseDto {
   constructor(user: UserModel) {
-    this.id = user.id;
-    this.email = user.email;
-    this.name = user.name;
-    this.phone = user.phone;
-    this.createdAt = TimeUtils.convertDateToLocalDateTimeStr(user.createdAt);
-    this.updatedAt = TimeUtils.convertDateToLocalDateTimeStr(user.updatedAt);
+    if (user) {
+      this.id = user.id;
+      this.email = user.email;
+      this.name = user.name;
+      this.phone = user.phone;
+      this.createdAt = TimeUtils.convertDateToLocalDateTimeStr(user.createdAt);
+      this.updatedAt = TimeUtils.convertDateToLocalDateTimeStr(user.updatedAt);
+    }
   }
 
   @ApiProperty({ description: '유저 시퀀스' })
