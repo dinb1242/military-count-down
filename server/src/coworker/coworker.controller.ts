@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Req } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -14,7 +14,9 @@ import { CreateCoworkerDto } from './dto/request/create-coworker.dto';
 import { CoworkerResponseDto } from './dto/response/coworker-response.dto';
 import { UpdateCoworkerDto } from './dto/request/update-coworker.dto';
 import { CreateCoworkerWikiDto } from './dto/request/create-coworker-wiki.dto';
-import { UpdateCoworkerWikiDto } from './dto/request/update-coworker-wiki.dto';
+import { CoworkerWikiResponseDto } from './dto/response/coworker-wiki-response.dto';
+import { Request } from 'express';
+import { CoworkerWikiRevisionResponseDto } from './dto/response/coworker-wiki-revision-response.dto';
 
 @ApiTags('함께한 개발자 API')
 @Controller('coworker')
@@ -97,36 +99,50 @@ export class CoworkerController {
   }
 
   @ApiBearerAuth(HttpHeaders.AUTHORIZATION)
-  @Post('wiki/:id')
+  @Post('wiki/:coworkerId')
   @ApiOperation({
-    summary: '위키 등록 API',
-    description: '특정 개발자의 시퀀스를 전달받아 해당 개발자에 대한 위키를 등록한다.',
+    summary: '위키 등록 및 수정 API',
+    description:
+      '특정 개발자의 시퀀스를 전달받아 해당 개발자에 대한 위키를 등록한다. 이미 존재하는 위키일 경우, 수정하고 Revision 을 추가한다.',
   })
   @ApiOkResponse({
     description: '등록 성공',
-    type: CoworkerResponseDto,
+    type: CoworkerWikiResponseDto,
   })
-  async createWiki(@Param('id') id: number, @Body() requestDto: CreateCoworkerWikiDto) {
-    return this.coworkerService.createWiki({
-      wiki: requestDto.wikiContent,
+  async upsertWiki(
+    @Req() request: Request,
+    @Param('coworkerId') coworkerId: number,
+    @Body() requestDto: CreateCoworkerWikiDto,
+  ) {
+    return this.coworkerService.createWiki(request.user, coworkerId, {
+      wikiContent: requestDto.wikiContent,
       coworker: {
-        connect: { id: id },
+        connect: { id: coworkerId },
       },
     });
   }
 
+  // TODO: 개발할 것.
   @ApiBearerAuth(HttpHeaders.AUTHORIZATION)
-  @Patch('wiki/:id')
+  @Get('wiki/:coworkerId')
   @ApiOperation({
-    summary: '위키 수정',
-    description: 'Path Variable 로 개발자 시퀀스를 전달받고, 수정할 위키 내용을 Body 로 전달받아 위키를 수정한다.',
+    summary: '특정 개발자 위키 조회 API',
+    description: '개발자의 시퀀스를 Path Var 로 전달받아 해당하는 개발자의 위키를 조회한다.',
   })
-  @ApiOkResponse({
-    description: '수정 성공',
-    type: CoworkerResponseDto,
+  @ApiOkResponse({ description: '조회 성공' })
+  @ApiNotFoundResponse({ description: '조회 실패 - 시퀀스 미조회' })
+  async findWikiOfSpecificCoworker(@Param('coworkerId') coworkerId: number) {
+    return null;
+  }
+
+  @ApiBearerAuth(HttpHeaders.AUTHORIZATION)
+  @Get('wiki/revision/:coworkerWikiId')
+  @ApiOperation({
+    summary: '위키 Revision 전체 조회 API',
+    description: '특정 개발자에 해당하는 Revision 목록을 전체 조회한다.',
   })
-  @ApiNotFoundResponse({ description: '수정 실패 - 시퀀스 미조회' })
-  async updateWiki(@Param('id') id: number, @Body() requestDto: UpdateCoworkerWikiDto) {
-    return this.coworkerService.updateWiki(id, {});
+  @ApiOkResponse({ description: '', type: CoworkerWikiRevisionResponseDto })
+  async findAllRevisionOfSpecificCoworker(@Param('coworkerWikiId') coworkerWikiId: number) {
+    return this.coworkerService.findAllRevisionOfSpecificCoworker(coworkerWikiId);
   }
 }

@@ -57,8 +57,8 @@ model Coworker {
 
 model CoworkerWiki {
   id Int @default(autoincrement()) @id
-  wiki String?
-  coworker Coworker @relation(fields: [coworkerId], references: [id])
+  wikiContent String?
+  coworker Coworker @relation(fields: [coworkerId], references: [id], onUpdate: Cascade)
   coworkerId Int @unique
   coworkerWikiRevision CoworkerWikiRevision[]
   createdAt DateTime @default(now())
@@ -67,10 +67,12 @@ model CoworkerWiki {
 
 model CoworkerWikiRevision {
   id Int @default(autoincrement()) @id
+  wikiContent String?
   coworkerWiki CoworkerWiki @relation(fields: [coworkerWikiId], references: [id])
   coworkerWikiId Int
   author User @relation(fields: [authorId], references: [id])
   authorId Int
+  createdAt DateTime @default(now())
 }
 
 model Example {
