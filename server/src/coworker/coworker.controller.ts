@@ -1,4 +1,18 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  FileTypeValidator,
+  Get,
+  MaxFileSizeValidator,
+  Param,
+  ParseFilePipe,
+  Patch,
+  Post,
+  Req,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -17,6 +31,7 @@ import { CreateCoworkerWikiDto } from './dto/request/create-coworker-wiki.dto';
 import { CoworkerWikiResponseDto } from './dto/response/coworker-wiki-response.dto';
 import { Request } from 'express';
 import { CoworkerWikiRevisionResponseDto } from './dto/response/coworker-wiki-revision-response.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('함께한 개발자 API')
 @Controller('coworker')
@@ -34,8 +49,20 @@ export class CoworkerController {
     type: CoworkerResponseDto,
   })
   @ApiBadRequestResponse({ description: '생성 실패 - 중복된 개발자' })
-  async create(@Body() requestDto: CreateCoworkerDto): Promise<CoworkerResponseDto> {
-    return this.coworkerService.create(requestDto);
+  @UseInterceptors(FileInterceptor('profileImage'))
+  async create(
+    @Body() requestDto: CreateCoworkerDto,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 3000 }),
+          new FileTypeValidator({ fileType: /\.(gif|jpe?g|tiff?|png|webp|bmp)$/i }),
+        ],
+      }),
+    )
+    profileImage: Express.Multer.File,
+  ): Promise<CoworkerResponseDto> {
+    return this.coworkerService.create(requestDto, profileImage);
   }
 
   @ApiBearerAuth(HttpHeaders.AUTHORIZATION)
