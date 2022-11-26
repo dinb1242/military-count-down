@@ -9,10 +9,15 @@ import { HttpHeaders } from './common/enums/http-headers.enum';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // 역직렬화 적용 (TypeORM 기반 DTO toEntity 에서 유효)
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
+
+  // 커스텀 공통 Response Interceptor 및 공통 예외 처리 필터 적용
   app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter());
 
+  // 프리즈마 서비스 전역 적용
   const prismaService = app.get(PrismaService);
   await prismaService.enableShutdownHooks(app);
 
