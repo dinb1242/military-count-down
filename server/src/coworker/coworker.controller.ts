@@ -156,10 +156,10 @@ export class CoworkerController {
     summary: '특정 개발자 위키 조회 API',
     description: '개발자의 시퀀스를 Path Var 로 전달받아 해당하는 개발자의 위키를 조회한다.',
   })
-  @ApiOkResponse({ description: '조회 성공' })
+  @ApiOkResponse({ description: '조회 성공', type: CoworkerWikiResponseDto })
   @ApiNotFoundResponse({ description: '조회 실패 - 시퀀스 미조회' })
-  async findWikiOfSpecificCoworker(@Param('coworkerId') coworkerId: number) {
-    return null;
+  async findWikiOfSpecificCoworker(@Param('coworkerId') coworkerId: number): Promise<CoworkerWikiResponseDto> {
+    return this.coworkerService.findWikiOfSpecificCoworker(coworkerId);
   }
 
   @ApiBearerAuth(HttpHeaders.AUTHORIZATION)

@@ -121,7 +121,7 @@ export class CoworkerService {
     return new CoworkerWikiResponseDto(wikiEntity);
   }
 
-  async findWikiOfSpecificCoworker(coworkerId: number) {
+  async findWikiOfSpecificCoworker(coworkerId: number): Promise<CoworkerWikiResponseDto> {
     const wikiEntity = await this.prismaService.coworkerWiki
       .findUniqueOrThrow({
         where: { coworkerId: coworkerId },
