@@ -141,7 +141,7 @@ export class CoworkerController {
     @Param('coworkerId') coworkerId: number,
     @Body() requestDto: CreateCoworkerWikiDto,
   ) {
-    return this.coworkerService.createWiki(request.user, coworkerId, {
+    return this.coworkerService.upsertWiki(request.user, coworkerId, {
       wikiContent: requestDto.wikiContent,
       coworker: {
         connect: { id: coworkerId },
@@ -168,7 +168,10 @@ export class CoworkerController {
     summary: '위키 Revision 전체 조회 API',
     description: '특정 개발자에 해당하는 Revision 목록을 전체 조회한다.',
   })
-  @ApiOkResponse({ description: '', type: CoworkerWikiRevisionResponseDto })
+  @ApiOkResponse({
+    description: '',
+    type: CoworkerWikiRevisionResponseDto,
+  })
   async findAllRevisionOfSpecificCoworker(@Param('coworkerWikiId') coworkerWikiId: number) {
     return this.coworkerService.findAllRevisionOfSpecificCoworker(coworkerWikiId);
   }

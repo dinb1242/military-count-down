@@ -88,7 +88,7 @@ export class CoworkerService {
     return new CoworkerResponseDto(coworkerEntity);
   }
 
-  async createWiki(
+  async upsertWiki(
     user: any,
     coworkerId: number,
     coworkerWikiCreateInput: Prisma.CoworkerWikiCreateInput,
