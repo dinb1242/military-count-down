@@ -2,6 +2,8 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { PrismaService } from '../common/prisma/prisma.service';
 import { Coworker as CoworkerModel, DevPart, Prisma } from '@prisma/client';
 import { CoworkerResponseDto } from './dto/response/coworker-response.dto';
+import { CoworkerWikiResponseDto } from './dto/response/coworker-wiki-response.dto';
+import { CoworkerWikiRevisionResponseDto } from './dto/response/coworker-wiki-revision-response.dto';
 
 @Injectable()
 export class CoworkerService {
@@ -12,11 +14,15 @@ export class CoworkerService {
    * @param coworkerCreateInput 요청 전문
    * @return 유저 응답 DTO
    */
-  async create(coworkerCreateInput: Prisma.CoworkerCreateInput): Promise<CoworkerResponseDto> {
+  async create(
+    coworkerCreateInput: Prisma.CoworkerCreateInput,
+    profileImage: Express.Multer.File,
+  ): Promise<CoworkerResponseDto> {
     const { ...data } = coworkerCreateInput;
 
-    if (!Object.values(DevPart).includes(data.devPart))
+    if (!Object.values(DevPart).includes(data.devPart)) {
       throw new BadRequestException(`Enum 타입이 일치하지 않습니다. devPart=${data.devPart}`);
+    }
 
     // 이미 동일한 개발자가 있는지 체크한다.
     await this.prismaService.coworker
@@ -80,5 +86,59 @@ export class CoworkerService {
     const coworkerEntity: CoworkerModel = await this.prismaService.coworker.delete({ where: { id: id } });
 
     return new CoworkerResponseDto(coworkerEntity);
+  }
+
+  async upsertWiki(
+    user: any,
+    coworkerId: number,
+    coworkerWikiCreateInput: Prisma.CoworkerWikiCreateInput,
+  ): Promise<CoworkerWikiResponseDto> {
+    const { id: authorId } = user;
+
+    const wikiRevisionObj: any = {
+      coworkerWikiRevision: {
+        create: {
+          author: {
+            connect: { id: authorId },
+          },
+          wikiContent: coworkerWikiCreateInput.wikiContent,
+        },
+      },
+    };
+
+    const wikiEntity = await this.prismaService.coworkerWiki.upsert({
+      where: { coworkerId: coworkerId },
+      create: {
+        ...coworkerWikiCreateInput,
+        ...wikiRevisionObj,
+      },
+      update: {
+        wikiContent: coworkerWikiCreateInput.wikiContent,
+        ...wikiRevisionObj,
+      },
+    });
+
+    return new CoworkerWikiResponseDto(wikiEntity);
+  }
+
+  async findWikiOfSpecificCoworker(coworkerId: number): Promise<CoworkerWikiResponseDto> {
+    const wikiEntity = await this.prismaService.coworkerWiki
+      .findUniqueOrThrow({
+        where: { coworkerId: coworkerId },
+      })
+      .catch(() => {
+        throw new NotFoundException('일치하는 개발자를 찾을 수 없습니다. coworkerId=' + coworkerId);
+      });
+
+    return new CoworkerWikiResponseDto(wikiEntity);
+  }
+
+  async findAllRevisionOfSpecificCoworker(coworkerWikiId: number) {
+    const wikiRevisions: Array<any> = await this.prismaService.coworkerWikiRevision.findMany({
+      where: { coworkerWikiId: coworkerWikiId },
+      include: { coworkerWiki: true, author: true },
+    });
+
+    return wikiRevisions.map((eachEntity) => new CoworkerWikiRevisionResponseDto(eachEntity));
   }
 }

@@ -6,6 +6,9 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "prisma:db-push": "prisma db push",
+    "prisma:migrate-dev": "prisma migrate dev",
+    "prisma:generate": "prisma generate",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -58,6 +61,7 @@
     "@types/express": "^4.17.13",
     "@types/jest": "28.1.8",
     "@types/lodash": "^4.14.189",
+    "@types/multer": "^1.4.7",
     "@types/node": "^16.0.0",
     "@types/passport": "^1.0.11",
     "@types/passport-jwt": "^3.0.7",
