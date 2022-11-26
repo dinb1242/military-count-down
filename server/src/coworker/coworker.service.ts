@@ -14,10 +14,7 @@ export class CoworkerService {
    * @param coworkerCreateInput 요청 전문
    * @return 유저 응답 DTO
    */
-  async create(
-    coworkerCreateInput: Prisma.CoworkerCreateInput,
-    profileImage: Express.Multer.File,
-  ): Promise<CoworkerResponseDto> {
+  async create(coworkerCreateInput: Prisma.CoworkerCreateInput): Promise<CoworkerResponseDto> {
     const { ...data } = coworkerCreateInput;
 
     if (!Object.values(DevPart).includes(data.devPart)) {
@@ -136,7 +133,10 @@ export class CoworkerService {
   async findAllRevisionOfSpecificCoworker(coworkerWikiId: number) {
     const wikiRevisions: Array<any> = await this.prismaService.coworkerWikiRevision.findMany({
       where: { coworkerWikiId: coworkerWikiId },
-      include: { coworkerWiki: true, author: true },
+      include: {
+        coworkerWiki: true,
+        author: true,
+      },
     });
 
     return wikiRevisions.map((eachEntity) => new CoworkerWikiRevisionResponseDto(eachEntity));
