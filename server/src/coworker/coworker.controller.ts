@@ -26,8 +26,8 @@ export class CoworkerController {
   @ApiBearerAuth(HttpHeaders.AUTHORIZATION)
   @Post()
   @ApiOperation({
-    summary: '생성 API',
-    description: '함께한 개발자 데이터를 생성한다.',
+    summary: '생성 API - File(Optional)',
+    description: '함께한 개발자 데이터를 생성한다. 개발자의 프로필 이미지는 파일 업로드 API 를 활용한다.',
   })
   @ApiCreatedResponse({
     description: '생성 성공',

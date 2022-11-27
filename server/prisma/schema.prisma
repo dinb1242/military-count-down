@@ -51,8 +51,8 @@ model Coworker {
   devPart   DevPart
   projects  String[]
   coworkerWiki CoworkerWiki?
-  file File @relation(fields: [fileId], references: [id])
-  fileId Int @unique
+  file File? @relation(fields: [fileId], references: [id])
+  fileId Int? @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -82,6 +82,7 @@ model File {
   filename String
   filePath String
   fileSize Int
+  mimeType String
   coworker Coworker?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
