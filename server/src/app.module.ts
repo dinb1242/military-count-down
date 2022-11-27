@@ -13,6 +13,9 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { CoworkerModule } from './coworker/coworker.module';
 import { ProjectModule } from './project/project.module';
+import { FileModule } from './file/file.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 // 환경 변수 별 상수 설정
 let envFilename = '';
@@ -26,9 +29,15 @@ if (process.env.NODE_ENV === 'local') {
 
 @Module({
   imports: [
+    // .env 파일을 전역적으로 사용할 수 있도록 적용한다.
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: envFilename,
+    }),
+    // 정적 파일을 /statics 라우트로 제공한다.
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+      serveRoot: '/statics',
     }),
     ExampleModule,
     UserModule,
@@ -38,6 +47,7 @@ if (process.env.NODE_ENV === 'local') {
     PrismaModule,
     CoworkerModule,
     ProjectModule,
+    FileModule,
   ],
   controllers: [AppController],
   providers: [
@@ -49,4 +59,5 @@ if (process.env.NODE_ENV === 'local') {
     },
   ],
 })
-export class AppModule {}
+export class AppModule {
+}

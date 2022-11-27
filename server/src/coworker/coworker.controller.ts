@@ -1,18 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  FileTypeValidator,
-  Get,
-  MaxFileSizeValidator,
-  Param,
-  ParseFilePipe,
-  Patch,
-  Post,
-  Req,
-  UploadedFile,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Req } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -31,7 +17,6 @@ import { CreateCoworkerWikiDto } from './dto/request/create-coworker-wiki.dto';
 import { CoworkerWikiResponseDto } from './dto/response/coworker-wiki-response.dto';
 import { Request } from 'express';
 import { CoworkerWikiRevisionResponseDto } from './dto/response/coworker-wiki-revision-response.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('함께한 개발자 API')
 @Controller('coworker')
@@ -41,28 +26,17 @@ export class CoworkerController {
   @ApiBearerAuth(HttpHeaders.AUTHORIZATION)
   @Post()
   @ApiOperation({
-    summary: '생성 API',
-    description: '함께한 개발자 데이터를 생성한다.',
+    summary: '생성 API - File(Optional)',
+    description: '함께한 개발자 데이터를 생성한다. 개발자의 프로필 이미지는 파일 업로드 API 를 활용한다.',
   })
   @ApiCreatedResponse({
     description: '생성 성공',
     type: CoworkerResponseDto,
   })
   @ApiBadRequestResponse({ description: '생성 실패 - 중복된 개발자' })
-  @UseInterceptors(FileInterceptor('profileImage'))
-  async create(
-    @Body() requestDto: CreateCoworkerDto,
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [
-          new MaxFileSizeValidator({ maxSize: 3000 }),
-          new FileTypeValidator({ fileType: /\.(gif|jpe?g|tiff?|png|webp|bmp)$/i }),
-        ],
-      }),
-    )
-    profileImage: Express.Multer.File,
-  ): Promise<CoworkerResponseDto> {
-    return this.coworkerService.create(requestDto, profileImage);
+  async create(@Body() requestDto: CreateCoworkerDto): Promise<CoworkerResponseDto> {
+    console.log(requestDto);
+    return this.coworkerService.create(requestDto);
   }
 
   @ApiBearerAuth(HttpHeaders.AUTHORIZATION)
@@ -149,14 +123,16 @@ export class CoworkerController {
     });
   }
 
-  // TODO: 개발할 것.
   @ApiBearerAuth(HttpHeaders.AUTHORIZATION)
   @Get('wiki/:coworkerId')
   @ApiOperation({
     summary: '특정 개발자 위키 조회 API',
     description: '개발자의 시퀀스를 Path Var 로 전달받아 해당하는 개발자의 위키를 조회한다.',
   })
-  @ApiOkResponse({ description: '조회 성공', type: CoworkerWikiResponseDto })
+  @ApiOkResponse({
+    description: '조회 성공',
+    type: CoworkerWikiResponseDto,
+  })
   @ApiNotFoundResponse({ description: '조회 실패 - 시퀀스 미조회' })
   async findWikiOfSpecificCoworker(@Param('coworkerId') coworkerId: number): Promise<CoworkerWikiResponseDto> {
     return this.coworkerService.findWikiOfSpecificCoworker(coworkerId);
