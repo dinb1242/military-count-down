@@ -1,64 +1,96 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { ProjectWikiResponseDto } from '../project/dto/response/project-wiki-response.dto';
-import { ProjectWikiRevisionResponseDto } from '../project/dto/response/project-wiki-revision-response.dto';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { AccidentWikiResponseDto } from './dto/response/accident-wiki-response.dto';
+import { PrismaService } from '../common/prisma/prisma.service';
+import { AccidentWikiRevisionResponseDto } from './dto/response/accident-wiki-revision-response.dto';
 
 @Injectable()
 export class AccidentService {
-  async upsertWiki(
+  constructor(private readonly prismaService: PrismaService) {}
+
+  async createWiki(
     user: any,
-    projectId: number,
-    projectWikiCreateInput: Prisma.ProjectWikiCreateInput,
-  ): Promise<ProjectWikiResponseDto> {
+    accidentWikiCreateInput: Prisma.AccidentWikiCreateInput,
+  ): Promise<AccidentWikiResponseDto> {
+    // 이미 생성된 위키가 있다면 예외를 발생시킨다.
+    await this.prismaService.accidentWiki.count().then((res) => {
+      if (res > 0) throw new BadRequestException('이미 기존에 존재하는 사건/사고 위키 항목이 존재합니다.');
+    });
+
     const { id: authorId } = user;
 
     const wikiRevisionObj: any = {
-      projectWikiRevision: {
+      accidentWikiRevision: {
         create: {
           author: {
             connect: { id: authorId },
           },
-          wikiContent: projectWikiCreateInput.wikiContent,
+          wikiContent: accidentWikiCreateInput.wikiContent,
         },
       },
     };
 
-    const wikiEntity = await this.prismaService.projectWiki.upsert({
-      where: { projectId: projectId },
-      create: {
-        ...projectWikiCreateInput,
-        ...wikiRevisionObj,
-      },
-      update: {
-        wikiContent: projectWikiCreateInput.wikiContent,
-        ...wikiRevisionObj,
+    const wikiEntity = await this.prismaService.accidentWiki.create({
+      data: {
+        ...accidentWikiCreateInput,
+        accidentWikiRevision: wikiRevisionObj,
       },
     });
 
-    return new ProjectWikiResponseDto(wikiEntity);
+    return new AccidentWikiResponseDto(wikiEntity);
   }
 
-  async findWikiOfSpecificProject(projectId: number): Promise<ProjectWikiResponseDto> {
-    const wikiEntity = await this.prismaService.projectWiki
-      .findUniqueOrThrow({
-        where: { projectId: projectId },
-      })
-      .catch(() => {
-        throw new NotFoundException('일치하는 프로젝트를 찾을 수 없습니다. projectId=' + projectId);
-      });
+  async updateWiki(user: any, accidentWikiUpdateInput: Prisma.AccidentWikiUpdateInput) {
+    const { authorId } = user.id;
 
-    return new ProjectWikiResponseDto(wikiEntity);
+    const wikiId: number = await this.prismaService.accidentWiki.findMany().then((res) => {
+      if (res.length > 0) {
+        throw new BadRequestException(
+          '사건/사고 위키가 한 개 이상 존재합니다. 오동작입니다, 데이터베이스 점검이 필요합니다.',
+        );
+      } else {
+        return res[0].id;
+      }
+    });
+
+    const wikiEntity = await this.prismaService.accidentWiki.update({
+      where: { id: wikiId },
+      data: {
+        ...accidentWikiUpdateInput,
+        accidentWikiRevision: {
+          create: {
+            author: { connect: { id: authorId } },
+            wikiContent: accidentWikiUpdateInput.wikiContent.toString(),
+          },
+        },
+      },
+    });
+
+    return new AccidentWikiResponseDto(wikiEntity);
   }
 
-  async findAllRevisionOfSpecificProject(projectWikiId: number) {
-    const wikiRevisions: Array<any> = await this.prismaService.projectWikiRevision.findMany({
-      where: { projectWikiId: projectWikiId },
+  async findWikiOfAccident(): Promise<AccidentWikiResponseDto> {
+    const wikiEntity = await this.prismaService.accidentWiki.findMany().then((res) => {
+      if (res.length > 0) {
+        throw new BadRequestException(
+          '사건/사고 위키가 한 개 이상 존재합니다. 오동작입니다, 데이터베이스 점검이 필요합니다.',
+        );
+      } else {
+        return res[0];
+      }
+    });
+
+    return new AccidentWikiResponseDto(wikiEntity);
+  }
+
+  async findAllRevisionOfAccident() {
+    const wikiRevisions: Array<any> = await this.prismaService.accidentWikiRevision.findMany({
       include: {
-        projectWiki: true,
+        accidentWiki: true,
         author: true,
       },
     });
 
-    return wikiRevisions.map((eachEntity) => new ProjectWikiRevisionResponseDto(eachEntity));
+    return wikiRevisions.map((eachEntity) => new AccidentWikiRevisionResponseDto(eachEntity));
   }
 }

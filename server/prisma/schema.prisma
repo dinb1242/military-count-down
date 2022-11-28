@@ -120,7 +120,7 @@ model AccidentWiki {
 
 model AccidentWikiRevision {
   id             Int          @id @default(autoincrement())
-  wikiContent    String?
+  wikiContent    String
   accidentWiki   AccidentWiki @relation(fields: [accidentWikiId], references: [id])
   accidentWikiId Int
   author         User         @relation(fields: [authorId], references: [id])
