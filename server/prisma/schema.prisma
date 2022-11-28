@@ -84,6 +84,8 @@ model Project {
   title       String
   content     String?
   projectWiki ProjectWiki?
+  file        File?        @relation(fields: [fileId], references: [id])
+  fileId      Int?         @unique
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 }
@@ -133,6 +135,7 @@ model File {
   fileSize  Int
   mimeType  String
   coworker  Coworker?
+  project   Project?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }

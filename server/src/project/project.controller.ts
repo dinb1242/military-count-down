@@ -25,8 +25,8 @@ export class ProjectController {
   @ApiBearerAuth(HttpHeaders.AUTHORIZATION)
   @Post()
   @ApiOperation({
-    summary: '생성 API',
-    description: '진행한 프로젝트를 생성한다.',
+    summary: '생성 API - File(Optional)',
+    description: '진행한 프로젝트를 생성한다. 필요한 경우 파일을 업로드 할 수 있다.',
   })
   @ApiCreatedResponse({ description: '생성 성공', type: ProjectResponseDto })
   async create(@Body() requestDto: CreateProjectDto): Promise<ProjectResponseDto> {

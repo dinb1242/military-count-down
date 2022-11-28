@@ -58,6 +58,11 @@ export class FileController {
           connect: { id: bbsId },
         };
         break;
+      case BbsType.PROJECT:
+        fileCreateInput.project = {
+          connect: { id: bbsId },
+        };
+        break;
       default:
         throw new BadRequestException('일치하는 bbsType 을 찾을 수 없습니다. bbsType=' + bbsType);
     }
