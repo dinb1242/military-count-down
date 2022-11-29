@@ -42,6 +42,7 @@ model User {
   coworkerWiki  CoworkerWikiRevision[]
   projectWiki   ProjectWikiRevision[]
   accidentWiki  AccidentWikiRevision[]
+  retrospect Retrospect[]
   createdAt     DateTime               @default(now())
   updatedAt     DateTime               @updatedAt
   status        Int                    @default(1)
@@ -126,6 +127,16 @@ model AccidentWikiRevision {
   author         User         @relation(fields: [authorId], references: [id])
   authorId       Int
   createdAt      DateTime     @default(now())
+}
+
+model Retrospect {
+  id Int @default(autoincrement()) @id
+  title String
+  content String?
+  author User @relation(fields: [authorId], references: [id])
+  authorId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model File {
