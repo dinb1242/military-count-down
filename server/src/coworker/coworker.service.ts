@@ -44,6 +44,9 @@ export class CoworkerService {
   async findAll(): Promise<CoworkerResponseDto[]> {
     const coworkerEntityList = await this.prismaService.coworker.findMany({
       orderBy: { createdAt: 'desc' },
+      include: {
+        file: true,
+      },
     });
 
     return coworkerEntityList.map((value) => new CoworkerResponseDto(value));
@@ -53,6 +56,7 @@ export class CoworkerService {
     const coworkerEntity: CoworkerModel = await this.prismaService.coworker
       .findUniqueOrThrow({
         where: { id: id },
+        include: { file: true },
       })
       .catch(() => {
         throw new NotFoundException('일치하는 개발자를 찾을 수 없습니다.');

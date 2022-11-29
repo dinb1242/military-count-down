@@ -10,6 +10,11 @@ import { HttpHeaders } from './common/enums/http-headers.enum';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors({
+    origin: '*',
+    allowedHeaders: '*',
+  });
+
   // 역직렬화 적용 (TypeORM 기반 DTO toEntity 에서 유효)
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
