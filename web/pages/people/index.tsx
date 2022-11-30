@@ -1,8 +1,8 @@
 import { NextPage } from "next";
 import Head from "next/head";
-import Link from 'next/link';
-import { HiPlusCircle, HiUserCircle } from 'react-icons/hi'
-import BtnBack from '../../components/buttons/btn-back';
+import Link from "next/link";
+import { HiPlusCircle, HiUserCircle } from "react-icons/hi";
+import BtnBack from "../../components/buttons/btn-back";
 import BtnSignOut from "../../components/buttons/btn-sign-out";
 import Card from "../../components/cards/card";
 

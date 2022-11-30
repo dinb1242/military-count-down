@@ -97,4 +97,16 @@ export class AuthController {
       .setHeader('Refresh-Token', result.refreshToken)
       .send();
   }
+
+  @ApiBearerAuth(HttpHeaders.AUTHORIZATION)
+  @Post('check')
+  @ApiOperation({
+    summary: 'Access Token 체크 API',
+    description: 'Access Token 의 유효성을 검증한다.',
+  })
+  @ApiOkResponse({ description: '유효', type: Boolean })
+  @ApiUnauthorizedResponse({ description: '미유효' })
+  async checkAccessToken(): Promise<boolean> {
+    return true;
+  }
 }

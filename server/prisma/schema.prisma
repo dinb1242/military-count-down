@@ -32,60 +32,123 @@ model AccessHistory {
 }
 
 model User {
-  id            Int             @id @default(autoincrement())
-  email         String          @unique
+  id            Int                    @id @default(autoincrement())
+  email         String                 @unique
   password      String
   name          String
-  phone         String          @unique
+  phone         String                 @unique
   authToken     AuthToken[]
   accessHistory AccessHistory[]
-  coworkerWiki CoworkerWikiRevision[]
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  status        Int             @default(1)
+  coworkerWiki  CoworkerWikiRevision[]
+  projectWiki   ProjectWikiRevision[]
+  accidentWiki  AccidentWikiRevision[]
+  retrospect Retrospect[]
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+  status        Int                    @default(1)
 }
 
 model Coworker {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  devPart   DevPart
-  projects  String[]
+  id           Int           @id @default(autoincrement())
+  name         String        @unique
+  devPart      DevPart
+  projects     String[]
   coworkerWiki CoworkerWiki?
-  file File? @relation(fields: [fileId], references: [id])
-  fileId Int? @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  file         File?         @relation(fields: [fileId], references: [id])
+  fileId       Int?          @unique
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 }
 
 model CoworkerWiki {
-  id Int @default(autoincrement()) @id
-  wikiContent String?
-  coworker Coworker @relation(fields: [coworkerId], references: [id], onUpdate: Cascade)
-  coworkerId Int @unique
+  id                   Int                    @id @default(autoincrement())
+  wikiContent          String?
+  coworker             Coworker               @relation(fields: [coworkerId], references: [id], onUpdate: Cascade)
+  coworkerId           Int                    @unique
   coworkerWikiRevision CoworkerWikiRevision[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
 }
 
 model CoworkerWikiRevision {
-  id Int @default(autoincrement()) @id
-  wikiContent String?
-  coworkerWiki CoworkerWiki @relation(fields: [coworkerWikiId], references: [id])
+  id             Int          @id @default(autoincrement())
+  wikiContent    String?
+  coworkerWiki   CoworkerWiki @relation(fields: [coworkerWikiId], references: [id])
   coworkerWikiId Int
+  author         User         @relation(fields: [authorId], references: [id])
+  authorId       Int
+  createdAt      DateTime     @default(now())
+}
+
+model Project {
+  id          Int          @id @default(autoincrement())
+  title       String
+  content     String?
+  projectWiki ProjectWiki?
+  file        File?        @relation(fields: [fileId], references: [id])
+  fileId      Int?         @unique
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model ProjectWiki {
+  id                  Int                   @id @default(autoincrement())
+  wikiContent         String?
+  project             Project               @relation(fields: [projectId], references: [id])
+  projectId           Int                   @unique
+  projectWikiRevision ProjectWikiRevision[]
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+}
+
+model ProjectWikiRevision {
+  id            Int         @id @default(autoincrement())
+  wikiContent   String?
+  projectWiki   ProjectWiki @relation(fields: [projectWikiId], references: [id])
+  projectWikiId Int
+  author        User        @relation(fields: [authorId], references: [id])
+  authorId      Int
+  createdAt     DateTime    @default(now())
+}
+
+model AccidentWiki {
+  id                   Int                    @id @default(autoincrement())
+  wikiContent          String?
+  accidentWikiRevision AccidentWikiRevision[]
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+}
+
+model AccidentWikiRevision {
+  id             Int          @id @default(autoincrement())
+  wikiContent    String
+  accidentWiki   AccidentWiki @relation(fields: [accidentWikiId], references: [id])
+  accidentWikiId Int
+  author         User         @relation(fields: [authorId], references: [id])
+  authorId       Int
+  createdAt      DateTime     @default(now())
+}
+
+model Retrospect {
+  id Int @default(autoincrement()) @id
+  title String
+  content String?
   author User @relation(fields: [authorId], references: [id])
   authorId Int
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model File {
-  id Int @default(autoincrement()) @id
-  filename String
-  filePath String
-  fileSize Int
-  mimeType String
-  coworker Coworker?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        Int       @id @default(autoincrement())
+  filename  String
+  filePath  String
+  fileSize  Int
+  mimeType  String
+  coworker  Coworker?
+  project   Project?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model Example {

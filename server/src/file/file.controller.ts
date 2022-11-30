@@ -3,8 +3,8 @@ import { FileService } from './file.service';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { HttpHeaders } from '../common/enums/http-headers.enum';
-import { multerOptions } from '../common/lib/multer.option';
-import { BbsType } from '../common/enums/bbs-type.enum';
+import { multerOptions } from './lib/multer.option';
+import { BbsType } from './enums/bbs-type.enum';
 import { Prisma } from '@prisma/client';
 import { FileResponseDto } from './dto/response/file-response.dto';
 
@@ -55,6 +55,11 @@ export class FileController {
     switch (bbsType) {
       case BbsType.COWORKER:
         fileCreateInput.coworker = {
+          connect: { id: bbsId },
+        };
+        break;
+      case BbsType.PROJECT:
+        fileCreateInput.project = {
           connect: { id: bbsId },
         };
         break;
