@@ -66,8 +66,13 @@ export const SignIn = () => {
 
     await AuthApi.signIn({ email, password })
       .then((res: any) => {
-        console.log(res);
-        if (res.data.success) router.push('/');
+        // 로그인에 성공하였다면, 토큰을 LocalStorage 에 저장한다.
+        if (res.data.success) {
+          const { accessToken, refreshToken } = res.data.data;
+          localStorage.setItem('Access-Token', accessToken);
+          localStorage.setItem('Refresh-Token', refreshToken);
+          router.push('/');
+        }
       }).catch(() => {
         setIsModalOpen(true);
       })
