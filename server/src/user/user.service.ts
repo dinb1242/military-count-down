@@ -98,4 +98,13 @@ export class UserService {
       },
     });
   }
+
+  /**
+   * 이메일 존재 여부를 체크한다.
+   * @param email
+   */
+  async checkEmail(email: string) {
+    const result = !!(await this.prismaService.user.findUnique({ where: { email: email } }));
+    return !result;
+  }
 }

@@ -1,9 +1,10 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/request/create-user.dto';
-import { ApiBadRequestResponse, ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Public } from '../auth/decorators/auth-public.decorator';
 import { UserResponseDto } from './dto/response/user-response.dto';
+import { CheckUserEmailDto } from './dto/request/check-user-email.dto';
 
 @ApiTags('유저 API')
 @Controller('user')
@@ -27,5 +28,17 @@ export class UserController {
   })
   async signUpUser(@Body() userData: CreateUserDto): Promise<UserResponseDto> {
     return await this.userService.signUpUser(userData);
+  }
+
+  @Public()
+  @Post('check')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: '이메일 중복 여부 확인 API',
+    description: '이메일을 Body 로 전달받아 해당하는 이메일을 사용할 수 있는지 체크한다.',
+  })
+  @ApiOkResponse({ description: '사용 가능 여부', type: Boolean })
+  async checkEmail(@Body() requestDto: CheckUserEmailDto) {
+    return this.userService.checkEmail(requestDto.email);
   }
 }

@@ -89,7 +89,7 @@ export const SignUpAgree = () => {
         if (!isAllAgree) {
             openModal();
         } else {
-            router.push('/auth/sign-up/create');
+            router.push('/auth/sign-up/create?agreeYn=true', '/auth/sign-up/create');
         }
     }
 
