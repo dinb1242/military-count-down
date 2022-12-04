@@ -21,12 +21,11 @@ export const SignIn = () => {
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const [isLoading, setIsLoading] = useState(false);
-
   const handleModal = () => {
     setIsModalOpen((a) => !a);
   };
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.currentTarget;
