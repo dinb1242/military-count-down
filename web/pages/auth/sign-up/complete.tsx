@@ -1,7 +1,26 @@
-import BonobonoClap from '../../../public/bonobono-thinking.gif'
-import Image from 'next/image';
-import Link from 'next/link';
-import { HiHome } from 'react-icons/hi';
+import BonobonoClap from "../../../public/bonobono-thinking.gif";
+import Image from "next/image";
+import Link from "next/link";
+import { NextPageContext } from "next";
+import { GoSignIn } from "react-icons/go";
+
+export const getServerSideProps = (context: NextPageContext) => {
+    const { complete } = context.query;
+
+    if (!complete) {
+        return {
+            redirect: {
+                permanent: true,
+                destination: '/auth/sign-in'
+            },
+            props: {}
+        }
+    }
+
+    return {
+        props: {}
+    }
+}
 
 export const Complete = () => {
     return (
@@ -30,9 +49,9 @@ export const Complete = () => {
                     <br/>
                         <span className={ 'font-bold text-xl' }>지현이의 전역일과 미림의 다양한 정보를 담고 있는</span>
                         <span className={ 'font-bold text-xl' }>미림 위키를 만나보세요.</span>
-                    <Link href={ '/' }>
+                    <Link href={ '/auth/sign-in' }>
                         <a className={ 'mt-4 text-xl font-bold bg-blue-500 text-white py-2 px-4 rounded hover:duration-200 hover:bg-blue-600 flex flex-row items-center active:bg-blue-700' }>
-                            <HiHome className={ 'mr-1' } /> 메인페이지로 이동
+                            <GoSignIn className={ 'mr-1' } /> 로그인 페이지로 이동
                         </a>
                     </Link>
                 </div>
