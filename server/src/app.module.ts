@@ -39,7 +39,7 @@ if (process.env.NODE_ENV === 'local') {
     // 정적 파일을 /statics 라우트로 제공한다.
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
-      serveRoot: '/statics',
+      serveRoot: '/public',
     }),
     ExampleModule,
     UserModule,

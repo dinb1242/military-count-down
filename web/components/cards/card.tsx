@@ -1,12 +1,27 @@
-import {NextPage} from "next";
-import {HiUserCircle} from "react-icons/hi";
+import { NextPage } from "next";
+import { HiUserCircle } from "react-icons/hi";
+import Image from "next/image";
+import { ENDPOINT } from "../../constants/api.constant";
+import { AiFillDelete, AiFillEdit, AiOutlineUser } from "react-icons/ai";
+import { GoTrashcan } from 'react-icons/go';
+import { MdOutlineReadMore } from 'react-icons/md';
+import { FaEllipsisV } from 'react-icons/fa';
 
 interface CardProps {
-    icon?: any;
-    name?: string;
-    badgeDesc?: string;
-    badgeColor?: 'badge-primary' | 'badge-secondary' | 'badge-accent' | 'badge-ghost' | 'badge-info' | 'badge-success' | 'badge-warning' | 'badge-error';
-    tags?: string[];
+  profileImage?: any;
+  name?: string;
+  badgeDesc?: string;
+  badgeColor?:
+    | "badge-primary"
+    | "badge-secondary"
+    | "badge-accent"
+    | "badge-ghost"
+    | "badge-info"
+    | "badge-success"
+    | "badge-warning"
+    | "badge-error"
+    | string;
+  tags?: string[];
 }
 
 /**
@@ -18,30 +33,83 @@ interface CardProps {
  * @param tags 태그 리스트
  * @constructor
  */
-export const Card: NextPage<CardProps> = ({ icon, name, badgeDesc, badgeColor, tags }) => {
-
-    return (
-        <div className="card h-auto w-80 bg-base-100 shadow-xl hover:bg-gray-200 hover:duration-200 active:bg-gray-300 transition hover:-translate-y-2">
-            <figure>{ icon === undefined ? <HiUserCircle className={ 'w-64 h-64' }/> : icon }</figure>
-            <div className="card-body">
-                <h2 className="card-title">
-                    { name }
-                    {
-                        badgeDesc === undefined ?
-                            null :
-                            <div className={ badgeColor === undefined ? 'badge' : 'badge ' + badgeColor }>{ badgeDesc }</div>
-                    }
-                </h2>
-                <div className="card-actions mt-2">
-                    {
-                        tags?.map((eachTag, idx) => {
-                            return <div key={ idx } className="badge badge-outline">{ eachTag }</div>
-                        })
-                    }
-                </div>
-            </div>
+export const Card: NextPage<CardProps> = ({
+  profileImage,
+  name,
+  badgeDesc,
+  badgeColor,
+  tags,
+}) => {
+  return (
+    <div className="card h-auto w-80 bg-base-100 shadow-xl transition hover:-translate-y-2 cursor-pointer">
+      <div className={"flex justify-end p-2"}>
+        <div
+          className="dropdown dropdown-left"
+          onClick={(event) => {
+            event.stopPropagation();
+          }}
+        >
+          <label
+            tabIndex={0}
+            className="btn btn-circle btn-ghost btn-sm text-gray-500"
+          >
+            <FaEllipsisV className={'w-4 h-4'} />
+          </label>
+          <ul
+            tabIndex={0}
+            className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
+          >
+            <li>
+              <a><AiFillEdit />수정</a>
+            </li>
+            <li>
+              <a><AiFillDelete />삭제</a>
+            </li>
+          </ul>
         </div>
-    );
-}
+      </div>
+      <div className={"flex justify-center"}>
+        <div className={"h-64"}>
+          {profileImage === undefined ? (
+            <HiUserCircle size={"100%"} />
+          ) : (
+            <div className={"relative p-28 mt-4"}>
+              <Image
+                className={"rounded-full"}
+                src={`${ENDPOINT}/${profileImage}`}
+                layout={"fill"}
+                objectFit={"cover"}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="card-body">
+        <h2 className="card-title">
+          {name}
+          {badgeDesc === undefined ? null : (
+            <div
+              className={
+                badgeColor === undefined ? "badge" : "badge " + badgeColor
+              }
+            >
+              {badgeDesc}
+            </div>
+          )}
+        </h2>
+        <div className="card-actions mt-2">
+          {tags?.map((eachTag, idx) => {
+            return (
+              <div key={idx} className="badge badge-outline">
+                {eachTag}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default Card;

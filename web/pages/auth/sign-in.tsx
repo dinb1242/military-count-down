@@ -5,6 +5,7 @@ import AuthApi from "../../apis/auth.api";
 import { useRouter } from "next/router";
 import AlertModal from "../../components/modals/alert.modal";
 import { LoadingSpin } from "../../components/spinning/loading.spin";
+import { Cookies } from 'next/dist/server/web/spec-extension/cookies';
 
 export const SignIn = () => {
   const router = useRouter();
@@ -74,6 +75,7 @@ export const SignIn = () => {
           const { accessToken, refreshToken } = res.data.data;
           localStorage.setItem("Access-Token", accessToken);
           localStorage.setItem("Refresh-Token", refreshToken);
+
           router.push("/");
         }
       })
