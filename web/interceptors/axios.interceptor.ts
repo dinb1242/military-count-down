@@ -1,6 +1,7 @@
 import axios from "axios";
 import { ENDPOINT } from "../constants/api.constant";
 import { ACCESS_TOKEN } from '../constants/token.constants';
+import { Cookies } from 'next/dist/server/web/spec-extension/cookies';
 
 export const axiosInstance = axios.create({
   baseURL: ENDPOINT,

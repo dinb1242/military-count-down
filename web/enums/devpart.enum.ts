@@ -1,0 +1,5 @@
+export enum DevPart {
+  FULL_STACK = 'FULL_STACK',
+  BACKEND = 'BACKEND',
+  FRONTEND = 'FRONTEND'
+}
