@@ -1,7 +1,7 @@
-import { NextPage } from "next";
+import { NextPage, NextPageContext } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { HiPlusCircle, HiUserCircle } from "react-icons/hi";
+import { HiPlusCircle } from "react-icons/hi";
 import BtnBack from "../../components/buttons/btn-back";
 import BtnSignOut from "../../components/buttons/btn-sign-out";
 import Card from "../../components/cards/card";
@@ -10,13 +10,13 @@ import { useEffect, useState } from "react";
 import { DevPart } from "../../enums/devpart.enum";
 
 interface FindAll {
-    id: number;
-    name: string;
-    devPart: string;
-    projects: string[];
-    profileImage: ProfileImage;
-    createdAt: string;
-    updatedAt: string;
+  id: number;
+  name: string;
+  devPart: string;
+  projects: string[];
+  profileImage: ProfileImage;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface ProfileImage {
@@ -29,16 +29,31 @@ interface ProfileImage {
     updatedAt: string
 }
 
+export const getServerSideProps = (context: NextPageContext) => {
+
+
+
+  return {
+    props: {}
+  }
+}
+
 const People: NextPage = () => {
+
+    const [t, st] = useState(-1);
 
     const [findAll, setFindAll] = useState<Array<FindAll>>();
 
+    const handler = () => {
+      st((prev) => prev+1);
+    }
+
     useEffect(() => {
-        CoworkerApi.findAll()
-          .then(res => {
-              setFindAll([...res.data.data])
-          })
-    }, [])
+      CoworkerApi.findAll()
+        .then(res => {
+          setFindAll([...res.data.data])
+        })
+    }, [t])
 
     return (
       <div className={ 'min-h-screen p-8' }>
@@ -80,21 +95,13 @@ const People: NextPage = () => {
                         return (
                           <Link key={ eachData.id } href={ `/people/wiki/${ eachData.id }` }>
                               <>
-                                  <Card profileImage={ eachData.profileImage.filePath } name={ eachData.name } badgeDesc={ eachData.devPart }
-                                        badgeColor={ badgeColor } tags={ eachData.projects } />
+                                  <Card id={eachData.id} profileImage={ eachData.profileImage.filePath } name={ eachData.name } badgeDesc={ eachData.devPart }
+                                        badgeColor={ badgeColor } tags={ eachData.projects } handler={ handler } />
                               </>
                           </Link>
                         )
                     })
                   }
-
-                  {/*<Link href={ '/people/wiki/1' }>*/}
-                  {/*    <>*/}
-                  {/*        <Card icon={ <HiUserCircle className={ 'w-64 h-64' }/> } name={ '백형서' }*/}
-                  {/*              badgeDesc={ '풀스택 개발자' }*/}
-                  {/*              tags={ ['dsfsdjfiajsdif', 'dsfjsidafjasdifjasdiof', 'dsafijsadfiosadjfoisad'] }/>*/}
-                  {/*    </>*/}
-                  {/*</Link>*/}
               </div>
           </div>
       </div>

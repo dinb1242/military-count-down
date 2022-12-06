@@ -6,8 +6,11 @@ import { AiFillDelete, AiFillEdit, AiOutlineUser } from "react-icons/ai";
 import { GoTrashcan } from 'react-icons/go';
 import { MdOutlineReadMore } from 'react-icons/md';
 import { FaEllipsisV } from 'react-icons/fa';
+import CoworkerApi from '../../apis/coworker.api';
+import { useState } from 'react';
 
 interface CardProps {
+  id: number
   profileImage?: any;
   name?: string;
   badgeDesc?: string;
@@ -22,6 +25,7 @@ interface CardProps {
     | "badge-error"
     | string;
   tags?: string[];
+  handler: () => void
 }
 
 /**
@@ -34,12 +38,20 @@ interface CardProps {
  * @constructor
  */
 export const Card: NextPage<CardProps> = ({
+  id,
   profileImage,
   name,
   badgeDesc,
   badgeColor,
   tags,
+  handler
 }) => {
+
+  // 삭제
+  const handleDeleteClick = () => {
+    CoworkerApi.delete(id).then(() => handler());
+  }
+
   return (
     <div className="card h-auto w-80 bg-base-100 shadow-xl transition hover:-translate-y-2 cursor-pointer">
       <div className={"flex justify-end p-2"}>
@@ -63,7 +75,7 @@ export const Card: NextPage<CardProps> = ({
               <a><AiFillEdit />수정</a>
             </li>
             <li>
-              <a><AiFillDelete />삭제</a>
+              <a onClick={ handleDeleteClick }><AiFillDelete />삭제</a>
             </li>
           </ul>
         </div>
