@@ -2,15 +2,12 @@ import { NextPage } from "next";
 import { HiUserCircle } from "react-icons/hi";
 import Image from "next/image";
 import { ENDPOINT } from "../../constants/api.constant";
-import { AiFillDelete, AiFillEdit, AiOutlineUser } from "react-icons/ai";
-import { GoTrashcan } from 'react-icons/go';
-import { MdOutlineReadMore } from 'react-icons/md';
-import { FaEllipsisV } from 'react-icons/fa';
-import CoworkerApi from '../../apis/coworker.api';
-import { useState } from 'react';
+import { AiFillDelete, AiFillEdit } from "react-icons/ai";
+import { FaEllipsisV } from "react-icons/fa";
+import CoworkerApi from "../../apis/coworker.api";
 
 interface CardProps {
-  id: number
+  id: number;
   profileImage?: any;
   name?: string;
   badgeDesc?: string;
@@ -25,7 +22,7 @@ interface CardProps {
     | "badge-error"
     | string;
   tags?: string[];
-  handler: () => void
+  handler: () => void;
 }
 
 /**

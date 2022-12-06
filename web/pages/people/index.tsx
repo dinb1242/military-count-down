@@ -1,4 +1,4 @@
-import { NextPage, NextPageContext } from "next";
+import { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { HiPlusCircle } from "react-icons/hi";
@@ -27,15 +27,6 @@ interface ProfileImage {
     mimeType: string,
     createdAt: string,
     updatedAt: string
-}
-
-export const getServerSideProps = (context: NextPageContext) => {
-
-
-
-  return {
-    props: {}
-  }
 }
 
 const People: NextPage = () => {
@@ -85,7 +76,7 @@ const People: NextPage = () => {
                   {
                     findAll &&
                     findAll.map(eachData => {
-                        let badgeColor = '';
+                        let badgeColor;
                         if (eachData.devPart === DevPart.BACKEND)
                             badgeColor = 'badge-secondary';
                         else if (eachData.devPart === DevPart.FRONTEND)
