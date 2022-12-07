@@ -17,6 +17,7 @@ export class ProjectService {
 
   async findAll(): Promise<ProjectResponseDto[]> {
     const projectEntityList = await this.prismaService.project.findMany({
+      include: { file: true },
       orderBy: { createdAt: 'desc' },
     });
 
