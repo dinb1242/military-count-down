@@ -2,15 +2,14 @@ import { NextPage } from "next";
 import { HiUserCircle } from "react-icons/hi";
 import Image from "next/image";
 import { ENDPOINT } from "../../constants/api.constant";
-import { AiFillDelete, AiFillEdit, AiOutlineUser } from "react-icons/ai";
-import { GoTrashcan } from 'react-icons/go';
-import { MdOutlineReadMore } from 'react-icons/md';
-import { FaEllipsisV } from 'react-icons/fa';
-import CoworkerApi from '../../apis/coworker.api';
-import { useState } from 'react';
+import { AiFillDelete, AiFillEdit } from "react-icons/ai";
+import { FaEllipsisV } from "react-icons/fa";
+import CoworkerApi from "../../apis/coworker.api";
+import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 
 interface CardProps {
-  id: number
+  id: number;
   profileImage?: any;
   name?: string;
   badgeDesc?: string;
@@ -25,7 +24,7 @@ interface CardProps {
     | "badge-error"
     | string;
   tags?: string[];
-  handler: () => void
+  handler: () => void;
 }
 
 /**
@@ -47,8 +46,16 @@ export const Card: NextPage<CardProps> = ({
   handler
 }) => {
 
+  const router = useRouter();
+
+  // 수정
+  const handleUpdateClick = () => {
+    router.push(`/people/${id}`);
+  }
+
   // 삭제
   const handleDeleteClick = () => {
+    toast.success('함께한 개발자가 삭제되었습니다.');
     CoworkerApi.delete(id).then(() => handler());
   }
 
@@ -72,7 +79,7 @@ export const Card: NextPage<CardProps> = ({
             className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
           >
             <li>
-              <a><AiFillEdit />수정</a>
+              <a onClick={ handleUpdateClick }><AiFillEdit />수정</a>
             </li>
             <li>
               <a onClick={ handleDeleteClick }><AiFillDelete />삭제</a>
