@@ -3,8 +3,50 @@ import BtnSignOut from "../../components/buttons/btn-sign-out";
 import Hero from "../../components/heros/hero";
 import Link from "next/link";
 import {HiPlusCircle} from "react-icons/hi";
+import { useEffect, useState } from 'react';
+import ProjectApi from '../../apis/project.api';
+import { ENDPOINT } from '../../constants/api.constant';
+
+interface FindAll {
+    id: number,
+    title: string,
+    content: string,
+    thumbnailList: ThumbnailList,
+    createdAt: string,
+    updatedAt: string
+}
+
+interface ThumbnailList {
+    id: number,
+    filePath: string,
+    filename: string,
+    fileSize: number,
+    mimeType: string,
+    createdAt: string,
+    updatedAt: string
+}
 
 export const Projects = () => {
+
+    const [findAll, setFindAll] = useState<FindAll[]>();
+
+    // 데이터 Fetch
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await ProjectApi.findAll();
+                const { data } = response.data;
+                setFindAll(data);
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        fetchData();
+    }, [])
+
+    if (!findAll)
+        return null;
+
     return (
         <div className={ 'min-h-screen p-8' }>
             <div className={ 'flex flex-row justify-between' }>
@@ -23,8 +65,13 @@ export const Projects = () => {
 
                 {/* 본문 */}
                 <div className={ 'border grid grid-cols-1 gap-y-4 p-8 w-5/6' }>
-                    <Hero title={ 'K-Digital Training (2021.02)' } content={ '내용' }></Hero>
-                    <Hero title={ 'K-Digital Training (2021.02)' } content={ '내용' }></Hero>
+                    {
+                        findAll && findAll.map(eachData => {
+                            return (
+                                <Hero key={ eachData.id } title={ eachData.title } content={ eachData.content } backgroundImg={ `${ENDPOINT}/${eachData.thumbnailList.filePath}` } />
+                            )
+                        })
+                    }
                     <div className="card 2xl:w-96 w-80 bg-base-100 shadow-xl image-full transition hover:-translate-y-2 cursor-pointer">
                         <figure><img src="https://placeimg.com/400/225/arch" alt="Shoes" /></figure>
                         <div className="card-body">

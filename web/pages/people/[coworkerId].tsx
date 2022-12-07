@@ -1,10 +1,5 @@
-import { NextPage } from "next";
-import {
-  HiMinusCircle,
-  HiOutlineUserAdd,
-  HiPlus,
-  HiPlusCircle,
-} from "react-icons/hi";
+import { NextPage, NextPageContext } from "next";
+import { HiMinusCircle, HiPlus, HiPlusCircle } from "react-icons/hi";
 import BtnBack from "../../components/buttons/btn-back";
 import { InputType } from "../../components/inputs/input";
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
@@ -17,8 +12,9 @@ import Image from "next/image";
 import FileApi from "../../apis/file.api";
 import { BbsType } from "../../enums/bbstype.enum";
 import { useRouter } from "next/router";
+import { AiFillEdit } from "react-icons/ai";
+import { ENDPOINT } from "../../constants/api.constant";
 import { toast } from "react-toastify";
-import { AiOutlineCheck } from "react-icons/ai";
 
 interface InputState {
   name: string;
@@ -42,9 +38,23 @@ enum InputName {
   EACH_PROJECT = "eachProject",
 }
 
-export const PeopleCreate: NextPage = () => {
+interface Props {
+  coworkerId: number;
+}
 
+export const getServerSideProps = (context: NextPageContext) => {
+  const { coworkerId } = context.query;
+  return {
+    props: {
+      coworkerId,
+    },
+  };
+};
+
+export const PeopleUpdate: NextPage<Props> = ({ coworkerId }) => {
   const router = useRouter();
+
+  const [findOne, setFindOne] = useState();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -171,7 +181,7 @@ export const PeopleCreate: NextPage = () => {
   };
 
   // 생성 핸들러
-  const handleCreateClick = () => {
+  const handleUpdateClick = () => {
     setIsLoading(true);
 
     if (!validate()) {
@@ -180,7 +190,7 @@ export const PeopleCreate: NextPage = () => {
       return;
     }
 
-    CoworkerApi.create({
+    CoworkerApi.update(coworkerId, {
       name: input.name,
       devPart: input.devPart,
       projects: projectTag.map((eachTag) => eachTag.tag),
@@ -193,18 +203,19 @@ export const PeopleCreate: NextPage = () => {
         if (success) {
           if (imgRef.current.files.length > 0) {
             const formData = new FormData();
-            formData.append('file', imgRef.current.files[0]);
+            formData.append("file", imgRef.current.files[0]);
             FileApi.upload(BbsType.COWORKER, id, formData)
-              .then(res => {
-                router.push('/people')
-              }).catch(err => {
-              console.log(err.response.data.message);
-            })
+              .then((res) => {
+                router.push("/people");
+              })
+              .catch((err) => {
+                console.log(err.response.data.message);
+              });
           }
-          toast.success('함께한 개발자가 생성되었습니다.', {
-            icon: <AiOutlineCheck />
+          toast.success('함께한 개발자가 수정되었습니다.', {
+            icon: <AiFillEdit className={'text-xl'} />
           });
-          router.push('/people')
+          router.push("/people");
         }
       })
       .catch((err) => {
@@ -220,16 +231,45 @@ export const PeopleCreate: NextPage = () => {
   };
 
   const [isDuplicatedModalOpen, setIsDuplicatedModalOpen] = useState(false);
-  const [isDuplicatedModalMessage, setIsDuplicatedModalMessage] = useState('');
+  const [isDuplicatedModalMessage, setIsDuplicatedModalMessage] = useState("");
   const handleDuplicatedModal = () => {
     setIsDuplicatedModalOpen((currentOpenState) => !currentOpenState);
   };
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await CoworkerApi.findOne(coworkerId);
+        setFindOne(response.data.data);
+        setInput({
+          name: response.data.data.name,
+          devPart: response.data.data.devPart,
+          eachProject: "",
+        });
+        const projects: string[] = response.data.data.projects;
+        const projectTagList = projects.map((value, idx) => {
+          return {
+            id: idx,
+            tag: value
+          }
+        });
+        setProjectTag([...projectTagList])
+        setImageUrl(`${ENDPOINT}/${response.data.data.profileImage.filePath}`);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchData();
+  }, []);
+
+  // 클린업
+  useEffect(() => {
     return () => {
       URL.revokeObjectURL(imageUrl);
     }
-  }, [])
+  }, []);
+
+  if (!findOne) return null;
 
   return (
     <div className={"min-h-screen p-8"}>
@@ -243,7 +283,7 @@ export const PeopleCreate: NextPage = () => {
       <AlertModal
         handleModal={handleDuplicatedModal}
         isOpen={isDuplicatedModalOpen}
-        title={'생성 불가'}
+        title={"생성 불가"}
         content={isDuplicatedModalMessage}
       />
 
@@ -259,7 +299,7 @@ export const PeopleCreate: NextPage = () => {
           }
         >
           <span className={"mt-8 font-bold text-2xl"}>
-            함께한 개발자 추가하기
+            함께한 개발자 수정
           </span>
 
           {/* 파일 업로드 */}
@@ -269,11 +309,16 @@ export const PeopleCreate: NextPage = () => {
                 "mt-4 flex justify-center relative items-center rounded-full w-32 h-32 hover:cursor-pointer bg-gray-400 hover:ring-2 hover:duration-200 active:bg-gray-500"
               }
             >
-              {
-                !imageUrl ?
-                  <HiPlus className={"w-6 h-6"} /> :
-                  <Image className={'rounded-full'} src={ imageUrl } layout={'fill'} objectFit={'cover'} />
-              }
+              {!imageUrl ? (
+                <HiPlus className={"w-6 h-6"} />
+              ) : (
+                <Image
+                  className={"rounded-full"}
+                  src={imageUrl}
+                  layout={"fill"}
+                  objectFit={"cover"}
+                />
+              )}
             </div>
           </label>
           <input
@@ -324,7 +369,7 @@ export const PeopleCreate: NextPage = () => {
               <select
                 name={InputName.DEV_PART}
                 onChange={onInputChange}
-                defaultValue={"개발 파트를 선택해주세요."}
+                defaultValue={input.devPart}
                 className="select select-info w-full max-w-xs"
               >
                 <option disabled>개발 파트를 선택해주세요.</option>
@@ -404,9 +449,9 @@ export const PeopleCreate: NextPage = () => {
                 className={
                   "bg-blue-500 p-2 flex flex-row justify-center items-center rounded hover:bg-blue-600 active:bg-blue-700 hover:duration-200"
                 }
-                onClick={handleCreateClick}
+                onClick={handleUpdateClick}
               >
-                <HiOutlineUserAdd className={"mr-1"} /> 저장
+                <AiFillEdit className={"mr-1"} /> 수정
               </button>
             ) : (
               <LoadingSpin />
@@ -418,4 +463,4 @@ export const PeopleCreate: NextPage = () => {
   );
 };
 
-export default PeopleCreate;
+export default PeopleUpdate;

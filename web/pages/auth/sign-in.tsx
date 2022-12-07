@@ -5,7 +5,8 @@ import AuthApi from "../../apis/auth.api";
 import { useRouter } from "next/router";
 import AlertModal from "../../components/modals/alert.modal";
 import { LoadingSpin } from "../../components/spinning/loading.spin";
-import { Cookies } from 'next/dist/server/web/spec-extension/cookies';
+import { toast } from "react-toastify";
+import { AiOutlineInfoCircle } from "react-icons/ai";
 
 export const SignIn = () => {
   const router = useRouter();
@@ -75,6 +76,9 @@ export const SignIn = () => {
           const { accessToken, refreshToken } = res.data.data;
           localStorage.setItem("Access-Token", accessToken);
           localStorage.setItem("Refresh-Token", refreshToken);
+          toast.info('로그인 되었습니다.', {
+            icon: <AiOutlineInfoCircle />
+          })
 
           router.push("/");
         }

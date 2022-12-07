@@ -1,12 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Project as ProjectModel } from '@prisma/client';
 import { TimeUtils } from '../../../common/utils/time.util';
+import { FileResponseDto } from '../../../file/dto/response/file-response.dto';
 
 export class ProjectResponseDto {
-  constructor(project: ProjectModel) {
+  constructor(project: any) {
     this.id = project.id;
     this.title = project.title;
     this.content = project.content;
+    this.thumbnailList = new FileResponseDto(project.file);
     this.createdAt = TimeUtils.convertDateToLocalDateTimeStr(project.createdAt);
     this.updatedAt = TimeUtils.convertDateToLocalDateTimeStr(project.updatedAt);
   }
@@ -19,6 +20,9 @@ export class ProjectResponseDto {
 
   @ApiProperty({ description: '내용' })
   readonly content: string;
+
+  @ApiProperty({ description: '파일 리스트' })
+  readonly thumbnailList: FileResponseDto;
 
   @ApiProperty({ description: '생성일' })
   readonly createdAt: string;
