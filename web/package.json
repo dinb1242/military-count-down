@@ -8,6 +8,7 @@
   "dependencies": {
     "@headlessui/react": "^1.7.3",
     "@heroicons/react": "^2.0.11",
+    "@toast-ui/editor": "^3.2.1",
     "autoprefixer": "^10.4.12",
     "axios": "^0.27.2",
     "concurrently": "^7.5.0",
