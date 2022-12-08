@@ -1,0 +1,6 @@
+export enum WikiType {
+    COWORKER = 'COWORKER',
+    PROJECT = 'PROJECT',
+    ACCIDENT = 'ACCIDENT',
+    RETROSPECT = 'RETROSPECT'
+}

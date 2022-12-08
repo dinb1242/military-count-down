@@ -15,7 +15,7 @@ export class CoworkerService {
    * @param coworkerCreateInput 요청 전문
    * @return 유저 응답 DTO
    */
-  async create(coworkerCreateInput: Prisma.CoworkerCreateInput): Promise<CoworkerResponseDto> {
+  async create(userId: number, coworkerCreateInput: Prisma.CoworkerCreateInput): Promise<CoworkerResponseDto> {
     const { ...data } = coworkerCreateInput;
 
     if (!Object.values(DevPart).includes(data.devPart)) {

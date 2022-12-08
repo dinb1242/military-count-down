@@ -34,9 +34,14 @@ export const Hero: NextPage<HeroProps> = ({ id, backgroundImg, title, content, i
       }
     }
 
+    const handleMoveToWikiClick = () => {
+        router.push(`/projects/wiki/${id}`);
+    }
+
     return (
         <div
             className="relative hero rounded-xl shadow-xl transition hover:-translate-y-2 duration-300 cursor-pointer select-none"
+            onClick={ handleMoveToWikiClick }
         >
             {
                 !isCreated &&

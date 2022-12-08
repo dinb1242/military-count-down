@@ -18,6 +18,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AccidentModule } from './accident/accident.module';
 import { RetrospectModule } from './retrospect/retrospect.module';
+import { WikiModule } from './wiki/wiki.module';
 
 // 환경 변수 별 상수 설정
 let envFilename = '';
@@ -52,6 +53,7 @@ if (process.env.NODE_ENV === 'local') {
     FileModule,
     AccidentModule,
     RetrospectModule,
+    WikiModule,
   ],
   controllers: [AppController],
   providers: [
