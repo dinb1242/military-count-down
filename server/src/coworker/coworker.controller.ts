@@ -150,4 +150,19 @@ export class CoworkerController {
   async findAllRevisionOfSpecificCoworker(@Param('coworkerWikiId') coworkerWikiId: number) {
     return this.coworkerService.findAllRevisionOfSpecificCoworker(coworkerWikiId);
   }
+
+  @ApiBearerAuth(HttpHeaders.AUTHORIZATION)
+  @Get('wiki/revision/one/:revisionId')
+  @ApiOperation({
+    summary: '특정 위키 Revision 조회 API',
+    description: '특정 위키 Revision 을 조회한다. '
+  })
+  @ApiOkResponse({
+    description: '조회 성공',
+    type: CoworkerWikiRevisionResponseDto
+  })
+  @ApiNotFoundResponse({ description: '조회 실패 - 시퀀스 미조회' })
+  async findOneRevisionOfSpecificCoworker(@Param('revisionId') revisionId: number): Promise<CoworkerWikiRevisionResponseDto> {
+    return this.coworkerService.findOneRevisionOfSpecificCoworker(revisionId);
+  }
 }
