@@ -120,7 +120,7 @@ export const Card: NextPage<CardProps> = ({
         <div className="card-actions mt-2">
           {tags?.map((eachTag, idx) => {
             return (
-              <div key={idx} className="badge badge-outline">
+              <div key={idx} className="border px-2 border-black rounded-xl text-sm h-auto">
                 {eachTag}
               </div>
             );

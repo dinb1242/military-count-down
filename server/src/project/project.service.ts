@@ -24,6 +24,16 @@ export class ProjectService {
     return projectEntityList.map((eachEntity) => new ProjectResponseDto(eachEntity));
   }
 
+  async findOne(id: number): Promise<ProjectResponseDto> {
+    const projectEntity = await this.prismaService.project
+      .findUniqueOrThrow({ where: { id: id }, include: { file: true } })
+      .catch(() => {
+        throw new NotFoundException('일치하는 프로젝트를 찾을 수 없습니다. projectId=' + id);
+      });
+
+    return new ProjectResponseDto(projectEntity);
+  }
+
   async update(id: number, projectUpdateInput: Prisma.ProjectUpdateInput) {
     await this.prismaService.project.findUniqueOrThrow({ where: { id } }).catch(() => {
       throw new NotFoundException('일치하는 프로젝트를 찾을 수 없습니다. projectId=' + id);

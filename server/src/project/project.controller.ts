@@ -48,6 +48,18 @@ export class ProjectController {
   }
 
   @ApiBearerAuth(HttpHeaders.AUTHORIZATION)
+  @Get(':id')
+  @ApiOperation({
+    summary: '특정 조회 API',
+    description: '프로젝트 시퀀스를 전달받아 특정 프로젝트를 반환한다.',
+  })
+  @ApiOkResponse({ description: '조회 성공', type: ProjectResponseDto })
+  @ApiNotFoundResponse({ description: '조회 실패 - 시퀀스 미조회' })
+  async findOne(@Param('id') id: number) {
+    return this.projectService.findOne(id);
+  }
+
+  @ApiBearerAuth(HttpHeaders.AUTHORIZATION)
   @Patch(':id')
   @ApiOperation({
     summary: '수정 API',

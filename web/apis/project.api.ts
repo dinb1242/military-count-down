@@ -9,6 +9,10 @@ export default {
     return axiosInstance("/project");
   },
 
+  findOne(id: number) {
+    return axiosInstance(`/project/${id}`);
+  },
+
   update(id: number, data: { title: string; content: string }) {
     return axiosInstance.patch(`/project/${id}`, data);
   },
