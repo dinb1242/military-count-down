@@ -2,27 +2,28 @@ import BtnBack from "../../../../components/buttons/btn-back";
 import BtnSignOut from "../../../../components/buttons/btn-sign-out";
 
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { AiFillSave } from 'react-icons/ai';
-import CoworkerApi from '../../../../apis/coworker.api';
 import { NextPage, NextPageContext } from 'next';
 import { toast } from 'react-toastify';
+import WikiApi from "../../../../apis/wiki.api";
+import { WikiType } from "../../../../enums/wiki-type.enum";
 
 const Editor = dynamic(()=> import('../../../../components/inputs/tui-editor'), { ssr : false } )
 
 interface Props {
-  peopleId: number;
+  projectId: number;
 }
 
 export const getServerSideProps = (context: NextPageContext) => {
-  const { peopleId } = context.query;
+  const { projectId } = context.query;
   return {
-    props: { peopleId }
+    props: { projectId }
   }
 }
 
-export const PeopleWikiCreate: NextPage<Props> = ({ peopleId }) => {
+export const ProjectWikiCreate: NextPage<Props> = ({ projectId }) => {
     const router = useRouter();
 
     const [initMarkdown, setInitMarkdown] = useState('');
@@ -32,11 +33,13 @@ export const PeopleWikiCreate: NextPage<Props> = ({ peopleId }) => {
     }
 
     const handleSubmitClick = () => {
-      CoworkerApi.upsertWiki(peopleId, {
+      WikiApi.update({
+        bbsId: projectId,
+        wikiType: WikiType.PROJECT,
         wikiContent: markdownInput
       }).then(res => {
         toast.success('위키가 편집되었습니다.');
-        router.push(`/people/wiki/${peopleId}`);
+        router.push(`/projects/wiki/${projectId}`);
       }).catch(err => {
         console.log(err);
         toast.error(err.response.data.message, {
@@ -50,7 +53,7 @@ export const PeopleWikiCreate: NextPage<Props> = ({ peopleId }) => {
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const response = await CoworkerApi.findWiki(peopleId);
+          const response = await WikiApi.findOneWiki(WikiType.PROJECT, projectId);
           const { data } = response.data;
 
           // 처음 작성되는 위키의 경우, data 가 null 이다.
@@ -68,7 +71,7 @@ export const PeopleWikiCreate: NextPage<Props> = ({ peopleId }) => {
     return (
         <div className={ 'min-h-screen p-8' }>
             <div className={ 'flex flex-row justify-between' }>
-                <BtnBack where={'/people/wiki/' + peopleId} />
+                <BtnBack where={'/project/wiki/' + projectId} />
                 <BtnSignOut />
             </div>
 
@@ -90,4 +93,4 @@ export const PeopleWikiCreate: NextPage<Props> = ({ peopleId }) => {
     );
 }
 
-export default PeopleWikiCreate;
+export default ProjectWikiCreate;

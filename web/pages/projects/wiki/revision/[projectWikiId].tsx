@@ -2,30 +2,21 @@ import BtnBack from '../../../../components/buttons/btn-back';
 import BtnSignOut from '../../../../components/buttons/btn-sign-out';
 import { NextPage, NextPageContext } from 'next';
 import { useEffect, useState } from 'react';
-import CoworkerApi from '../../../../apis/coworker.api';
 import Link from 'next/link';
+import WikiApi from "../../../../apis/wiki.api";
+import ProjectApi from "../../../../apis/project.api";
 
 interface Props {
-  peopleId: number;
-  peopleWikiId: number;
+  projectId: number;
+  projectWikiId: number;
 }
 
 interface FindAllRevisions {
   id: number;
   authorId: number;
-  coworkerWikiId: number;
+  wikiId: number;
   wikiContent: string;
-  coworkerWiki: CoworkerWiki;
   author: Author;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface CoworkerWiki {
-  id: number;
-  coworkerId: number;
-  name: string;
-  wikiContent: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -39,12 +30,10 @@ interface Author {
   updatedAt: string;
 }
 
-interface FindCoworker {
+interface FindOneProject {
   id: number;
-  name: string;
-  devPart: string;
-  projects: string[];
-  profileImage: ProfileImage;
+  title: string;
+  content: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -60,28 +49,28 @@ interface ProfileImage {
 }
 
 export const getServerSideProps = (context: NextPageContext) => {
-  const { peopleId, peopleWikiId } = context.query;
+  const { projectId, projectWikiId } = context.query;
 
   return {
-    props: { peopleId, peopleWikiId }
+    props: { projectId, projectWikiId }
   }
 }
 
-export const PeopleWikiRevision: NextPage<Props> = ({ peopleId, peopleWikiId }) => {
+export const ProjectWikiRevision: NextPage<Props> = ({ projectId, projectWikiId }) => {
 
   const [findAllRevisions, setFindAllRevisions] = useState<FindAllRevisions[]>();
-  const [findCoworker, setFindCoworker] = useState<FindCoworker>();
+  const [findOneProject, setFindOneProject] = useState<FindOneProject>();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await CoworkerApi.findAllWikiRevision(peopleWikiId);
-        const responseCoworker = await CoworkerApi.findOne(peopleId);
+        const response = await WikiApi.findAllWikiRevisions(projectWikiId);
+        const responseCoworker = await ProjectApi.findOne(projectId);
         const { data } = response.data;
         const { data: dataCoworker } = responseCoworker.data;
 
         setFindAllRevisions(data);
-        setFindCoworker(dataCoworker);
+        setFindOneProject(dataCoworker);
       } catch (err) {
         console.log(err);
       }
@@ -92,7 +81,7 @@ export const PeopleWikiRevision: NextPage<Props> = ({ peopleId, peopleWikiId }) 
   return (
     <div className={ 'min-h-screen p-8' }>
       <div className={"flex flex-row justify-between"}>
-        <BtnBack where={"/people/wiki/" + peopleId} />
+        <BtnBack where={"/projects/wiki/" + projectId} />
         <BtnSignOut />
       </div>
       
@@ -124,7 +113,7 @@ export const PeopleWikiRevision: NextPage<Props> = ({ peopleId, peopleWikiId }) 
                   </td>
                   <td>{ eachRevision.createdAt }</td>
                   <th>
-                    <Link href={'/people/wiki/revision/old/' + peopleId + '/' + eachRevision.id } >
+                    <Link href={'/projects/wiki/revision/old/' + projectId + '/' + eachRevision.id } >
                       <a>
                         <button className="btn btn-ghost btn-xs">보기</button>
                       </a>
@@ -135,29 +124,10 @@ export const PeopleWikiRevision: NextPage<Props> = ({ peopleId, peopleWikiId }) 
             })
           }
           </tbody>
-          {/* Foot */}
-          <tfoot>
-          <tr>
-            <th>Name</th>
-            <th>Favorite Color</th>
-            <th></th>
-          </tr>
-          </tfoot>
         </table>
       </div>
-
-      {
-        findAllRevisions &&
-        findAllRevisions.map(eachRevision => {
-          return (
-            <>
-              { eachRevision.author.name }
-            </>
-          )
-        })
-      }
     </div>
   )
 }
 
-export default PeopleWikiRevision;
+export default ProjectWikiRevision;

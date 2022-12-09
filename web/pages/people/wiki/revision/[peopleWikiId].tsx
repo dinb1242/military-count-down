@@ -136,27 +136,8 @@ export const PeopleWikiRevision: NextPage<Props> = ({ peopleId, peopleWikiId }) 
             })
           }
           </tbody>
-          {/* Foot */}
-          <tfoot>
-          <tr>
-            <th>Name</th>
-            <th>Favorite Color</th>
-            <th></th>
-          </tr>
-          </tfoot>
         </table>
       </div>
-
-      {
-        findAllRevisions &&
-        findAllRevisions.map(eachRevision => {
-          return (
-            <>
-              { eachRevision.author.name }
-            </>
-          )
-        })
-      }
     </div>
   )
 }

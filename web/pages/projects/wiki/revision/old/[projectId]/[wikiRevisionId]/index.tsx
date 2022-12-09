@@ -1,36 +1,33 @@
-import BtnBack from '../../../../../../../components/buttons/btn-back';
 import BtnSignOut from '../../../../../../../components/buttons/btn-sign-out';
-import Link from 'next/link';
 import { NextPage, NextPageContext } from 'next';
 import { useEffect, useState } from 'react';
-import CoworkerApi from '../../../../../../../apis/coworker.api';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { HiArrowCircleLeft } from 'react-icons/hi';
+import ProjectApi from "../../../../../../../apis/project.api";
+import WikiApi from "../../../../../../../apis/wiki.api";
 
 const Viewer = dynamic(() => import("../../../../../../../components/inputs/tui-viewer"), {
   ssr: false,
 });
 
 interface Props {
-  peopleId: number;
+  projectId: number;
   wikiRevisionId: number;
 }
 
 interface FindOneRevision {
   id: number;
   authorId: number;
-  coworkerWikiId: number;
+  wikiId: number;
   wikiContent: string;
-  coworkerWiki: CoworkerWiki;
   author: Author;
   createdAt: string;
   updatedAt: string;
 }
 
-interface CoworkerWiki {
+interface ProjectWiki {
   id: number;
-  coworkerId: number;
   name: string;
   wikiContent: string;
   createdAt: string;
@@ -46,51 +43,39 @@ interface Author {
   updatedAt: string;
 }
 
-interface FindOneCoworker {
+interface FindOneProject {
   id: number;
-  name: string;
-  devPart: string;
-  projects: string[];
-  profileImage: ProfileImage;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface ProfileImage {
-  id: number;
-  filename: string;
-  filePath: string;
-  fileSize: number;
-  mimeType: string;
+  title: string;
+  content: string;
   createdAt: string;
   updatedAt: string;
 }
 
 export const getServerSideProps = (context: NextPageContext) => {
 
-  const { peopleId, wikiRevisionId } = context.query;
+  const { projectId, wikiRevisionId } = context.query;
 
   return {
-    props: { peopleId, wikiRevisionId }
+    props: { projectId, wikiRevisionId }
   }
 }
 
-export const OldRevisionView: NextPage<Props> = ({ peopleId, wikiRevisionId }) => {
+export const OldRevisionView: NextPage<Props> = ({ projectId, wikiRevisionId }) => {
   const router = useRouter();
 
-  const [findOneCoworker, setFindOneCoworker] = useState<FindOneCoworker>();
+  const [findOneProject, setFindOneProject] = useState<FindOneProject>();
   const [findOneRevision, setFindOneRevision] = useState<FindOneRevision>();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responseCoworker = await CoworkerApi.findOne(peopleId);
-        const responseRevision = await CoworkerApi.findOneWikiRevision(wikiRevisionId);
+        const responseProject = await ProjectApi.findOne(projectId);
+        const responseRevision = await WikiApi.findOneWikiRevision(wikiRevisionId);
 
-        const { data: dataCoworker } = responseCoworker.data;
+        const { data: dataProject } = responseProject.data;
         const { data: dataRevision } = responseRevision.data;
 
-        setFindOneCoworker(dataCoworker);
+        setFindOneProject(dataProject);
         setFindOneRevision(dataRevision);
       } catch (err) {
         console.log(err);
@@ -115,7 +100,7 @@ export const OldRevisionView: NextPage<Props> = ({ peopleId, wikiRevisionId }) =
       <div className={"border rounded py-8 px-12 w-full mt-16"}>
         {/* 상단 */}
         <div className={"w-full flex flex-row justify-between"}>
-          <h1 className={"font-bold text-3xl"}>{ findOneCoworker && findOneRevision && findOneCoworker.name + ` (Revision: ${findOneRevision.createdAt})` }</h1>
+          <h1 className={"font-bold text-3xl"}>{ findOneProject && findOneRevision && findOneProject.title + ` (Revision: ${findOneRevision.createdAt})` }</h1>
         </div>
 
         {/* 본문 */}

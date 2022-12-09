@@ -110,18 +110,18 @@ export class WikiController {
       // FIXME: 하기 항목들 스키마에 정의한 이후 수정할 것.
       case WikiType.PROJECT:
         wikiWhereInput = {
-          coworker: {
+          project: {
             id: bbsId
           },
-          wikiType: WikiType.COWORKER
+          wikiType: WikiType.PROJECT
         }
         break;
       case WikiType.ACCIDENT:
         wikiWhereInput = {
-          coworker: {
+          project: {
             id: bbsId
           },
-          wikiType: WikiType.COWORKER
+          wikiType: WikiType.ACCIDENT
         }
         break;
       case WikiType.RETROSPECT:
