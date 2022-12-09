@@ -41,12 +41,7 @@ export const Projects = () => {
       try {
         const response = await ProjectApi.findAll();
         const { data } = response.data;
-
-        console.log(data);
         setFindAll(data);
-
-        console.log('나는야~ 유즈이펙트')
-        console.log(data[0].thumbnailList.filePath);
       } catch (err) {
         console.log(err);
       }

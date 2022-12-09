@@ -1,4 +1,8 @@
 {
+  "name": "military-count-down-web",
+  "version": "0.0.1",
+  "description": "A military count down and mirim wiki web application",
+  "author": "Jihyun, Jeong",
   "private": true,
   "scripts": {
     "dev": "next dev",
