@@ -4,6 +4,9 @@
   "description": "A military count down and mirim wiki web application",
   "author": "Jihyun, Jeong",
   "private": true,
+  "engines": {
+    "node": "18.12.1"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
