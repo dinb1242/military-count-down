@@ -1,12 +1,11 @@
-import BtnBack from '../../../../../../../components/buttons/btn-back';
 import BtnSignOut from '../../../../../../../components/buttons/btn-sign-out';
-import Link from 'next/link';
 import { NextPage, NextPageContext } from 'next';
 import { useEffect, useState } from 'react';
 import CoworkerApi from '../../../../../../../apis/coworker.api';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { HiArrowCircleLeft } from 'react-icons/hi';
+import WikiApi from "../../../../../../../apis/wiki.api";
 
 const Viewer = dynamic(() => import("../../../../../../../components/inputs/tui-viewer"), {
   ssr: false,
@@ -85,7 +84,7 @@ export const OldRevisionView: NextPage<Props> = ({ peopleId, wikiRevisionId }) =
     const fetchData = async () => {
       try {
         const responseCoworker = await CoworkerApi.findOne(peopleId);
-        const responseRevision = await CoworkerApi.findOneWikiRevision(wikiRevisionId);
+        const responseRevision = await WikiApi.findOneWikiRevision(wikiRevisionId);
 
         const { data: dataCoworker } = responseCoworker.data;
         const { data: dataRevision } = responseRevision.data;

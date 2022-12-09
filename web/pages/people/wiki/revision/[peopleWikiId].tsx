@@ -4,6 +4,7 @@ import { NextPage, NextPageContext } from 'next';
 import { useEffect, useState } from 'react';
 import CoworkerApi from '../../../../apis/coworker.api';
 import Link from 'next/link';
+import WikiApi from "../../../../apis/wiki.api";
 
 interface Props {
   peopleId: number;
@@ -75,7 +76,7 @@ export const PeopleWikiRevision: NextPage<Props> = ({ peopleId, peopleWikiId }) 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await CoworkerApi.findAllWikiRevision(peopleWikiId);
+        const response = await WikiApi.findAllWikiRevisions(peopleWikiId);
         const responseCoworker = await CoworkerApi.findOne(peopleId);
         const { data } = response.data;
         const { data: dataCoworker } = responseCoworker.data;

@@ -36,10 +36,9 @@ export class CoworkerController {
   })
   @ApiBadRequestResponse({ description: '생성 실패 - 중복된 개발자' })
   async create(@Req() request: Request, @Body() requestDto: CreateCoworkerDto): Promise<CoworkerResponseDto> {
-
     const { id: userId }: any = request.user;
 
-    return this.coworkerService.create(userId, {
+    return this.coworkerService.create({
       ...requestDto,
       wiki: {
         create: {

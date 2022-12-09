@@ -1,6 +1,5 @@
 import { BadRequestException, Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
 import { WikiService } from './wiki.service';
-import { CreateWikiDto } from './dto/request/create-wiki.dto';
 import { ApiBearerAuth, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { HttpHeaders } from '../common/enums/http-headers.enum';
 import { CoworkerWikiResponseDto } from '../coworker/dto/response/coworker-wiki-response.dto';
@@ -9,6 +8,7 @@ import { WikiType } from '../common/enums/wiki-type.enum';
 import { Prisma } from '@prisma/client';
 import { WikiResponseDto } from "./dto/response/wiki-response.dto";
 import { WikiRevisionResponseDto } from "./dto/response/wiki-revision-response.dto";
+import { UpdateWikiDto } from "./dto/request/update-wiki.dto";
 
 @ApiTags('위키 API')
 @Controller('wiki')
@@ -17,7 +17,7 @@ export class WikiController {
   }
 
   @ApiBearerAuth(HttpHeaders.AUTHORIZATION)
-  @Post()
+  @Post('')
   @ApiOperation({
     summary: '위키 등록 및 수정 API',
     description: '특정 위키 타입에 대한 위키를 등록한다. 이미 존재하는 위키일 경우, 수정하고 Revision 을 추가한다.',
@@ -26,36 +26,34 @@ export class WikiController {
     description: '등록 성공',
     type: CoworkerWikiResponseDto,
   })
-  async upsert(@Req() request: Request, @Body() requestDto: CreateWikiDto) {
+  async update(@Req() request: Request, @Body() requestDto: UpdateWikiDto) {
     const {id: userId}: any = request.user;
     let relation = {};
 
     switch (requestDto.wikiType) {
       case WikiType.COWORKER:
         relation = {
-          coworker: {
-            connect: {id: requestDto.bbsId},
-          },
+          coworker: { id: Number(requestDto.bbsId) },
         };
         break;
       case WikiType.PROJECT:
         relation = {
           project: {
-            connect: {id: requestDto.bbsId},
+            id: Number(requestDto.bbsId)
           },
         };
         break;
       case WikiType.ACCIDENT:
         relation = {
           accident: {
-            connect: {id: requestDto.bbsId},
+            id: Number(requestDto.bbsId)
           },
         };
         break;
       case WikiType.RETROSPECT:
         relation = {
           retrospect: {
-            connect: {id: requestDto.bbsId},
+            id: Number(requestDto.bbsId)
           },
         };
         break;
@@ -63,17 +61,18 @@ export class WikiController {
         throw new BadRequestException('일치하는 위키 타입을 찾을 수 없습니다. wikiType=' + requestDto.wikiType);
     }
 
-    return this.wikiService.upsert({
-      wikiContent: requestDto.wikiContent,
+    return this.wikiService.update({
       wikiType: requestDto.wikiType,
-      ...relation,
+      ...relation
+    }, {
+      wikiContent: requestDto.wikiContent,
       wikiRevision: {
         create: {
           wikiContent: requestDto.wikiContent,
-          author: {connect: {id: userId}},
-        },
-      },
-    });
+          author: { connect: { id: userId } }
+        }
+      }
+    })
   }
 
   @ApiBearerAuth(HttpHeaders.AUTHORIZATION)
@@ -161,7 +160,8 @@ export class WikiController {
       },
       include: {
         author: true
-      }
+      },
+      orderBy: { createdAt: 'desc' }
     })
   }
 

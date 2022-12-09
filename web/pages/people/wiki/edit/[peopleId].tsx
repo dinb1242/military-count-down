@@ -2,12 +2,13 @@ import BtnBack from "../../../../components/buttons/btn-back";
 import BtnSignOut from "../../../../components/buttons/btn-sign-out";
 
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { AiFillSave } from 'react-icons/ai';
-import CoworkerApi from '../../../../apis/coworker.api';
 import { NextPage, NextPageContext } from 'next';
 import { toast } from 'react-toastify';
+import WikiApi from "../../../../apis/wiki.api";
+import { WikiType } from "../../../../enums/wiki-type.enum";
 
 const Editor = dynamic(()=> import('../../../../components/inputs/tui-editor'), { ssr : false } )
 
@@ -32,7 +33,9 @@ export const PeopleWikiCreate: NextPage<Props> = ({ peopleId }) => {
     }
 
     const handleSubmitClick = () => {
-      CoworkerApi.upsertWiki(peopleId, {
+      WikiApi.update({
+        bbsId: peopleId,
+        wikiType: WikiType.COWORKER,
         wikiContent: markdownInput
       }).then(res => {
         toast.success('위키가 편집되었습니다.');
@@ -50,7 +53,7 @@ export const PeopleWikiCreate: NextPage<Props> = ({ peopleId }) => {
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const response = await CoworkerApi.findWiki(peopleId);
+          const response = await WikiApi.findOneWiki(WikiType.COWORKER, peopleId);
           const { data } = response.data;
 
           // 처음 작성되는 위키의 경우, data 가 null 이다.

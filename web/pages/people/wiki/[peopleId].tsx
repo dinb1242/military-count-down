@@ -6,6 +6,8 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import CoworkerApi from "../../../apis/coworker.api";
 import { useRouter } from 'next/router';
+import WikiApi from "../../../apis/wiki.api";
+import { WikiType } from "../../../enums/wiki-type.enum";
 
 const Viewer = dynamic(() => import("../../../components/inputs/tui-viewer"), {
   ssr: false,
@@ -48,7 +50,7 @@ export const PeopleWiki: NextPage<Props> = ({ peopleId }) => {
     const fetchData = async () => {
       try {
         const responseCoworker = await CoworkerApi.findOne(peopleId);
-        const responseWiki = await CoworkerApi.findWiki(peopleId);
+        const responseWiki = await WikiApi.findOneWiki(WikiType.COWORKER, peopleId);
         const { data: dataWiki } = responseWiki.data;
         const { data: dataCoworker } = responseCoworker.data;
 
