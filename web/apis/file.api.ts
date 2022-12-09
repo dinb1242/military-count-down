@@ -9,4 +9,12 @@ export default {
       }
     });
   },
+
+  markdownUpload(formData: FormData) {
+    return axiosInstance.post('/file/markdown/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      }
+    });
+  }
 };

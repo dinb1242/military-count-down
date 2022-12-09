@@ -7,7 +7,8 @@ import { CoworkerWikiRevisionResponseDto } from './dto/response/coworker-wiki-re
 
 @Injectable()
 export class CoworkerService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) {
+  }
 
   /**
    *
@@ -18,7 +19,7 @@ export class CoworkerService {
     const { ...data } = coworkerCreateInput;
 
     if (!Object.values(DevPart).includes(data.devPart)) {
-      throw new BadRequestException(`Enum 타입이 일치하지 않습니다. devPart=${data.devPart}`);
+      throw new BadRequestException(`Enum 타입이 일치하지 않습니다. devPart=${ data.devPart }`);
     }
 
     // 이미 동일한 개발자가 있는지 체크한다.
@@ -94,6 +95,10 @@ export class CoworkerService {
     coworkerId: number,
     coworkerWikiCreateInput: Prisma.CoworkerWikiCreateInput,
   ): Promise<CoworkerWikiResponseDto> {
+    await this.prismaService.coworker.findUniqueOrThrow({ where: { id: coworkerId } }).catch((err) => {
+      throw new NotFoundException('일치하는 시퀀스를 찾을 수 없습니다.');
+    });
+
     const { id: authorId } = user;
 
     const wikiRevisionObj: any = {
@@ -124,14 +129,17 @@ export class CoworkerService {
 
   async findWikiOfSpecificCoworker(coworkerId: number): Promise<CoworkerWikiResponseDto> {
     const wikiEntity = await this.prismaService.coworkerWiki
-      .findUniqueOrThrow({
+      .findUnique({
         where: { coworkerId: coworkerId },
+        include: { coworker: true },
       })
       .catch(() => {
         throw new NotFoundException('일치하는 개발자를 찾을 수 없습니다. coworkerId=' + coworkerId);
       });
 
-    return new CoworkerWikiResponseDto(wikiEntity);
+    if (wikiEntity) return new CoworkerWikiResponseDto(wikiEntity);
+
+    return null;
   }
 
   async findAllRevisionOfSpecificCoworker(coworkerWikiId: number) {
@@ -141,8 +149,18 @@ export class CoworkerService {
         coworkerWiki: true,
         author: true,
       },
+      orderBy: { createdAt: 'desc' },
     });
 
     return wikiRevisions.map((eachEntity) => new CoworkerWikiRevisionResponseDto(eachEntity));
+  }
+
+  async findOneRevisionOfSpecificCoworker(revisionId: number): Promise<CoworkerWikiRevisionResponseDto> {
+    const revisionEntity = await this.prismaService.coworkerWikiRevision.findUniqueOrThrow({
+      where: { id: revisionId },
+      include: { coworkerWiki: true },
+    });
+
+    return new CoworkerWikiRevisionResponseDto(revisionEntity);
   }
 }

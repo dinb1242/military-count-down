@@ -39,10 +39,11 @@ model User {
   phone         String                 @unique
   authToken     AuthToken[]
   accessHistory AccessHistory[]
+  wikiRevision  WikiRevision[]
   coworkerWiki  CoworkerWikiRevision[]
   projectWiki   ProjectWikiRevision[]
   accidentWiki  AccidentWikiRevision[]
-  retrospect Retrospect[]
+  retrospect    Retrospect[]
   createdAt     DateTime               @default(now())
   updatedAt     DateTime               @updatedAt
   status        Int                    @default(1)
@@ -54,6 +55,8 @@ model Coworker {
   devPart      DevPart
   projects     String[]
   coworkerWiki CoworkerWiki?
+  wiki         Wiki          @relation(fields: [wikiId], references: [id])
+  wikiId       Int           @unique
   file         File?         @relation(fields: [fileId], references: [id])
   fileId       Int?          @unique
   createdAt    DateTime      @default(now())
@@ -85,6 +88,8 @@ model Project {
   title       String
   content     String?
   projectWiki ProjectWiki?
+  wiki        Wiki         @relation(fields: [wikiId], references: [id])
+  wikiId      Int          @unique
   file        File?        @relation(fields: [fileId], references: [id])
   fileId      Int?         @unique
   createdAt   DateTime     @default(now())
@@ -129,12 +134,33 @@ model AccidentWikiRevision {
   createdAt      DateTime     @default(now())
 }
 
+model Wiki {
+  id           Int            @id @default(autoincrement())
+  wikiType     WikiType
+  wikiContent  String?
+  wikiRevision WikiRevision[]
+  coworker     Coworker?
+  project      Project?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+}
+
+model WikiRevision {
+  id          Int      @id @default(autoincrement())
+  wikiContent String
+  wiki        Wiki     @relation(fields: [wikiId], references: [id])
+  wikiId      Int
+  author      User     @relation(fields: [authorId], references: [id])
+  authorId    Int
+  createdAt   DateTime @default(now())
+}
+
 model Retrospect {
-  id Int @default(autoincrement()) @id
-  title String
-  content String?
-  author User @relation(fields: [authorId], references: [id])
-  authorId Int
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String?
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -174,4 +200,11 @@ enum DevPart {
   FULL_STACK
   BACKEND
   FRONTEND
+}
+
+enum WikiType {
+  COWORKER
+  PROJECT
+  ACCIDENT
+  RETROSPECT
 }

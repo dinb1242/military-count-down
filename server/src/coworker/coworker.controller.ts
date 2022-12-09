@@ -17,6 +17,7 @@ import { CreateCoworkerWikiDto } from './dto/request/create-coworker-wiki.dto';
 import { CoworkerWikiResponseDto } from './dto/response/coworker-wiki-response.dto';
 import { Request } from 'express';
 import { CoworkerWikiRevisionResponseDto } from './dto/response/coworker-wiki-revision-response.dto';
+import {WikiType} from "../common/enums/wiki-type.enum";
 
 @ApiTags('함께한 개발자 API')
 @Controller('coworker')
@@ -34,8 +35,24 @@ export class CoworkerController {
     type: CoworkerResponseDto,
   })
   @ApiBadRequestResponse({ description: '생성 실패 - 중복된 개발자' })
-  async create(@Body() requestDto: CreateCoworkerDto): Promise<CoworkerResponseDto> {
-    return this.coworkerService.create(requestDto);
+  async create(@Req() request: Request, @Body() requestDto: CreateCoworkerDto): Promise<CoworkerResponseDto> {
+    const { id: userId }: any = request.user;
+
+    return this.coworkerService.create({
+      ...requestDto,
+      wiki: {
+        create: {
+          wikiType: WikiType.COWORKER,
+          wikiContent: '',
+          wikiRevision: {
+            create: {
+              author: { connect: { id: userId } },
+              wikiContent: ''
+            }
+          }
+        }
+      }
+    });
   }
 
   @ApiBearerAuth(HttpHeaders.AUTHORIZATION)
@@ -149,5 +166,20 @@ export class CoworkerController {
   })
   async findAllRevisionOfSpecificCoworker(@Param('coworkerWikiId') coworkerWikiId: number) {
     return this.coworkerService.findAllRevisionOfSpecificCoworker(coworkerWikiId);
+  }
+
+  @ApiBearerAuth(HttpHeaders.AUTHORIZATION)
+  @Get('wiki/revision/one/:revisionId')
+  @ApiOperation({
+    summary: '특정 위키 Revision 조회 API',
+    description: '특정 위키 Revision 을 조회한다. '
+  })
+  @ApiOkResponse({
+    description: '조회 성공',
+    type: CoworkerWikiRevisionResponseDto
+  })
+  @ApiNotFoundResponse({ description: '조회 실패 - 시퀀스 미조회' })
+  async findOneRevisionOfSpecificCoworker(@Param('revisionId') revisionId: number): Promise<CoworkerWikiRevisionResponseDto> {
+    return this.coworkerService.findOneRevisionOfSpecificCoworker(revisionId);
   }
 }

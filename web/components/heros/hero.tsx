@@ -16,11 +16,6 @@ interface HeroProps {
 
 export const Hero: NextPage<HeroProps> = ({ id, backgroundImg, title, content, isCreated, trickHandler }) => {
 
-    if (!isCreated) {
-      console.log('나는야 히어로!');
-      console.log(backgroundImg);
-    }
-
     const router = useRouter();
 
     const handleUpdateClick = () => {
@@ -34,9 +29,21 @@ export const Hero: NextPage<HeroProps> = ({ id, backgroundImg, title, content, i
       }
     }
 
+    const handleMoveToWikiClick = () => {
+        router.push(`/projects/wiki/${id}`);
+    }
+
+    const canMoveToWiki = () => {
+      if (isCreated)
+        return null;
+
+      return handleMoveToWikiClick();
+    }
+
     return (
         <div
             className="relative hero rounded-xl shadow-xl transition hover:-translate-y-2 duration-300 cursor-pointer select-none"
+            onClick={ canMoveToWiki }
         >
             {
                 !isCreated &&

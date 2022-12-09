@@ -119,7 +119,8 @@ export const ProjectsUpdate: NextPage<ProjectProps> = ({ projectId }) => {
           title: data.title,
           content: data.content
         })
-        setImageUrl(`${ENDPOINT}/${data.thumbnailList.filePath}`);
+        if (data.thumbnailList.filePath)
+          setImageUrl(`${ENDPOINT}/${data.thumbnailList.filePath}`);
       } catch (err) {
         console.log(err);
       }

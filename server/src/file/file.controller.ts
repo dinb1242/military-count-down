@@ -7,6 +7,7 @@ import { multerOptions } from './lib/multer.option';
 import { BbsType } from './enums/bbs-type.enum';
 import { Prisma } from '@prisma/client';
 import { FileResponseDto } from './dto/response/file-response.dto';
+import { markdownMulterOptions } from './lib/markdown-multer.option';
 
 @ApiTags('파일 API')
 @Controller('file')
@@ -68,5 +69,24 @@ export class FileController {
     }
 
     return this.fileService.uploadFile(fileCreateInput);
+  }
+
+  @ApiBearerAuth(HttpHeaders.AUTHORIZATION)
+  @Post('/markdown/upload')
+  @UseInterceptors(FileInterceptor('file', markdownMulterOptions))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  async markdownFileUpload(@UploadedFile('file') file: Express.Multer.File) {
+    return file.path;
   }
 }

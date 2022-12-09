@@ -59,8 +59,12 @@ export const Card: NextPage<CardProps> = ({
     CoworkerApi.delete(id).then(() => handler());
   }
 
+  const handleMoveToWikiClick = () => {
+    router.push(`/people/wiki/${id}`)
+  }
+
   return (
-    <div className="card h-auto w-80 bg-base-100 shadow-xl transition hover:-translate-y-2 cursor-pointer">
+    <div className="card h-auto w-80 bg-base-100 shadow-xl transition hover:-translate-y-2 cursor-pointer" onClick={ handleMoveToWikiClick }>
       <div className={"flex justify-end p-2"}>
         <div
           className="dropdown dropdown-left"

@@ -44,4 +44,8 @@ export default {
   findAllWikiRevision(coworkerWikiId: number) {
     return axiosInstance.get(`/coworker/wiki/revision/${coworkerWikiId}`);
   },
+
+  findOneWikiRevision(revisionId: number) {
+    return axiosInstance.get(`/coworker/wiki/revision/one/${revisionId}`);
+  }
 };

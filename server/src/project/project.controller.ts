@@ -16,6 +16,7 @@ import { Request } from 'express';
 import { CreateProjectWikiDto } from './dto/request/create-project-wiki.dto';
 import { ProjectWikiResponseDto } from './dto/response/project-wiki-response.dto';
 import { ProjectWikiRevisionResponseDto } from './dto/response/project-wiki-revision-response.dto';
+import { WikiType } from "../common/enums/wiki-type.enum";
 
 @ApiTags('진행한 프로젝트 API')
 @Controller('project')
@@ -29,10 +30,22 @@ export class ProjectController {
     description: '진행한 프로젝트를 생성한다. 필요한 경우 파일을 업로드 할 수 있다.',
   })
   @ApiCreatedResponse({ description: '생성 성공', type: ProjectResponseDto })
-  async create(@Body() requestDto: CreateProjectDto): Promise<ProjectResponseDto> {
+  async create(@Req() request: Request, @Body() requestDto: CreateProjectDto): Promise<ProjectResponseDto> {
+    const { id: userId }: any = request.user;
     return this.projectService.create({
-      title: requestDto.title,
-      content: requestDto.content,
+      ...requestDto,
+      wiki: {
+        create: {
+          wikiType: WikiType.PROJECT,
+          wikiContent: '',
+          wikiRevision: {
+            create: {
+              author: { connect: { id: userId } },
+              wikiContent: ''
+            }
+          }
+        }
+      }
     });
   }
 

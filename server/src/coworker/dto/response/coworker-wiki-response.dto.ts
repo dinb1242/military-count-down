@@ -3,10 +3,13 @@ import { CoworkerWiki } from '@prisma/client';
 import { TimeUtils } from '../../../common/utils/time.util';
 
 export class CoworkerWikiResponseDto {
-  constructor(coworkerWiki: CoworkerWiki) {
+  constructor(coworkerWiki: any) {
     this.id = coworkerWiki.id;
     this.coworkerId = coworkerWiki.coworkerId;
     this.wikiContent = coworkerWiki.wikiContent;
+    if (coworkerWiki.coworker) {
+      this.name = coworkerWiki.coworker.name;
+    }
     this.createdAt = TimeUtils.convertDateToLocalDateTimeStr(coworkerWiki.createdAt);
     this.updatedAt = TimeUtils.convertDateToLocalDateTimeStr(coworkerWiki.updatedAt);
   }
@@ -16,6 +19,9 @@ export class CoworkerWikiResponseDto {
 
   @ApiProperty({ description: 'coworker 시퀀스', example: '1' })
   coworkerId: number;
+
+  @ApiProperty({ description: '실명' })
+  name: string;
 
   @ApiProperty({ description: '위키 마크다운 내용' })
   wikiContent: string | null;

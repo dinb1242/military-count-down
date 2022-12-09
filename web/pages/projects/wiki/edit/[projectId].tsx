@@ -13,17 +13,17 @@ import { WikiType } from "../../../../enums/wiki-type.enum";
 const Editor = dynamic(()=> import('../../../../components/inputs/tui-editor'), { ssr : false } )
 
 interface Props {
-  peopleId: number;
+  projectId: number;
 }
 
 export const getServerSideProps = (context: NextPageContext) => {
-  const { peopleId } = context.query;
+  const { projectId } = context.query;
   return {
-    props: { peopleId }
+    props: { projectId }
   }
 }
 
-export const PeopleWikiCreate: NextPage<Props> = ({ peopleId }) => {
+export const ProjectWikiCreate: NextPage<Props> = ({ projectId }) => {
     const router = useRouter();
 
     const [initMarkdown, setInitMarkdown] = useState('');
@@ -34,12 +34,12 @@ export const PeopleWikiCreate: NextPage<Props> = ({ peopleId }) => {
 
     const handleSubmitClick = () => {
       WikiApi.update({
-        bbsId: peopleId,
-        wikiType: WikiType.COWORKER,
+        bbsId: projectId,
+        wikiType: WikiType.PROJECT,
         wikiContent: markdownInput
       }).then(res => {
         toast.success('위키가 편집되었습니다.');
-        router.push(`/people/wiki/${peopleId}`);
+        router.push(`/projects/wiki/${projectId}`);
       }).catch(err => {
         console.log(err);
         toast.error(err.response.data.message, {
@@ -53,7 +53,7 @@ export const PeopleWikiCreate: NextPage<Props> = ({ peopleId }) => {
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const response = await WikiApi.findOneWiki(WikiType.COWORKER, peopleId);
+          const response = await WikiApi.findOneWiki(WikiType.PROJECT, projectId);
           const { data } = response.data;
 
           // 처음 작성되는 위키의 경우, data 가 null 이다.
@@ -71,7 +71,7 @@ export const PeopleWikiCreate: NextPage<Props> = ({ peopleId }) => {
     return (
         <div className={ 'min-h-screen p-8' }>
             <div className={ 'flex flex-row justify-between' }>
-                <BtnBack where={'/people/wiki/' + peopleId} />
+                <BtnBack where={'/project/wiki/' + projectId} />
                 <BtnSignOut />
             </div>
 
@@ -93,4 +93,4 @@ export const PeopleWikiCreate: NextPage<Props> = ({ peopleId }) => {
     );
 }
 
-export default PeopleWikiCreate;
+export default ProjectWikiCreate;
