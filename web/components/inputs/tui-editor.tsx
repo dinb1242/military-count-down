@@ -29,6 +29,9 @@ const TuiEditor: NextPage<Props> = ({handleMarkdownChange, initMarkdown}) => {
     const editorIns = editorRef.current.getInstance();
     const contentMarkdown = editorIns.getMarkdown();
 
+    console.log(editorIns.getHTML());
+    console.log(contentMarkdown);
+
     handleMarkdownChange(contentMarkdown);
   };
 
@@ -60,11 +63,12 @@ const TuiEditor: NextPage<Props> = ({handleMarkdownChange, initMarkdown}) => {
                 type: ctx.entering ? 'openTag' : 'closeTag',
                 tagName: `h${node.level}`,
                 attributes: {
-                  id: node.firstChild?.literal
+                  id: node.firstChild?.literal.replace(' ', '-')
                 }
               };
             },
           }}
+          autofocus={ false }
           hooks={{
             addImageBlobHook: async (
               blob: Blob | File,

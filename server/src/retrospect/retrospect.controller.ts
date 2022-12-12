@@ -6,7 +6,7 @@ import {
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
-  ApiOperation,
+  ApiOperation, ApiTags,
 } from '@nestjs/swagger';
 import { HttpHeaders } from '../common/enums/http-headers.enum';
 import { CreateRetrospectDto } from './dto/request/create-retrospect.dto';
@@ -14,6 +14,7 @@ import { RetrospectResponseDto } from './dto/response/retrospect-response.dto';
 import { Request } from 'express';
 import { UpdateRetrospectDto } from './dto/request/update-retrospect.dto';
 
+@ApiTags('회고 API')
 @Controller('retrospect')
 export class RetrospectController {
   constructor(private readonly retrospectService: RetrospectService) {}

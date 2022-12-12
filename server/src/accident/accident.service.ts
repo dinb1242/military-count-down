@@ -1,8 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { AccidentWikiResponseDto } from './dto/response/accident-wiki-response.dto';
 import { PrismaService } from '../common/prisma/prisma.service';
 import { AccidentWikiRevisionResponseDto } from './dto/response/accident-wiki-revision-response.dto';
+import { WikiType } from "../common/enums/wiki-type.enum";
 
 @Injectable()
 export class AccidentService {
@@ -70,15 +71,13 @@ export class AccidentService {
   }
 
   async findWikiOfAccident(): Promise<AccidentWikiResponseDto> {
-    const wikiEntity = await this.prismaService.accidentWiki.findMany().then((res) => {
-      if (res.length > 0) {
-        throw new BadRequestException(
-          '사건/사고 위키가 한 개 이상 존재합니다. 오동작입니다, 데이터베이스 점검이 필요합니다.',
-        );
-      } else {
-        return res[0];
+    const wikiEntity = await this.prismaService.wiki.findFirstOrThrow({
+      where: {
+        wikiType: WikiType.ACCIDENT
       }
-    });
+    }).catch(() => {
+      throw new NotFoundException('등록된 사건/사고 위키가 존재하지 않습니다.');
+    })
 
     return new AccidentWikiResponseDto(wikiEntity);
   }

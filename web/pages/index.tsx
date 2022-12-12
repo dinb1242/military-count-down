@@ -116,15 +116,17 @@ const Home: NextPage = () => {
             </a>
           </Link>
 
-          <a
-            href="#"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-gray-500 focus:text-gray-900 hover:duration-200"
-          >
-            <h3 className="text-2xl font-bold">사건/사고 &rarr;</h3>
-            <p className="mt-4 text-xl">
-              좌충우돌 지현이의 미림 사건/사고
-            </p>
-          </a>
+          <Link href={'/accident/wiki'}>
+            <a
+              href="#"
+              className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-gray-500 focus:text-gray-900 hover:duration-200"
+            >
+              <h3 className="text-2xl font-bold">사건/사고 &rarr;</h3>
+              <p className="mt-4 text-xl">
+                좌충우돌 지현이의 미림 사건/사고
+              </p>
+            </a>
+          </Link>
 
           <a
             href="#"
