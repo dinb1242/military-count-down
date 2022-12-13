@@ -3,7 +3,6 @@ LABEL author="Jihyun, Jeong"
 
 WORKDIR /var/www/server
 COPY . .
-RUN chmod +x ./entrypoint.sh
 
 EXPOSE 8080
 
