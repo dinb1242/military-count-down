@@ -1,6 +1,18 @@
-import { Body, Controller, Get, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Req,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ExampleService } from './example.service';
-import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Example as ExampleModel } from '@prisma/client';
 import { CreateExampleDto } from './dto/request/create-example.dto';
 import { UpdateExampleDto } from './dto/request/update-example.dto';
@@ -9,6 +21,10 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Request } from 'express';
 import { HttpHeaders } from '../common/enums/http-headers.enum';
 import { PrismaService } from '../common/prisma/prisma.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { s3Client } from '../common/libs/s3-client.lib';
+import { ListObjectsCommand } from '@aws-sdk/client-s3';
+import { Public } from '../auth/decorators/auth-public.decorator';
 
 @ApiBearerAuth(HttpHeaders.AUTHORIZATION)
 @ApiTags('예제 API')
@@ -72,5 +88,29 @@ export class ExampleController {
   @Get(':id')
   async findExample(@Param('id') id: string): Promise<ExampleModel> {
     return await this.exampleService.findExample({ id: Number(id) });
+  }
+
+  @Public()
+  @Post('r2/test')
+  @ApiOperation({
+    summary: 'R2 테스트 API',
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @UseInterceptors(FileInterceptor('file'))
+  async r2Test(@UploadedFile('file') file: Express.Multer.File) {
+    const result = await s3Client.send(new ListObjectsCommand({ Bucket: process.env.R2_BUCKET_NAME }));
+    console.log(result);
+    return null;
   }
 }
