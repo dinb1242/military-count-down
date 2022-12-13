@@ -59,7 +59,6 @@ industrial personnel agent.
 <br/>
 <b>Note that the datasource must match up with `db.environment` in docker-compose.yml</b>
 ```
-# Create .env in server directory.
 >> cd ./server
 >> touch .env
 ```
