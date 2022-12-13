@@ -54,7 +54,7 @@ industrial personnel agent.
     networks:
       - military-count-down
 ```
-<br/>
+
 3. Move to the `server` directory, create `.env` file to specify the postgreSQL datasource and fill in the below code.
 <br/>
 <b>Note that the datasource must match up with `db.environment` in docker-compose.yml</b>
