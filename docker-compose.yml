@@ -1,0 +1,44 @@
+version: "3.9"
+
+services:
+  db:
+    container_name: military-count-down-postgres
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=local
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=my1018213!
+    ports:
+      - "5432:5432"
+    networks:
+      - military-count-down
+  web:
+    build:
+      context: ./web
+      dockerfile: ./Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./web:/var/www/web
+    depends_on:
+      - server
+    networks:
+      - military-count-down
+  server:
+    build:
+      context: ./server
+      dockerfile: ./Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./server:/var/www/server
+    links:
+      - db
+    depends_on:
+      - db
+    networks:
+      - military-count-down
+networks:
+  military-count-down:
+    driver: bridge
+    external: true
