@@ -99,6 +99,7 @@ military-count-down-server-1   "/bin/sh -c ./entryp…"   server              ru
 military-count-down-web-1      "npm run start"          web                 running             0.0.0.0:3000->3000/tcp, :::3000->3000/tcp
 ```
 <br/>
+
 7. If some containers are not running, then you can run those by using the command below.
 ```
 >> docker compose start # Whole containers will be started.
