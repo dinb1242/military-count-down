@@ -1,7 +1,7 @@
 import "@toast-ui/editor/dist/toastui-editor.css";
 
 import { Editor } from "@toast-ui/react-editor";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { HookCallback } from "@toast-ui/editor/types/editor";
 import FileApi from "../../apis/file.api";
 import { ENDPOINT } from "../../constants/api.constant";
@@ -12,7 +12,7 @@ interface Props {
   initMarkdown?: string;
 }
 
-const TuiEditor: NextPage<Props> = ({ handleMarkdownChange, initMarkdown }) => {
+const TuiEditor: NextPage<Props> = ({handleMarkdownChange, initMarkdown}) => {
 
   const editorRef = useRef<any>(null);
   const toolbarItems = [
@@ -28,6 +28,9 @@ const TuiEditor: NextPage<Props> = ({ handleMarkdownChange, initMarkdown }) => {
   const handleChange = () => {
     const editorIns = editorRef.current.getInstance();
     const contentMarkdown = editorIns.getMarkdown();
+
+    console.log(editorIns.getHTML());
+    console.log(contentMarkdown);
 
     handleMarkdownChange(contentMarkdown);
   };
@@ -45,7 +48,7 @@ const TuiEditor: NextPage<Props> = ({ handleMarkdownChange, initMarkdown }) => {
       <div className={"w-full"}>
         <Editor
           ref={editorRef}
-          initialValue={ initMarkdown ? initMarkdown : '' } // 글 수정 시 사용
+          initialValue={initMarkdown ? initMarkdown : ''} // 글 수정 시 사용
           initialEditType="markdown" // wysiwyg & markdown
           hideModeSwitch={true}
           height="500px"
@@ -53,7 +56,19 @@ const TuiEditor: NextPage<Props> = ({ handleMarkdownChange, initMarkdown }) => {
           usageStatistics={false}
           toolbarItems={toolbarItems}
           previewStyle={"vertical"}
-          onChange={ handleChange }
+          onChange={handleChange}
+          customHTMLRenderer={{
+            heading(node: any, ctx: any) {
+              return {
+                type: ctx.entering ? 'openTag' : 'closeTag',
+                tagName: `h${node.level}`,
+                attributes: {
+                  id: node.firstChild?.literal.replace(' ', '-')
+                }
+              };
+            },
+          }}
+          autofocus={ false }
           hooks={{
             addImageBlobHook: async (
               blob: Blob | File,

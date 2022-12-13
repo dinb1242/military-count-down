@@ -97,6 +97,7 @@ const People: NextPage = () => {
                     badgeColor={badgeColor}
                     tags={eachData.projects}
                     handler={handler}
+                    key={eachData.id}
                   />
               );
             })}

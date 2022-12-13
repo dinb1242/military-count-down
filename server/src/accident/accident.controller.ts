@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Patch, Post, Req } from '@nestjs/common';
 import { AccidentService } from './accident.service';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { HttpHeaders } from '../common/enums/http-headers.enum';
 import { Request } from 'express';
 import { AccidentWikiResponseDto } from './dto/response/accident-wiki-response.dto';
@@ -8,6 +8,7 @@ import { CreateAccidentWikiDto } from './dto/request/create-accident-wiki.dto';
 import { AccidentWikiRevisionResponseDto } from './dto/response/accident-wiki-revision-response.dto';
 import { UpdateAccidentWikiDto } from './dto/request/update-accident-wiki.dto';
 
+@ApiTags('사건/사고 API')
 @Controller('accident')
 export class AccidentController {
   constructor(private readonly accidentService: AccidentService) {}
@@ -54,7 +55,7 @@ export class AccidentController {
   @Get('wiki')
   @ApiOperation({
     summary: '사건/사고 위키 조회 API',
-    description: '등록된 사건/사고 위키를 조회한다.',
+    description: '등록된 사건/사고 위키를 조회한다. 사건/사고 위키는 단 한 개이며, 이에 따라 데이터베이스 내에서 사건/사고 위키 데이터 한 건을 조회한다.',
   })
   @ApiOkResponse({
     description: '조회 성공',

@@ -1,9 +1,9 @@
-import {axiosInstance} from "../interceptors/axios.interceptor";
-import {WikiType} from "../enums/wiki-type.enum";
+import { axiosInstance } from "../interceptors/axios.interceptor";
+import { WikiType } from "../enums/wiki-type.enum";
 
 export default {
     update(data: {
-        bbsId: number,
+        bbsId?: number,
         wikiContent: string,
         wikiType: WikiType
     }) {
@@ -20,5 +20,27 @@ export default {
 
     findOneWikiRevision(wikiRevisionId: number) {
         return axiosInstance.get(`/wiki/revision/one/${wikiRevisionId}`);
+    },
+
+    /**
+     * 사건/사고 위키
+     */
+
+    createAccidentWiki(data: {
+        wikiContent: string
+    }) {
+        return axiosInstance.post('/wiki/accident', {
+            ...data
+        })
+    },
+
+    updateAccidentWiki(data: {
+        wikiContent: string
+    }) {
+      return axiosInstance.patch('/wiki/accident', data);
+    },
+
+    findOneAccidentWiki() {
+      return axiosInstance.get('/accident/wiki');
     }
 }
