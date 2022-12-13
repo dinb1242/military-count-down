@@ -72,7 +72,7 @@ industrial personnel agent.
 ```
 ```
 # .env
-DATABASE_URL="postgresql://username:password@military-count-down-postgres:5432/db_name?schema=schema_name"
+DATABASE_URL="postgresql://username:password@db:5432/db_name?schema=schema_name"
 JWT_KEY=A_JWT_key_what_you_want_to_use
 ``` 
 <br/>
