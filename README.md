@@ -78,14 +78,14 @@ To create a docker network, execute the command below.
 ```
 >> docker network create military-count-down
 ```
-
+<br/>
 5. Move to the root directory and type the command below to set up the whole projects.
 ```
 # Move to the root directory and build.
 >> cd ..
 >> docker compose up --build -d
 ```
-
+<br/>
 6. Once the docker compose command finished, you can check the status using the command below.
 ```
 >> docker compose ps
@@ -98,7 +98,7 @@ military-count-down-postgres   "docker-entrypoint.s…"   db                  ru
 military-count-down-server-1   "/bin/sh -c ./entryp…"   server              running             0.0.0.0:8080->8080/tcp, :::8080->8080/tcp
 military-count-down-web-1      "npm run start"          web                 running             0.0.0.0:3000->3000/tcp, :::3000->3000/tcp
 ```
-
+<br/>
 7. If some containers are not running, then you can run those by using the command below.
 ```
 >> docker compose start # Whole containers will be started.
