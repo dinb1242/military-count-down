@@ -14,5 +14,8 @@ npx prisma db push
 echo ">> Generating prisma schema"
 npx prisma generate
 
+echo ">> Building server"
+npm run build
+
 echo ">> Starting server..."
-npm run start
+npm run start:prod
