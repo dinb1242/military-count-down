@@ -2,10 +2,10 @@
 IT산업기능요원의 회사 전역일 계산기 및 미림 위키
 
 ## Description
-A military discharge date calculator and company wiki toy project.<br/>
+A military discharge date calculator and company wiki toy project.<br/><br/>
 This project consists of the left days of military duty and some of wiki about the company where I worked as a skilled industrial personnel agent.
 
-## Tech stacks
+## Developed using
 <div align="center">
   <img alt="TypeScript" src ="https://img.shields.io/badge/TypeScript-3178C6.svg?&style=for-the-badge&logo=TypeScript&logoColor=white"/>
   <img alt="Next.js" src ="https://img.shields.io/badge/Next.js-000000.svg?&style=for-the-badge&logo=Next.js&logoColor=white"/>
