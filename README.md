@@ -59,6 +59,7 @@ industrial personnel agent.
 <br/>
 <b>Note that the datasource must match up with `db.environment` in docker-compose.yml</b>
 ```
+# Create .env in server directory.
 >> cd ./server
 >> touch .env
 ```
@@ -66,7 +67,7 @@ industrial personnel agent.
 DATABASE_URL="postgresql://username:password@military-count-down-postgres:5432/db_name?schema=schema_name"
 JWT_KEY=A_JWT_key_what_you_want_to_use
 ```
-
+<br/>
 4. Before execute the docker compose command, you have to create a new docker network named `military-count-down` by typing the command below.
 <br/>
 Otherwise, you can just remove docker compose network setting by modifying `networks` property in docker-compose.yml. <b>(If you decide this way, you can skip this step.)</b>
