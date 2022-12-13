@@ -28,6 +28,13 @@ industrial personnel agent.
 - Docker Compose
 
 ## Installiation
+### Summary
+1. Clone repository.
+2. Modify datasource (`docker-compose.yml` and `.env` both)
+3. Create new docker network named `military-count-down`
+4. Docker compose build and execute
+
+### Detail
 1. Clone this repository using the command below where you want.
 ```
 >> git clone https://github.com/dinb1242/military-count-down.git
