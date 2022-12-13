@@ -35,7 +35,7 @@ industrial personnel agent.
 
 2. Move to the directory where you have cloned, find `docker-compose.yml`, and modify the postgreSQL db, username, and password what you want to use.
 <br/><br/>
-**You have to modify `.env` file too (datasource such as DB, username, password in this file must match up with `db.environment` in `docker-compose.yml`)**
+<b>You have to modify `.env` file too (datasource such as DB, username, password in this file must match up with `db.environment` in `docker-compose.yml`)</b>
 ```
 >> cd ./military-count-down
 ```
@@ -69,8 +69,7 @@ JWT_KEY=A_JWT_key_what_you_want_to_use
 ```
 <br/>
 
-4. Before execute the docker compose command, you have to create a new docker network named `military-count-down` by typing the command below.
-<br/>
+4. Before execute the docker compose command, you have to create a new docker network named `military-count-down` by typing the command below.<br/>
 Otherwise, you can just remove docker compose network setting by modifying `networks` property in docker-compose.yml. <b>(If you decide this way, you can skip this step.)</b>
 <br/><br/>
 To create a docker network, execute the command below.
