@@ -54,6 +54,7 @@ industrial personnel agent.
     networks:
       - military-count-down
 ```
+<br/>
 
 3. Move to the `server` directory, create `.env` file to specify the postgreSQL datasource and fill in the below code.
 <br/>
@@ -79,6 +80,7 @@ To create a docker network, execute the command below.
 >> docker network create military-count-down
 ```
 <br/>
+
 5. Move to the root directory and type the command below to set up the whole projects.
 ```
 # Move to the root directory and build.
@@ -86,6 +88,7 @@ To create a docker network, execute the command below.
 >> docker compose up --build -d
 ```
 <br/>
+
 6. Once the docker compose command finished, you can check the status using the command below.
 ```
 >> docker compose ps
