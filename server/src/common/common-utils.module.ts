@@ -4,7 +4,7 @@ import { TimeUtils } from './utils/time.util';
 import { JwtUtils } from './utils/jwt.util';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { R2Utils } from "./utils/r2.util";
+import { R2Utils } from './utils/r2.util';
 
 @Global()
 @Module({
