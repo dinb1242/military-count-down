@@ -2,11 +2,11 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { PrismaService } from '../common/prisma/prisma.service';
 import { Coworker as CoworkerModel, DevPart, Prisma } from '@prisma/client';
 import { CoworkerResponseDto } from './dto/response/coworker-response.dto';
+import { R2Utils } from "../common/utils/r2.util";
 
 @Injectable()
 export class CoworkerService {
-  constructor(private readonly prismaService: PrismaService) {
-  }
+  constructor(private readonly prismaService: PrismaService, private readonly r2Utils: R2Utils) {}
 
   /**
    *
@@ -90,7 +90,29 @@ export class CoworkerService {
       throw new NotFoundException('일치하는 개발자를 찾을 수 없습니다.');
     });
     const { fileId } = coworkerEntity;
-    await this.prismaService.coworker.delete({where: {id: id}});
+    await this.prismaService.coworker.delete({where: {id: id}})
+      .then(async (res) => {
+        // 파일이 존재한다면
+        if (coworkerEntity.fileId) {
+          // 파일을 제거한다.
+          const { fileKey } = await this.prismaService.file.findUniqueOrThrow(
+            {
+              where: { id: fileId },
+              select: {
+                fileKey: true
+              }
+            })
+            .catch(() => {
+              throw new NotFoundException('해당 파일을 찾을 수 없습니다.');
+            });
+
+          // 파일 엔티티를 제거한다.
+          await this.prismaService.file.delete({ where: { id: fileId } });
+
+          // R2 에서 해당 파일을 제거한다.
+          await this.r2Utils.deleteObject(fileKey);
+        }
+      })
 
     return new CoworkerResponseDto(coworkerEntity);
   }

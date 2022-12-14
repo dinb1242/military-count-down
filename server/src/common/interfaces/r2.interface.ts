@@ -12,3 +12,8 @@ export interface PutObjectCommandParams {
   Key: string;
   Body: Buffer;
 }
+
+export interface DeleteObjectCommandParams {
+  Bucket: string;
+  Key: string;
+}

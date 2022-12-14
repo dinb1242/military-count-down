@@ -1,6 +1,11 @@
-import { GetObjectCommandParams, ListObjectCommandParams, PutObjectCommandParams } from "../interfaces/r2.interface";
+import {
+  DeleteObjectCommandParams,
+  GetObjectCommandParams,
+  ListObjectCommandParams,
+  PutObjectCommandParams
+} from "../interfaces/r2.interface";
 import { s3Client } from "../libs/r2-client.lib";
-import { GetObjectCommand, ListObjectsCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import { DeleteObjectCommand, GetObjectCommand, ListObjectsCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { Injectable } from "@nestjs/common";
 
 /**
@@ -46,5 +51,14 @@ export class R2Utils {
       Bucket: bucketName,
     }
     return s3Client.send(new ListObjectsCommand(listObjectCommandParams));
+  }
+
+  async deleteObject(key: string) {
+    const deleteObjectCommandParams: DeleteObjectCommandParams = {
+      Bucket: bucketName,
+      Key: key
+    };
+
+    return s3Client.send(new DeleteObjectCommand(deleteObjectCommandParams));
   }
 }
