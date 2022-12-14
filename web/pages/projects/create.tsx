@@ -77,6 +77,8 @@ export const ProjectsCreate = () => {
             FileApi.upload(BbsType.PROJECT, projectId, formData).then(() => {
               router.push("/projects");
             });
+          } else {
+            router.push("/projects");
           }
           toast.success('프로젝트가 성공적으로 생성되었습니다.', {
             style: {
@@ -84,7 +86,6 @@ export const ProjectsCreate = () => {
             },
             icon: <AiOutlineCheck />
           })
-          router.push("/projects");
         }
       })
       .catch((err) => {
