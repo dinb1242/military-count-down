@@ -191,20 +191,23 @@ export const PeopleCreate: NextPage = () => {
 
         // 파일 저장
         if (success) {
-          if (imgRef.current.files.length > 0) {
-            const formData = new FormData();
-            formData.append('file', imgRef.current.files[0]);
+          const file = imgRef.current.files[0];
+          const formData = new FormData();
+          formData.append('file', file);
+
+          if (file) {
             FileApi.upload(BbsType.COWORKER, id, formData)
               .then(res => {
                 router.push('/people')
               }).catch(err => {
               console.log(err.response.data.message);
             })
+          } else {
+            router.push('/people')
           }
           toast.success('함께한 개발자가 생성되었습니다.', {
             icon: <AiOutlineCheck />
           });
-          router.push('/people')
         }
       })
       .catch((err) => {

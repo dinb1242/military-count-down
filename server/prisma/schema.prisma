@@ -169,6 +169,7 @@ model File {
   id        Int       @id @default(autoincrement())
   filename  String
   filePath  String
+  fileKey String
   fileSize  Int
   mimeType  String
   coworker  Coworker?

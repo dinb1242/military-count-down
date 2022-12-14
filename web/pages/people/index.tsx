@@ -44,6 +44,9 @@ const People: NextPage = () => {
     });
   }, [t]);
 
+  if (!findAll)
+    return null;
+
   return (
     <div className={"min-h-screen p-8"}>
       <Head>

@@ -11,7 +11,6 @@ import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import { AiFillEdit, AiOutlineCheck } from "react-icons/ai";
 import { NextPage, NextPageContext } from "next";
-import { ENDPOINT } from "../../constants/api.constant";
 
 interface ProjectProps {
   projectId: number;
@@ -120,7 +119,7 @@ export const ProjectsUpdate: NextPage<ProjectProps> = ({ projectId }) => {
           content: data.content
         })
         if (data.thumbnailList.filePath)
-          setImageUrl(`${ENDPOINT}/${data.thumbnailList.filePath}`);
+          setImageUrl(data.thumbnailList.filePath);
       } catch (err) {
         console.log(err);
       }

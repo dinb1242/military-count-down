@@ -1,7 +1,6 @@
 import { NextPage } from "next";
 import { HiUserCircle } from "react-icons/hi";
 import Image from "next/image";
-import { ENDPOINT } from "../../constants/api.constant";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { FaEllipsisV } from "react-icons/fa";
 import CoworkerApi from "../../apis/coworker.api";
@@ -99,7 +98,7 @@ export const Card: NextPage<CardProps> = ({
             <div className={"relative p-28 mt-4"}>
               <Image
                 className={"rounded-full"}
-                src={`${ENDPOINT}/${profileImage}`}
+                src={`${profileImage}`}
                 layout={"fill"}
                 objectFit={"cover"}
               />
