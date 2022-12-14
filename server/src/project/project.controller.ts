@@ -13,9 +13,6 @@ import { CreateProjectDto } from './dto/request/create-project.dto';
 import { ProjectResponseDto } from './dto/response/project-response.dto';
 import { UpdateProjectDto } from './dto/request/update-project.dto';
 import { Request } from 'express';
-import { CreateProjectWikiDto } from './dto/request/create-project-wiki.dto';
-import { ProjectWikiResponseDto } from './dto/response/project-wiki-response.dto';
-import { ProjectWikiRevisionResponseDto } from './dto/response/project-wiki-revision-response.dto';
 import { WikiType } from "../common/enums/wiki-type.enum";
 
 @ApiTags('진행한 프로젝트 API')
@@ -97,58 +94,5 @@ export class ProjectController {
   @ApiNotFoundResponse({ description: '삭제 실패 - 시퀀스 미조회' })
   async delete(@Param('id') id: number): Promise<ProjectResponseDto> {
     return this.projectService.delete(id);
-  }
-
-  @ApiBearerAuth(HttpHeaders.AUTHORIZATION)
-  @Post('wiki/:projectId')
-  @ApiOperation({
-    summary: '위키 등록 및 수정 API',
-    description:
-      '특정 프로젝트의 시퀀스를 전달받아 해당 프로젝트에 대한 위키를 등록한다. 이미 존재하는 위키일 경우, 수정하고 Revision 을 추가한다.',
-  })
-  @ApiOkResponse({
-    description: '등록 성공',
-    type: ProjectWikiResponseDto,
-  })
-  async upsertWiki(
-    @Req() request: Request,
-    @Param('projectId') projectId: number,
-    @Body() requestDto: CreateProjectWikiDto,
-  ) {
-    return this.projectService.upsertWiki(request.user, projectId, {
-      wikiContent: requestDto.wikiContent,
-      project: {
-        connect: { id: projectId },
-      },
-    });
-  }
-
-  @ApiBearerAuth(HttpHeaders.AUTHORIZATION)
-  @Get('wiki/:projectId')
-  @ApiOperation({
-    summary: '특정 개발자 위키 조회 API',
-    description: '개발자의 시퀀스를 Path Var 로 전달받아 해당하는 개발자의 위키를 조회한다.',
-  })
-  @ApiOkResponse({
-    description: '조회 성공',
-    type: ProjectWikiResponseDto,
-  })
-  @ApiNotFoundResponse({ description: '조회 실패 - 시퀀스 미조회' })
-  async findWikiOfSpecificProject(@Param('projectId') projectId: number): Promise<ProjectWikiResponseDto> {
-    return this.projectService.findWikiOfSpecificProject(projectId);
-  }
-
-  @ApiBearerAuth(HttpHeaders.AUTHORIZATION)
-  @Get('wiki/revision/:projectWikiId')
-  @ApiOperation({
-    summary: '위키 Revision 전체 조회 API',
-    description: '특정 프로젝트에 해당하는 Revision 목록을 전체 조회한다.',
-  })
-  @ApiOkResponse({
-    description: '조회 성공',
-    type: ProjectWikiRevisionResponseDto,
-  })
-  async findAllRevisionOfSpecificProject(@Param('projectWikiId') projectWikiId: number) {
-    return this.projectService.findAllRevisionOfSpecificProject(projectWikiId);
   }
 }
