@@ -24,8 +24,7 @@ export class FileService {
   async uploadFile(user: any, bbsType: BbsType, bbsId: number, file: Express.Multer.File): Promise<FileResponseDto> {
     try {
       // R2 에 파일을 업로드한다.
-      const { email } = user;
-      const key = `${email}/${bbsType}/${randomUUID() + "_" + file.originalname}`
+      const key = `${bbsType}/${randomUUID() + "_" + file.originalname}`
       await this.r2Utils.uploadObject(key, file.buffer);
       Logger.log(`업로드가 완료되었습니다.\nObject path=${key}`);
 
