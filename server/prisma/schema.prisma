@@ -40,9 +40,6 @@ model User {
   authToken     AuthToken[]
   accessHistory AccessHistory[]
   wikiRevision  WikiRevision[]
-  coworkerWiki  CoworkerWikiRevision[]
-  projectWiki   ProjectWikiRevision[]
-  accidentWiki  AccidentWikiRevision[]
   retrospect    Retrospect[]
   createdAt     DateTime               @default(now())
   updatedAt     DateTime               @updatedAt
@@ -54,7 +51,6 @@ model Coworker {
   name         String        @unique
   devPart      DevPart
   projects     String[]
-  coworkerWiki CoworkerWiki?
   wiki         Wiki          @relation(fields: [wikiId], references: [id])
   wikiId       Int           @unique
   file         File?         @relation(fields: [fileId], references: [id])
@@ -63,75 +59,16 @@ model Coworker {
   updatedAt    DateTime      @updatedAt
 }
 
-model CoworkerWiki {
-  id                   Int                    @id @default(autoincrement())
-  wikiContent          String?
-  coworker             Coworker               @relation(fields: [coworkerId], references: [id], onUpdate: Cascade)
-  coworkerId           Int                    @unique
-  coworkerWikiRevision CoworkerWikiRevision[]
-  createdAt            DateTime               @default(now())
-  updatedAt            DateTime               @updatedAt
-}
-
-model CoworkerWikiRevision {
-  id             Int          @id @default(autoincrement())
-  wikiContent    String?
-  coworkerWiki   CoworkerWiki @relation(fields: [coworkerWikiId], references: [id])
-  coworkerWikiId Int
-  author         User         @relation(fields: [authorId], references: [id])
-  authorId       Int
-  createdAt      DateTime     @default(now())
-}
-
 model Project {
   id          Int          @id @default(autoincrement())
   title       String
   content     String?
-  projectWiki ProjectWiki?
   wiki        Wiki         @relation(fields: [wikiId], references: [id])
   wikiId      Int          @unique
   file        File?        @relation(fields: [fileId], references: [id])
   fileId      Int?         @unique
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
-}
-
-model ProjectWiki {
-  id                  Int                   @id @default(autoincrement())
-  wikiContent         String?
-  project             Project               @relation(fields: [projectId], references: [id])
-  projectId           Int                   @unique
-  projectWikiRevision ProjectWikiRevision[]
-  createdAt           DateTime              @default(now())
-  updatedAt           DateTime              @updatedAt
-}
-
-model ProjectWikiRevision {
-  id            Int         @id @default(autoincrement())
-  wikiContent   String?
-  projectWiki   ProjectWiki @relation(fields: [projectWikiId], references: [id])
-  projectWikiId Int
-  author        User        @relation(fields: [authorId], references: [id])
-  authorId      Int
-  createdAt     DateTime    @default(now())
-}
-
-model AccidentWiki {
-  id                   Int                    @id @default(autoincrement())
-  wikiContent          String?
-  accidentWikiRevision AccidentWikiRevision[]
-  createdAt            DateTime               @default(now())
-  updatedAt            DateTime               @updatedAt
-}
-
-model AccidentWikiRevision {
-  id             Int          @id @default(autoincrement())
-  wikiContent    String
-  accidentWiki   AccidentWiki @relation(fields: [accidentWikiId], references: [id])
-  accidentWikiId Int
-  author         User         @relation(fields: [authorId], references: [id])
-  authorId       Int
-  createdAt      DateTime     @default(now())
 }
 
 model Wiki {
@@ -148,7 +85,7 @@ model Wiki {
 model WikiRevision {
   id          Int      @id @default(autoincrement())
   wikiContent String
-  wiki        Wiki     @relation(fields: [wikiId], references: [id])
+  wiki        Wiki     @relation(fields: [wikiId], references: [id], onDelete: Cascade)
   wikiId      Int
   author      User     @relation(fields: [authorId], references: [id])
   authorId    Int
@@ -169,6 +106,7 @@ model File {
   id        Int       @id @default(autoincrement())
   filename  String
   filePath  String
+  fileKey String
   fileSize  Int
   mimeType  String
   coworker  Coworker?

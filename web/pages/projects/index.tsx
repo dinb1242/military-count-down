@@ -5,7 +5,6 @@ import Link from "next/link";
 import { HiPlusCircle } from "react-icons/hi";
 import { useEffect, useState } from "react";
 import ProjectApi from "../../apis/project.api";
-import { ENDPOINT } from "../../constants/api.constant";
 
 interface FindAll {
   id: number;
@@ -81,7 +80,7 @@ export const Projects = () => {
                   id={eachData.id}
                   title={eachData.title}
                   content={eachData.content}
-                  backgroundImg={ eachData.thumbnailList.filePath && `${ENDPOINT}/${eachData.thumbnailList.filePath}`}
+                  backgroundImg={ eachData.thumbnailList.filePath && eachData.thumbnailList.filePath}
                   trickHandler={ trickHandler }
                 />
               );

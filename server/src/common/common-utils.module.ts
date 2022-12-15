@@ -4,6 +4,7 @@ import { TimeUtils } from './utils/time.util';
 import { JwtUtils } from './utils/jwt.util';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { R2Utils } from './utils/r2.util';
 
 @Global()
 @Module({
@@ -20,7 +21,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       inject: [ConfigService],
     }),
   ],
-  providers: [CipherUtils, TimeUtils, JwtUtils],
-  exports: [CipherUtils, TimeUtils, JwtUtils],
+  providers: [CipherUtils, TimeUtils, JwtUtils, R2Utils],
+  exports: [CipherUtils, TimeUtils, JwtUtils, R2Utils],
 })
 export class CommonUtilsModule {}

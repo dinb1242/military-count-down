@@ -4,7 +4,6 @@ import { Editor } from "@toast-ui/react-editor";
 import { useEffect, useRef } from "react";
 import { HookCallback } from "@toast-ui/editor/types/editor";
 import FileApi from "../../apis/file.api";
-import { ENDPOINT } from "../../constants/api.constant";
 import { NextPage } from "next";
 
 interface Props {
@@ -79,7 +78,7 @@ const TuiEditor: NextPage<Props> = ({handleMarkdownChange, initMarkdown}) => {
               const response: any = await FileApi.markdownUpload(formData);
               let path: string = response.data.data;
               path = path.replace("\\", "/");
-              callback(`${ENDPOINT}/${path}`, "image");
+              callback(path, "image");
               return false;
             },
           }}

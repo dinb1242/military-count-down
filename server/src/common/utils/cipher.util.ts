@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import * as CryptoJS from 'crypto-js';
 
 const encKey = process.env.ENC_KEY;

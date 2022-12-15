@@ -10,7 +10,6 @@ import {
   ApiTags
 } from '@nestjs/swagger';
 import { HttpHeaders } from '../common/enums/http-headers.enum';
-import { CoworkerWikiResponseDto } from '../coworker/dto/response/coworker-wiki-response.dto';
 import { Request } from 'express';
 import { WikiType } from '../common/enums/wiki-type.enum';
 import { Prisma } from '@prisma/client';
@@ -33,7 +32,7 @@ export class WikiController {
   })
   @ApiOkResponse({
     description: '등록 성공',
-    type: CoworkerWikiResponseDto,
+    type: WikiResponseDto,
   })
   async update(@Req() request: Request, @Body() requestDto: UpdateWikiDto) {
     const {id: userId}: any = request.user;
@@ -87,7 +86,7 @@ export class WikiController {
   })
   @ApiOkResponse({
     description: '조회 성공',
-    type: CoworkerWikiResponseDto,
+    type: WikiResponseDto,
   })
   @ApiParam({
     name: 'bbsType',

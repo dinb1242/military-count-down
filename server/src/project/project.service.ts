@@ -1,13 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../common/prisma/prisma.service';
-import { Prisma } from '@prisma/client';
+import { Prisma, Project as ProjectModel } from '@prisma/client';
 import { ProjectResponseDto } from './dto/response/project-response.dto';
-import { ProjectWikiResponseDto } from './dto/response/project-wiki-response.dto';
-import { ProjectWikiRevisionResponseDto } from './dto/response/project-wiki-revision-response.dto';
+import { R2Utils } from "../common/utils/r2.util";
 
 @Injectable()
 export class ProjectService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService, private readonly r2Utils: R2Utils) {}
 
   async create(projectCreateInput: Prisma.ProjectCreateInput): Promise<ProjectResponseDto> {
     const projectEntity = await this.prismaService.project.create({ data: projectCreateInput });
@@ -48,69 +47,39 @@ export class ProjectService {
   }
 
   async delete(id: number): Promise<ProjectResponseDto> {
-    await this.prismaService.project.findUniqueOrThrow({ where: { id } }).catch(() => {
-      throw new NotFoundException('일치하는 프로젝트를 찾을 수 없습니다. projectId=' + id);
-    });
-
-    const projectEntity = await this.prismaService.project.delete({ where: { id: id } });
-
-    return new ProjectResponseDto(projectEntity);
-  }
-
-  async upsertWiki(
-    user: any,
-    projectId: number,
-    projectWikiCreateInput: Prisma.ProjectWikiCreateInput,
-  ): Promise<ProjectWikiResponseDto> {
-    const { id: authorId } = user;
-
-    const wikiRevisionObj: any = {
-      projectWikiRevision: {
-        create: {
-          author: {
-            connect: { id: authorId },
-          },
-          wikiContent: projectWikiCreateInput.wikiContent,
+    const projectEntity: ProjectModel = await this.prismaService.project.findUniqueOrThrow(
+      {
+        where: {
+          id: id
         },
-      },
-    };
-
-    const wikiEntity = await this.prismaService.projectWiki.upsert({
-      where: { projectId: projectId },
-      create: {
-        ...projectWikiCreateInput,
-        ...wikiRevisionObj,
-      },
-      update: {
-        wikiContent: projectWikiCreateInput.wikiContent,
-        ...wikiRevisionObj,
-      },
+        include: { file: true }
+      }).catch(() => {
+      throw new NotFoundException('일치하는 프로젝트를 찾을 수 없습니다.');
     });
+    const { fileId } = projectEntity;
+    await this.prismaService.project.delete({where: {id: id}})
+      .then(async (res) => {
+        // 파일이 존재한다면
+        if (projectEntity.fileId) {
+          // 파일을 제거한다.
+          const { fileKey } = await this.prismaService.file.findUniqueOrThrow(
+            {
+              where: { id: fileId },
+              select: {
+                fileKey: true
+              }
+            })
+            .catch(() => {
+              throw new NotFoundException('해당 파일을 찾을 수 없습니다.');
+            });
 
-    return new ProjectWikiResponseDto(wikiEntity);
-  }
+          // 파일 엔티티를 제거한다.
+          await this.prismaService.file.delete({ where: { id: fileId } });
 
-  async findWikiOfSpecificProject(projectId: number): Promise<ProjectWikiResponseDto> {
-    const wikiEntity = await this.prismaService.projectWiki
-      .findUniqueOrThrow({
-        where: { projectId: projectId },
+          // R2 에서 해당 파일을 제거한다.
+          await this.r2Utils.deleteObject(fileKey);
+        }
       })
-      .catch(() => {
-        throw new NotFoundException('일치하는 프로젝트를 찾을 수 없습니다. projectId=' + projectId);
-      });
-
-    return new ProjectWikiResponseDto(wikiEntity);
-  }
-
-  async findAllRevisionOfSpecificProject(projectWikiId: number) {
-    const wikiRevisions: Array<any> = await this.prismaService.projectWikiRevision.findMany({
-      where: { projectWikiId: projectWikiId },
-      include: {
-        projectWiki: true,
-        author: true,
-      },
-    });
-
-    return wikiRevisions.map((eachEntity) => new ProjectWikiRevisionResponseDto(eachEntity));
+    return new ProjectResponseDto(projectEntity);
   }
 }
