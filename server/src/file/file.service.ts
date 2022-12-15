@@ -26,9 +26,9 @@ export class FileService {
       // R2 에 파일을 업로드한다.
       const key = `${bbsType}/${randomUUID() + "_" + file.originalname}`
       await this.r2Utils.uploadObject(key, file.buffer);
-      Logger.log(`업로드가 완료되었습니다.\nObject path=${key}`);
 
       const objectPath = `${process.env.R2_PUBLIC_ENDPOINT}/${key}`;
+      Logger.log(`업로드가 완료되었습니다.\nObject path=${key}, Full path=${objectPath}`);
 
       const { originalname, size, mimetype } = file;
 
