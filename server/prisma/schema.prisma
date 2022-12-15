@@ -85,7 +85,7 @@ model Wiki {
 model WikiRevision {
   id          Int      @id @default(autoincrement())
   wikiContent String
-  wiki        Wiki     @relation(fields: [wikiId], references: [id])
+  wiki        Wiki     @relation(fields: [wikiId], references: [id], onDelete: Cascade)
   wikiId      Int
   author      User     @relation(fields: [authorId], references: [id])
   authorId    Int
