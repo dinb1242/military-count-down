@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { HiArrowCircleLeft } from 'react-icons/hi';
 import ProjectApi from "../../../../../../../apis/project.api";
 import WikiApi from "../../../../../../../apis/wiki.api";
+import { toast } from "react-toastify";
 
 const Viewer = dynamic(() => import("../../../../../../../components/inputs/tui-viewer"), {
   ssr: false,
@@ -22,14 +23,6 @@ interface FindOneRevision {
   wikiId: number;
   wikiContent: string;
   author: Author;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface ProjectWiki {
-  id: number;
-  name: string;
-  wikiContent: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -77,8 +70,13 @@ export const OldRevisionView: NextPage<Props> = ({ projectId, wikiRevisionId }) 
 
         setFindOneProject(dataProject);
         setFindOneRevision(dataRevision);
-      } catch (err) {
+      } catch (err: any) {
         console.log(err);
+        const { status } = err.response;
+        if (status === 404) {
+          router.push('/projects');
+        }
+        toast.error(err.response.data.message);
       }
     }
 

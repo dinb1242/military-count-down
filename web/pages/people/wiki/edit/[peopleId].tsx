@@ -42,6 +42,10 @@ export const PeopleWikiCreate: NextPage<Props> = ({ peopleId }) => {
         router.push(`/people/wiki/${peopleId}`);
       }).catch(err => {
         console.log(err);
+        const { status } = err.response;
+        if (status === 404) {
+          router.push('/people');
+        }
         toast.error(err.response.data.message, {
           style: {
             width: '400px'
