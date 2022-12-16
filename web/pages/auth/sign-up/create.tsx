@@ -230,6 +230,7 @@ export const SignUpCreate = () => {
   const [isPhoneValModalOpen, setIsPhoneValModalOpen] = useState(false);
   const handlePhoneValModal = () => {
     setIsPhoneValModalOpen((a) => !a);
+    setIsLoading(false);
   };
 
   return (
