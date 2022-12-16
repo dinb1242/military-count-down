@@ -109,7 +109,9 @@ export const Card: NextPage<CardProps> = ({
 
       <div className="card-body">
         <h2 className="card-title">
-          {name}
+          <span className={'truncate'}>
+            {name}
+          </span>
           {badgeDesc === undefined ? null : (
             <div
               className={
