@@ -28,9 +28,6 @@ const TuiEditor: NextPage<Props> = ({handleMarkdownChange, initMarkdown}) => {
     const editorIns = editorRef.current.getInstance();
     const contentMarkdown = editorIns.getMarkdown();
 
-    console.log(editorIns.getHTML());
-    console.log(contentMarkdown);
-
     handleMarkdownChange(contentMarkdown);
   };
 
