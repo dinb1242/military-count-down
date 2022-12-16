@@ -26,14 +26,14 @@ export class FileService {
       // R2 에 파일을 업로드한다.
       const key = `${bbsType}/${randomUUID() + "_" + file.originalname}`
       await this.r2Utils.uploadObject(key, file.buffer);
-      Logger.log(`업로드가 완료되었습니다.\nObject path=${key}`);
 
       const objectPath = `${process.env.R2_PUBLIC_ENDPOINT}/${key}`;
+      Logger.log(`업로드가 완료되었습니다.\nObject path=${key}, Full path=${objectPath}`);
 
       const { originalname, size, mimetype } = file;
 
       const fileCreateInput: Prisma.FileCreateInput = {
-        filename: originalname,
+        filename: originalname.replace(' ', ''),
         filePath: objectPath,
         fileKey: key,
         fileSize: size,
@@ -68,7 +68,7 @@ export class FileService {
   async markdownFileUpload(user: any, file: Express.Multer.File): Promise<string> {
     // R2 에 파일을 업로드한다.
     const { email } = user;
-    const key = `${email}/Markdown/${randomUUID() + "_" + file.originalname}`
+    const key = `${email}/Markdown/${randomUUID() + "_" + file.originalname.replace(' ', '')}`
     await this.r2Utils.uploadObject(key, file.buffer);
     Logger.log(`업로드가 완료되었습니다.\nObject path=${key}`);
 

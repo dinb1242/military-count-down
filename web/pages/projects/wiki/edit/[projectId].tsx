@@ -42,6 +42,10 @@ export const ProjectWikiCreate: NextPage<Props> = ({ projectId }) => {
         router.push(`/projects/wiki/${projectId}`);
       }).catch(err => {
         console.log(err);
+        const { status } = err.response;
+        if (status === 404) {
+          router.push('/projects');
+        }
         toast.error(err.response.data.message, {
           style: {
             width: '400px'

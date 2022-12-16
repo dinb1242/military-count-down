@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import CoworkerApi from '../../../../apis/coworker.api';
 import Link from 'next/link';
 import WikiApi from "../../../../apis/wiki.api";
+import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 
 interface Props {
   peopleId: number;
@@ -69,6 +71,7 @@ export const getServerSideProps = (context: NextPageContext) => {
 }
 
 export const PeopleWikiRevision: NextPage<Props> = ({ peopleId, peopleWikiId }) => {
+  const router = useRouter();
 
   const [findAllRevisions, setFindAllRevisions] = useState<FindAllRevisions[]>();
   const [findCoworker, setFindCoworker] = useState<FindCoworker>();
@@ -83,8 +86,13 @@ export const PeopleWikiRevision: NextPage<Props> = ({ peopleId, peopleWikiId }) 
 
         setFindAllRevisions(data);
         setFindCoworker(dataCoworker);
-      } catch (err) {
+      } catch (err: any) {
         console.log(err);
+        const { status } = err.response;
+        if (status === 404) {
+          router.push('/people');
+        }
+        toast.error(err.response.data.message);
       }
     }
     fetchData();
