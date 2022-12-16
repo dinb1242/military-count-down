@@ -13,7 +13,6 @@ import FileApi from "../../apis/file.api";
 import { BbsType } from "../../enums/bbstype.enum";
 import { useRouter } from "next/router";
 import { AiFillEdit } from "react-icons/ai";
-import { ENDPOINT } from "../../constants/api.constant";
 import { toast } from "react-toastify";
 
 interface InputState {
@@ -23,7 +22,7 @@ interface InputState {
 }
 
 interface ProjectTagState {
-  id: number;
+  id: string;
   tag: string;
 }
 
@@ -118,7 +117,7 @@ export const PeopleUpdate: NextPage<Props> = ({ coworkerId }) => {
       setProjectTag([
         ...projectTag,
         {
-          id: nextId.current,
+          id: Math.random().toString(36).substring(2, 12),
           tag: eachProjectTag,
         },
       ]);
@@ -134,7 +133,7 @@ export const PeopleUpdate: NextPage<Props> = ({ coworkerId }) => {
   };
 
   // 태그 클릭 시 제거
-  const removeEachProjectTag = (targetIdx: number) => {
+  const removeEachProjectTag = (targetIdx: string) => {
     setProjectTag(
       projectTag.filter((eachProjectTag) => eachProjectTag.id !== targetIdx)
     );
@@ -247,14 +246,14 @@ export const PeopleUpdate: NextPage<Props> = ({ coworkerId }) => {
           eachProject: "",
         });
         const projects: string[] = response.data.data.projects;
-        const projectTagList = projects.map((value, idx) => {
+        const projectTagList = projects.map((value) => {
           return {
-            id: idx,
+            id: Math.random().toString(36).substring(2, 12),
             tag: value
           }
         });
         setProjectTag([...projectTagList])
-        setImageUrl(`${ENDPOINT}/${response.data.data.profileImage.filePath}`);
+        setImageUrl(`${response.data.data.profileImage.filePath}`);
       } catch (err) {
         console.log(err);
       }
@@ -434,7 +433,7 @@ export const PeopleUpdate: NextPage<Props> = ({ coworkerId }) => {
                       "border w-11/12 truncate p-1 rounded text-center mx-2 select-none hover:bg-red-500 hover:duration-200 hover:text-white"
                     }
                     onClick={(event) =>
-                      removeEachProjectTag(parseInt(event.currentTarget.id))
+                      removeEachProjectTag(event.currentTarget.id)
                     }
                   >
                     {eachProjectTag.tag}
