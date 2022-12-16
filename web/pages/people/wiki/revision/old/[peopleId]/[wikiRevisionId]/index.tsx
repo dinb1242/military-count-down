@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { HiArrowCircleLeft } from 'react-icons/hi';
 import WikiApi from "../../../../../../../apis/wiki.api";
+import { toast } from "react-toastify";
 
 const Viewer = dynamic(() => import("../../../../../../../components/inputs/tui-viewer"), {
   ssr: false,
@@ -91,8 +92,13 @@ export const OldRevisionView: NextPage<Props> = ({ peopleId, wikiRevisionId }) =
 
         setFindOneCoworker(dataCoworker);
         setFindOneRevision(dataRevision);
-      } catch (err) {
+      } catch (err: any) {
         console.log(err);
+        const { status } = err.response;
+        if (status === 404) {
+          router.push('/people');
+        }
+        toast.error(err.response.data.message);
       }
     }
 

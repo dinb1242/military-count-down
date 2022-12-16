@@ -31,6 +31,10 @@ export const AccidentWikiCreate = () => {
         router.push(`/accident/wiki`);
       }).catch(err => {
         console.log(err);
+        const { status } = err.response;
+        if (status === 404) {
+          router.push('/');
+        }
         toast.error(err.response.data.message, {
           style: {
             width: '400px'

@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import WikiApi from "../../../../apis/wiki.api";
 import ProjectApi from "../../../../apis/project.api";
+import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 
 interface Props {
   projectId: number;
@@ -38,16 +40,6 @@ interface FindOneProject {
   updatedAt: string;
 }
 
-interface ProfileImage {
-  id: number;
-  filename: string;
-  filePath: string;
-  fileSize: number;
-  mimeType: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export const getServerSideProps = (context: NextPageContext) => {
   const { projectId, projectWikiId } = context.query;
 
@@ -57,6 +49,7 @@ export const getServerSideProps = (context: NextPageContext) => {
 }
 
 export const ProjectWikiRevision: NextPage<Props> = ({ projectId, projectWikiId }) => {
+  const router = useRouter();
 
   const [findAllRevisions, setFindAllRevisions] = useState<FindAllRevisions[]>();
   const [findOneProject, setFindOneProject] = useState<FindOneProject>();
@@ -71,8 +64,13 @@ export const ProjectWikiRevision: NextPage<Props> = ({ projectId, projectWikiId 
 
         setFindAllRevisions(data);
         setFindOneProject(dataCoworker);
-      } catch (err) {
+      } catch (err: any) {
         console.log(err);
+        const { status } = err.response;
+        if (status === 404) {
+          router.push('/projects');
+        }
+        toast.error(err.response.data.message);
       }
     }
     fetchData();

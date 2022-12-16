@@ -8,6 +8,7 @@ import CoworkerApi from "../../../apis/coworker.api";
 import { useRouter } from 'next/router';
 import WikiApi from "../../../apis/wiki.api";
 import { WikiType } from "../../../enums/wiki-type.enum";
+import { toast } from "react-toastify";
 
 const Viewer = dynamic(() => import("../../../components/inputs/tui-viewer"), {
   ssr: false,
@@ -56,8 +57,13 @@ export const PeopleWiki: NextPage<Props> = ({ peopleId }) => {
 
         setFindOneCoworker(dataCoworker === null ? '' : dataCoworker);
         setFindOneWiki(dataWiki === null ? '' : dataWiki);
-      } catch (err) {
+      } catch (err: any) {
         console.log(err);
+        const { status } = err.response;
+        if (status === 404) {
+          router.push('/people');
+        }
+        toast.error(err.response.data.message);
       }
     };
 
@@ -75,7 +81,7 @@ export const PeopleWiki: NextPage<Props> = ({ peopleId }) => {
       <div className={"border rounded py-8 px-12 w-full mt-16"}>
         {/* 상단 */}
         <div className={"w-full flex flex-row justify-between"}>
-          <h1 className={"font-bold text-3xl"}>{ findOneCoworker && findOneCoworker.name }</h1>
+          <h1 className={"font-bold text-3xl truncate w-2/3"}>{ findOneCoworker && findOneCoworker.name }</h1>
           <div>
             {
               findOneWiki &&

@@ -16,7 +16,11 @@ export class WikiService {
     const wikiId: number = await this.prismaService.wiki.findFirst({
       select: {id: true},
       where: wikiWhereInput
-    }).then(res => res.id);
+    }).then(res => {
+      if (!res)
+        throw new NotFoundException('해당하는 위키 게시글이 존재하지 않습니다.');
+      return res.id;
+    });
 
     const wikiEntity = await this.prismaService.wiki.update({
       where: {id: wikiId},
