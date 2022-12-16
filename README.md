@@ -7,7 +7,7 @@ A military discharge date calculator and company wiki toy project for myself and
 This project consists of the left days of military duty and some wiki about the company where I worked as a skilled
 industrial personnel agent.
 
-## Tech stacks
+## Developed using
 
 <div align="center">
   <img alt="TypeScript" src ="https://img.shields.io/badge/TypeScript-3178C6.svg?&style=for-the-badge&logo=TypeScript&logoColor=white"/>
