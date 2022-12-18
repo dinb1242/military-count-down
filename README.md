@@ -28,6 +28,7 @@ industrial personnel agent.
 - Git
 - Docker
 - Docker Compose
+- Cloudflare R2
 
 ## Installiation
 ### Summary
