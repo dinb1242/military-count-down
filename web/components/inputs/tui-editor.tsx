@@ -59,7 +59,7 @@ const TuiEditor: NextPage<Props> = ({handleMarkdownChange, initMarkdown}) => {
                 type: ctx.entering ? 'openTag' : 'closeTag',
                 tagName: `h${node.level}`,
                 attributes: {
-                  id: node.firstChild?.type === 'text' ? node.firstChild?.literal.replace(' ', '-') : node.firstChild?.type
+                  id: node.firstChild?.type === 'text' ? node.firstChild?.literal.replaceAll(' ', '-') : node.firstChild?.type
                 }
               };
             },
