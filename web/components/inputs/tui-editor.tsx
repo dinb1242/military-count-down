@@ -55,11 +55,12 @@ const TuiEditor: NextPage<Props> = ({handleMarkdownChange, initMarkdown}) => {
           onChange={handleChange}
           customHTMLRenderer={{
             heading(node: any, ctx: any) {
+              console.log(node);
               return {
                 type: ctx.entering ? 'openTag' : 'closeTag',
                 tagName: `h${node.level}`,
                 attributes: {
-                  id: node.firstChild?.literal.replace(' ', '-')
+                  id: node.firstChild?.type === 'text' ? node.firstChild?.literal.replace(' ', '-') : node.firstChild?.literal
                 }
               };
             },
