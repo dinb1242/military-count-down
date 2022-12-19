@@ -24,6 +24,8 @@ services:
       - "5432:5432"
     networks:
       - military-count-down
+    volumes:
+      - /var/lib/postgresql/data:/var/lib/postgresql/data
   web:
     build:
       context: ./web
