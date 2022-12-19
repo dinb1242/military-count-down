@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Req } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Req, Res } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -13,7 +13,7 @@ import { CoworkerService } from './coworker.service';
 import { CreateCoworkerDto } from './dto/request/create-coworker.dto';
 import { CoworkerResponseDto } from './dto/response/coworker-response.dto';
 import { UpdateCoworkerDto } from './dto/request/update-coworker.dto';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { WikiType } from "../common/enums/wiki-type.enum";
 
 @ApiTags('함께한 개발자 API')

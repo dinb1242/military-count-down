@@ -9,7 +9,7 @@
   "scripts": {
     "prisma:mig-dev": "npx --prefix server prisma migrate dev",
     "prisma:gen": "npx --prefix server prisma generate",
-    "start:local": "concurrently \"npm run dev --prefix web\" \"cross-env NODE_ENV=local npm run start:dev --prefix server\"",
+    "start:local": "concurrently \"npm run dev --prefix web\" \"npm run start:local --prefix server\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
