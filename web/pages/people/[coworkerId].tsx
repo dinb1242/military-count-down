@@ -140,7 +140,7 @@ export const PeopleUpdate: NextPage<Props> = ({ coworkerId }) => {
   };
 
   // 파일 메소드
-  const [imageUrl, setImageUrl] = useState<any>("");
+  const [imageUrl, setImageUrl] = useState<any>();
   const imgRef = useRef<any>();
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -253,7 +253,7 @@ export const PeopleUpdate: NextPage<Props> = ({ coworkerId }) => {
           }
         });
         setProjectTag([...projectTagList])
-        setImageUrl(`${response.data.data.profileImage.filePath}`);
+        setImageUrl(response.data.data.profileImage.filePath);
       } catch (err) {
         console.log(err);
       }
