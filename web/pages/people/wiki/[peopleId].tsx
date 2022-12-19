@@ -34,14 +34,14 @@ interface FindOneWiki {
 }
 
 export const getServerSideProps = (context: NextPageContext) => {
-  const { peopleId } = context.query;
+  const {peopleId} = context.query;
 
   return {
-    props: { peopleId },
+    props: {peopleId},
   };
 };
 
-export const PeopleWiki: NextPage<Props> = ({ peopleId }) => {
+export const PeopleWiki: NextPage<Props> = ({peopleId}) => {
   const router = useRouter();
 
   const [findOneCoworker, setFindOneCoworker] = useState<FindOneCoworker>();
@@ -52,14 +52,14 @@ export const PeopleWiki: NextPage<Props> = ({ peopleId }) => {
       try {
         const responseCoworker = await CoworkerApi.findOne(peopleId);
         const responseWiki = await WikiApi.findOneWiki(WikiType.COWORKER, peopleId);
-        const { data: dataWiki } = responseWiki.data;
-        const { data: dataCoworker } = responseCoworker.data;
+        const {data: dataWiki} = responseWiki.data;
+        const {data: dataCoworker} = responseCoworker.data;
 
         setFindOneCoworker(dataCoworker === null ? '' : dataCoworker);
         setFindOneWiki(dataWiki === null ? '' : dataWiki);
       } catch (err: any) {
         console.log(err);
-        const { status } = err.response;
+        const {status} = err.response;
         if (status === 404) {
           router.push('/people');
         }
@@ -73,35 +73,37 @@ export const PeopleWiki: NextPage<Props> = ({ peopleId }) => {
   return (
     <div className={"min-h-screen p-8"}>
       <div className={"flex flex-row justify-between"}>
-        <BtnBack where={"/people"} />
-        <BtnSignOut />
+        <BtnBack where={"/people"}/>
+        <BtnSignOut/>
       </div>
 
       {/* 위키 본문 바디 */}
-      <div className={"border rounded py-8 px-12 w-full mt-16"}>
-        {/* 상단 */}
-        <div className={"w-full flex flex-row justify-between"}>
-          <h1 className={"font-bold text-3xl truncate w-2/3"}>{ findOneCoworker && findOneCoworker.name }</h1>
-          <div>
-            {
-              findOneWiki &&
-                <Link href={"/people/wiki/revision/" + findOneWiki.id + '?peopleId=' + peopleId} >
-                    <a className={ 'hover:text-blue-500' }>역사</a>
+      <div className={'flex justify-center'}>
+        <div className={"border rounded py-8 px-12 w-full lg:w-1/2 mt-16"}>
+          {/* 상단 */}
+          <div className={"w-full flex flex-row justify-between"}>
+            <h1 className={"font-bold text-3xl truncate w-2/3"}>{findOneCoworker && findOneCoworker.name}</h1>
+            <div>
+              {
+                findOneWiki &&
+                <Link href={"/people/wiki/revision/" + findOneWiki.id + '?peopleId=' + peopleId}>
+                  <a className={'hover:text-blue-500'}>역사</a>
                 </Link>
-            }
-            <span> | </span>
-            <Link href={"/people/wiki/edit/" + peopleId}>
-              <a className={ 'hover:text-blue-500' }>편집</a>
-            </Link>
-          </div>
-        </div>
-
-        {/* 본문 */}
-        { findOneWiki &&
-            <div className={"mt-16"}>
-                <Viewer initMarkdown={ findOneWiki && findOneWiki.wikiContent } />
+              }
+              <span> | </span>
+              <Link href={"/people/wiki/edit/" + peopleId}>
+                <a className={'hover:text-blue-500'}>편집</a>
+              </Link>
             </div>
-        }
+          </div>
+
+          {/* 본문 */}
+          {findOneWiki &&
+            <div className={"mt-16"}>
+              <Viewer initMarkdown={findOneWiki && findOneWiki.wikiContent}/>
+            </div>
+          }
+        </div>
       </div>
     </div>
   );

@@ -48,30 +48,32 @@ export const AccidentWiki = () => {
       </div>
 
       {/* 위키 본문 바디 */}
-      <div className={"border rounded py-8 px-12 w-full mt-16"}>
-        {/* 상단 */}
-        <div className={"w-full flex flex-row justify-between"}>
-          <h1 className={"font-bold text-3xl"}>사건/사고</h1>
-          <div>
-            {
-              findOneWiki &&
+      <div className={'flex justify-center'}>
+        <div className={"border rounded py-8 px-12 w-full lg:w-1/2 mt-16"}>
+          {/* 상단 */}
+          <div className={"w-full flex flex-row justify-between"}>
+            <h1 className={"font-bold text-3xl"}>사건/사고</h1>
+            <div>
+              {
+                findOneWiki &&
                 <Link href={"/accident/wiki/revision/" + findOneWiki.id} >
-                    <a className={ 'hover:text-blue-500' }>역사</a>
+                  <a className={ 'hover:text-blue-500' }>역사</a>
                 </Link>
-            }
-            <span> | </span>
-            <Link href={"/accident/wiki/edit/"}>
-              <a className={ 'hover:text-blue-500' }>편집</a>
-            </Link>
-          </div>
-        </div>
-
-        {/* 본문 */}
-        { findOneWiki &&
-            <div className={"mt-16"}>
-                <Viewer initMarkdown={ findOneWiki && findOneWiki.wikiContent } />
+              }
+              <span> | </span>
+              <Link href={"/accident/wiki/edit/"}>
+                <a className={ 'hover:text-blue-500' }>편집</a>
+              </Link>
             </div>
-        }
+          </div>
+
+          {/* 본문 */}
+          { findOneWiki &&
+            <div className={"mt-16"}>
+              <Viewer initMarkdown={ findOneWiki && findOneWiki.wikiContent } />
+            </div>
+          }
+        </div>
       </div>
     </div>
   );
