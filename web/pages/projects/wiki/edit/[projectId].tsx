@@ -75,7 +75,7 @@ export const ProjectWikiCreate: NextPage<Props> = ({ projectId }) => {
     return (
         <div className={ 'min-h-screen p-8' }>
             <div className={ 'flex flex-row justify-between' }>
-                <BtnBack where={'/project/wiki/' + projectId} />
+                <BtnBack where={'/projects/wiki/' + projectId} />
                 <BtnSignOut />
             </div>
 
