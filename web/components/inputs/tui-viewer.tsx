@@ -16,7 +16,7 @@ const TuiViewer: NextPage<Props> = ({ initMarkdown }) => {
           type: ctx.entering ? 'openTag' : 'closeTag',
           tagName: `h${node.level}`,
           attributes: {
-            id: node.firstChild?.literal.replace(' ', '-')
+            id: node.firstChild?.type === 'text' ? node.firstChild?.literal.replace(' ', '-') : node.firstChild?.type
           }
         };
       },
