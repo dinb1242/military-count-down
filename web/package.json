@@ -5,9 +5,9 @@
   "author": "Jihyun, Jeong",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "dotenv -e ./.env-local -- next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "dotenv -e ./.env -- next start"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.3",
@@ -18,6 +18,8 @@
     "axios": "^0.27.2",
     "concurrently": "^7.5.0",
     "daisyui": "^2.31.0",
+    "dotenv-cli": "^6.0.0",
+    "env-cmd": "^10.1.0",
     "flowbite": "^1.5.4",
     "flowbite-react": "^0.3.7",
     "md-editor-rt": "^2.3.0",

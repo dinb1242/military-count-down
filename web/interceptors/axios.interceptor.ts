@@ -1,10 +1,10 @@
 import axios from "axios";
-import { ENDPOINT } from "../constants/api.constant";
+import { NEXT_PUBLIC_ENDPOINT } from "../constants/api.constant";
 import { ACCESS_TOKEN } from '../constants/token.constants';
 import { Cookies } from 'next/dist/server/web/spec-extension/cookies';
 
 export const axiosInstance = axios.create({
-  baseURL: ENDPOINT,
+  baseURL: NEXT_PUBLIC_ENDPOINT,
   timeout: 3000,
 });
 
