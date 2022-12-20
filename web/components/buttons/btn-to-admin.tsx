@@ -1,4 +1,4 @@
-import { HiLogout } from "react-icons/hi";
+import { HiOutlineChartPie } from "react-icons/hi";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import AuthApi from "../../apis/auth.api";
@@ -32,7 +32,7 @@ export const BtnToAdmin: NextPage = () => {
         "ring-1 flex justify-center items-center w-40 px-2 py-2 font-bold text-center text-xl select-none hover:ring-2 hover:duration-200 hover:cursor-pointer active:ring-4"
       }
     >
-      관리자 페이지 <HiLogout className={"ml-2"} />
+      <HiOutlineChartPie className={"mr-2"} /> 관리자 페이지
     </a>
   );
 };
