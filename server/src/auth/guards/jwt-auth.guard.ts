@@ -1,4 +1,4 @@
-import { ExecutionContext, Injectable } from '@nestjs/common';
+import { ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from '../decorators/auth-public.decorator';
@@ -33,9 +33,10 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       })
 
       if (!isExistsToken) {
-        return false;
+        throw new UnauthorizedException('데이터베이스 내 해당 토큰이 존재하지 않습니다. 로그아웃되었거나, 조작된 토큰일 수 있습니다.');
       }
+      return true;
     }
-    return isValidJwt;
+    return false;
   }
 }
