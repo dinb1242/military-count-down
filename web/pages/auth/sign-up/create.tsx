@@ -116,15 +116,12 @@ export const SignUpCreate = () => {
 
   const handleEmailCheckClick = () => {
     if (!inputs.email.match(emailRegexp)) {
-      console.log(`이메일 정규식 옳지 않음, email=${inputs.email}`);
       setIsInputsValidate({
         ...isInputsValidate,
         email: false,
       });
 
       return;
-    } else {
-      console.log(`이메일 정규식 가능 email=${inputs.email}`);
     }
 
     AuthApi.checkEmail({email: inputs.email})
