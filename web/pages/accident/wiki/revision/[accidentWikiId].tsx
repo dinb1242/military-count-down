@@ -4,6 +4,7 @@ import { NextPage, NextPageContext } from 'next';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import WikiApi from "../../../../apis/wiki.api";
+import { BtnScrollToTop } from "../../../../components/buttons/btn-scroll-to-top";
 
 interface Props {
   accidentWikiId: number;
@@ -102,6 +103,7 @@ export const AccidentWikiRevision: NextPage<Props> = ({ accidentWikiId }) => {
           </tbody>
         </table>
       </div>
+      <BtnScrollToTop />
     </div>
   )
 }

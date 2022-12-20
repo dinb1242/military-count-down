@@ -5,6 +5,7 @@ import Link from "next/link";
 import { HiPlusCircle } from "react-icons/hi";
 import { useEffect, useState } from "react";
 import ProjectApi from "../../apis/project.api";
+import { BtnScrollToTop } from "../../components/buttons/btn-scroll-to-top";
 
 interface FindAll {
   id: number;
@@ -87,6 +88,7 @@ export const Projects = () => {
             })}
         </div>
       </div>
+      <BtnScrollToTop />
     </div>
   );
 };

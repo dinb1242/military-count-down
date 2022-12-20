@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import { HiArrowCircleLeft } from 'react-icons/hi';
 import WikiApi from "../../../../../../../apis/wiki.api";
 import { toast } from "react-toastify";
+import { BtnScrollToTop } from "../../../../../../../components/buttons/btn-scroll-to-top";
 
 const Viewer = dynamic(() => import("../../../../../../../components/inputs/tui-viewer"), {
   ssr: false,
@@ -136,6 +137,7 @@ export const OldRevisionView: NextPage<Props> = ({peopleId, wikiRevisionId}) => 
           }
         </div>
       </div>
+      <BtnScrollToTop />
     </div>
   );
 }
