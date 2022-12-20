@@ -7,6 +7,7 @@ import Link from 'next/link';
 import WikiApi from "../../../../apis/wiki.api";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
+import { BtnScrollToTop } from "../../../../components/buttons/btn-scroll-to-top";
 
 interface Props {
   peopleId: number;
@@ -146,6 +147,7 @@ export const PeopleWikiRevision: NextPage<Props> = ({ peopleId, peopleWikiId }) 
           </tbody>
         </table>
       </div>
+      <BtnScrollToTop />
     </div>
   )
 }

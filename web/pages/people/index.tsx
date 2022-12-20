@@ -8,6 +8,7 @@ import Card from "../../components/cards/card";
 import CoworkerApi from "../../apis/coworker.api";
 import { useEffect, useState } from "react";
 import { DevPart } from "../../enums/devpart.enum";
+import { BtnScrollToTop } from "../../components/buttons/btn-scroll-to-top";
 
 interface FindAll {
   id: number;
@@ -106,6 +107,7 @@ const People: NextPage = () => {
             })}
         </div>
       </div>
+      <BtnScrollToTop />
     </div>
   );
 };

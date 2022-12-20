@@ -9,6 +9,7 @@ import { useRouter } from 'next/router';
 import WikiApi from "../../../apis/wiki.api";
 import { WikiType } from "../../../enums/wiki-type.enum";
 import { toast } from "react-toastify";
+import { BtnScrollToTop } from "../../../components/buttons/btn-scroll-to-top";
 
 const Viewer = dynamic(() => import("../../../components/inputs/tui-viewer"), {
   ssr: false,
@@ -105,6 +106,7 @@ export const PeopleWiki: NextPage<Props> = ({peopleId}) => {
           }
         </div>
       </div>
+      <BtnScrollToTop />
     </div>
   );
 };
