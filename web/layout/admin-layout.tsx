@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import AuthApi from "../apis/auth.api";
 import { AxiosError } from "axios";
+import { AdminNav } from "../components/nav/admin.nav";
 
 export const AdminLayout = ({children}: any) => {
   // 어드민 페이지에 대한 접근 권한을 확인한다.
@@ -46,8 +47,13 @@ export const AdminLayout = ({children}: any) => {
   }, [])
 
   return (
-    <div>
-      <main>{children}</main>
+    <div className={'container min-h-screen flex flex-row flex-none'}>
+      <nav className={'w-80'}><AdminNav /></nav>
+      <main style={{ flexGrow: 1 }} className={ 'p-8' }>
+        <div className={'border rounded p-8'}>
+          { children }
+        </div>
+      </main>
     </div>
   );
 }
