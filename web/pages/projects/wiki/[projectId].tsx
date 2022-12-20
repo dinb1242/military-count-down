@@ -9,6 +9,7 @@ import WikiApi from "../../../apis/wiki.api";
 import { WikiType } from "../../../enums/wiki-type.enum";
 import ProjectApi from "../../../apis/project.api";
 import { toast } from "react-toastify";
+import { BtnScrollToTop } from "../../../components/buttons/btn-scroll-to-top";
 
 const Viewer = dynamic(() => import("../../../components/inputs/tui-viewer"), {
   ssr: false,
@@ -107,6 +108,7 @@ export const ProjectWiki: NextPage<Props> = ({projectId}) => {
           }
         </div>
       </div>
+      <BtnScrollToTop />
     </div>
   );
 };

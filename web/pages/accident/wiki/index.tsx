@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
 import WikiApi from "../../../apis/wiki.api";
+import { BtnScrollToTop } from "../../../components/buttons/btn-scroll-to-top";
 
 const Viewer = dynamic(() => import("../../../components/inputs/tui-viewer"), {
   ssr: false,
@@ -75,6 +76,7 @@ export const AccidentWiki = () => {
           }
         </div>
       </div>
+      <BtnScrollToTop />
     </div>
   );
 };
