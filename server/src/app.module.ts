@@ -19,6 +19,7 @@ import { join } from 'path';
 import { AccidentModule } from './accident/accident.module';
 import { RetrospectModule } from './retrospect/retrospect.module';
 import { WikiModule } from './wiki/wiki.module';
+import { RoleAuthGuard } from "./auth/guards/role-auth.guard";
 
 // 환경 변수 별 상수 설정
 let envFilename = '';
@@ -63,6 +64,10 @@ if (process.env.NODE_ENV === 'local') {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
+    {
+      provide: APP_GUARD,
+      useClass: RoleAuthGuard,
+    }
   ],
 })
 export class AppModule {

@@ -57,6 +57,7 @@ export class AuthService {
     const payload = {
       email: user.email,
       sub: user.id,
+      isAdmin: user.isAdmin
     };
 
     // 토큰을 생성한다.
