@@ -1,15 +1,15 @@
 import { NextPageWithLayout } from "../../_app";
 import { AdminLayout } from "../../../layout/admin-layout";
 
-export const AdminDashboard: NextPageWithLayout = () => {
+export const AdminAccessHistLog: NextPageWithLayout = () => {
   return (
     <div className={''}>
-      대시보드
+      접속 로그
     </div>
   );
 }
 
-AdminDashboard.getLayout = (page) => {
+AdminAccessHistLog.getLayout = (page) => {
   return (
     <AdminLayout>
       { page }
@@ -17,4 +17,4 @@ AdminDashboard.getLayout = (page) => {
   )
 }
 
-export default AdminDashboard;
+export default AdminAccessHistLog;

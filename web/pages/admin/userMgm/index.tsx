@@ -1,15 +1,15 @@
 import { NextPageWithLayout } from "../../_app";
 import { AdminLayout } from "../../../layout/admin-layout";
 
-export const AdminDashboard: NextPageWithLayout = () => {
+export const AdminUserMgm: NextPageWithLayout = () => {
   return (
     <div className={''}>
-      대시보드
+      유저 관리
     </div>
   );
 }
 
-AdminDashboard.getLayout = (page) => {
+AdminUserMgm.getLayout = (page) => {
   return (
     <AdminLayout>
       { page }
@@ -17,4 +17,4 @@ AdminDashboard.getLayout = (page) => {
   )
 }
 
-export default AdminDashboard;
+export default AdminUserMgm;
