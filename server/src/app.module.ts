@@ -20,6 +20,7 @@ import { AccidentModule } from './accident/accident.module';
 import { RetrospectModule } from './retrospect/retrospect.module';
 import { WikiModule } from './wiki/wiki.module';
 import { RoleAuthGuard } from "./auth/guards/role-auth.guard";
+import { DashboardModule } from './admin/dashboard/dashboard.module';
 
 // 환경 변수 별 상수 설정
 let envFilename = '';
@@ -55,6 +56,7 @@ if (process.env.NODE_ENV === 'local') {
     AccidentModule,
     RetrospectModule,
     WikiModule,
+    DashboardModule,
   ],
   controllers: [AppController],
   providers: [
