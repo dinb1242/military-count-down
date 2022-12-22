@@ -1,8 +1,9 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
-import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
+import { ApiOkResponse, ApiQuery, ApiTags } from "@nestjs/swagger";
 import { DashboardUserCountResponseDto } from "./dto/response/dashboard-user-count.response.dto";
 import { AdminApi } from "../../common/decorators/admin-api.decorator";
+import { AccessHistCountTypeEnum } from "./enums/accessHistCountTypeEnum";
 
 @ApiTags('[관리자] 대시보드 API')
 @Controller('adm/dashboard')
@@ -23,11 +24,21 @@ export class DashboardController {
     return this.dashboardService.admUserCount();
   }
 
-  // @AdminApi({
-  //   summary: '주간/월별/전체 방문자 통계',
-  //   description: '방문자 통계를 조회한다. 중복 로그인도 모두 포함한다.'
-  // })
-  // @Get('access-hist-count')
-  // @ApiOkResponse({ description: '조회 성공'})
+  @AdminApi({
+    summary: '주간/월별/전체 방문자 통계',
+    description: '방문자 통계를 조회한다. 중복 로그인도 모두 포함한다.'
+  })
+  @Get('access-hist-count')
+  @ApiQuery({
+    name: 'type',
+    description: '조회 타입',
+    enum: AccessHistCountTypeEnum
+  })
+  @ApiOkResponse({ description: '조회 성공'})
+  async admAccessHistCount(
+    @Query('type') type: AccessHistCountTypeEnum
+  ): Promise<any> {
+    return this.dashboardService.admAccessHistCount(type);
+  }
 
 }
