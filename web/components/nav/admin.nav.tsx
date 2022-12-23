@@ -2,8 +2,13 @@ import { BtnAdminNav } from "../buttons/btn-admin-nav";
 import { AiFillHome, AiOutlinePartition, AiOutlineUser } from "react-icons/ai";
 import React, { useState } from "react";
 import Link from 'next/link';
+import { NextPage } from "next";
 
-export const AdminNav = () => {
+interface AdminNavProps {
+  pathname?: string
+}
+
+export const AdminNav: NextPage<AdminNavProps> = (props) => {
 
   const [btn, setBtn] = useState([
     {
@@ -11,21 +16,21 @@ export const AdminNav = () => {
       href: '/admin/dashboard',
       icon: <AiFillHome/>,
       display: '대시보드',
-      selected: true
+      selected: props.pathname === '/admin/dashboard'
     },
     {
       name: 'userMgm',
       href: '/admin/userMgm',
       icon: <AiOutlineUser/>,
       display: '유저 관리',
-      selected: false
+      selected: props.pathname === '/admin/userMgm'
     },
     {
       name: 'accessHistLog',
       href: '/admin/accessHistLog',
       icon: <AiOutlinePartition/>,
       display: '접속 로그',
-      selected: false
+      selected: props.pathname === '/admin/accessHistLog'
     }
   ])
 

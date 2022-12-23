@@ -48,7 +48,9 @@ export const AdminLayout = ({children}: any) => {
 
   return (
     <div className={'container min-h-screen flex flex-row flex-none'}>
-      <nav className={'w-80'}><AdminNav /></nav>
+      <nav className={'w-80'}>
+        <AdminNav pathname={ router.pathname } />
+      </nav>
       <main style={{ flexGrow: 1 }} className={ 'p-8' }>
         <div className={'border rounded p-8'}>
           { children }
