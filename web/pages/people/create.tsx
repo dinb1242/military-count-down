@@ -48,6 +48,11 @@ export const PeopleCreate: NextPage = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const [isFileSizeModalOpen, setIsFileSizeModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDuplicatedModalOpen, setIsDuplicatedModalOpen] = useState(false);
+  const [isDuplicatedModalMessage, setIsDuplicatedModalMessage] = useState('');
+
   const [input, setInput] = useState<InputState>({
     name: "",
     devPart: "",
@@ -170,12 +175,30 @@ export const PeopleCreate: NextPage = () => {
     return isAllValidated;
   };
 
+  const fileValidate = () => {
+    // 파일 검증 (2MB 제한)
+    const file: File = imgRef.current.files[0];
+    if (file) {
+      if (file.size > 2097152) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   // 생성 핸들러
   const handleCreateClick = () => {
     setIsLoading(true);
 
     if (!validate()) {
       setIsModalOpen(true);
+      setIsLoading(false);
+      return;
+    }
+
+    if (!fileValidate()) {
+      setIsFileSizeModalOpen(true);
       setIsLoading(false);
       return;
     }
@@ -200,7 +223,7 @@ export const PeopleCreate: NextPage = () => {
               .then(res => {
                 router.push('/people')
               }).catch(err => {
-              console.log(err.response.data.message);
+                console.log(err);
             })
           } else {
             router.push('/people')
@@ -217,16 +240,17 @@ export const PeopleCreate: NextPage = () => {
       });
   };
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const handleModal = () => {
     setIsModalOpen((currentOpenState) => !currentOpenState);
   };
 
-  const [isDuplicatedModalOpen, setIsDuplicatedModalOpen] = useState(false);
-  const [isDuplicatedModalMessage, setIsDuplicatedModalMessage] = useState('');
   const handleDuplicatedModal = () => {
     setIsDuplicatedModalOpen((currentOpenState) => !currentOpenState);
   };
+
+  const handleFileSizeModal = () => {
+    setIsFileSizeModalOpen((prev) => !prev);
+  }
 
   useEffect(() => {
     return () => {
@@ -241,6 +265,13 @@ export const PeopleCreate: NextPage = () => {
         isOpen={isModalOpen}
         title={"생성 불가"}
         content={"필수 입력란을 입력해주세요."}
+      />
+
+      <AlertModal
+        handleModal={ handleFileSizeModal }
+        isOpen={ isFileSizeModalOpen }
+        title={"생성 불가"}
+        content={"파일 사이즈는 2MB 이하여야합니다."}
       />
 
       <AlertModal
