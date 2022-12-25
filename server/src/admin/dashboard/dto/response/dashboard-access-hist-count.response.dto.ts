@@ -15,5 +15,5 @@ export class DashboardAccessHistCountResponseDto {
   readonly date: string;
 
   @ApiProperty({ description: '횟수' })
-  readonly count: number;
+  count: number;
 }
