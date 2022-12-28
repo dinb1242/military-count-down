@@ -116,15 +116,12 @@ export const SignUpCreate = () => {
 
   const handleEmailCheckClick = () => {
     if (!inputs.email.match(emailRegexp)) {
-      console.log(`이메일 정규식 옳지 않음, email=${inputs.email}`);
       setIsInputsValidate({
         ...isInputsValidate,
         email: false,
       });
 
       return;
-    } else {
-      console.log(`이메일 정규식 가능 email=${inputs.email}`);
     }
 
     AuthApi.checkEmail({email: inputs.email})
@@ -270,7 +267,7 @@ export const SignUpCreate = () => {
           {/* 등록 폼 */}
           <div
             className={
-              "mt-8 w-full h-auto lg:grid lg:grid-cols-2 lg:gap-4 flex flex-col"
+              "mt-8 w-full h-auto 2xl:grid 2xl:grid-cols-2 2xl:gap-4 flex flex-col"
             }
           >
             <div>
@@ -313,6 +310,9 @@ export const SignUpCreate = () => {
               )}
             </div>
 
+            <div className={"row-span-3 m-auto hidden lg:block text-center"}>
+              <Image width={"200%"} height={"200%"} src={Bonobono}/>
+            </div>
             <div>
               <label className={"label"}>
                 <span className={"label-text font-bold text-lg"}>
@@ -365,11 +365,6 @@ export const SignUpCreate = () => {
                 </span>
               )}
             </div>
-
-            <div className={"row-span-2 hidden lg:block text-center"}>
-              <Image width={"200%"} height={"200%"} src={Bonobono}/>
-            </div>
-
             <div>
               <label className={"label"}>
                 <span className={"label-text font-bold text-lg"}>

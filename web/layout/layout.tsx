@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router';
 import AuthApi from '../apis/auth.api';
 import { ACCESS_TOKEN, REFRESH_TOKEN } from '../constants/token.constants';
-import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
@@ -23,8 +22,9 @@ export const Layout = ({ children }: any) => {
         // 유효하지 않을 경우, Local Storage 내 데이터를 제거하고, 로그인 화면으로 이동한다.
         AuthApi.checkToken()
           .then(res => {
-            if (res.data.success)
+            if (res.data.success) {
               router.push('/')
+            }
           })
           .catch(() => {
           localStorage.removeItem(ACCESS_TOKEN);
@@ -45,18 +45,6 @@ export const Layout = ({ children }: any) => {
   return (
     <div>
       <main>{ children }</main>
-      <ToastContainer
-        position="bottom-left"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss={false}
-        draggable={true}
-        pauseOnHover
-        theme="light"
-      />
     </div>
   )
 }

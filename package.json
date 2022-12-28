@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/dinb1242/military-count-down#readme",
   "dependencies": {
+    "@nestjs/mapped-types": "*",
     "concurrently": "^7.5.0",
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.3"

@@ -1,4 +1,4 @@
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CipherUtils } from '../common/utils/cipher.util';
 import { UserService } from '../user/user.service';
 import { SignInUnauthorizedException } from '../common/exceptions/sign-in-unauthorized.exception';
@@ -57,6 +57,7 @@ export class AuthService {
     const payload = {
       email: user.email,
       sub: user.id,
+      isAdmin: user.isAdmin
     };
 
     // 토큰을 생성한다.
@@ -187,5 +188,22 @@ export class AuthService {
       accessToken: accessToken,
       refreshToken: refreshToken,
     };
+  }
+
+  async checkAdmin(userId: number): Promise<Boolean> {
+    const { isAdmin } = await this.prismaService.user.findUniqueOrThrow({
+      select: {
+        isAdmin: true
+      },
+      where: { id: userId }
+    }).catch(() => {
+      throw new NotFoundException('일치하는 유저를 찾을 수 없습니다. userId=' + userId);
+    });
+
+    if (!isAdmin) {
+      throw new ForbiddenException('관리자 권한이 없습니다.');
+    }
+
+    return true;
   }
 }
