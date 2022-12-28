@@ -39,7 +39,7 @@ const Home: NextPage = () => {
   const refAnimationInstance = useRef<any>(null);
 
   // Date 에 인자를 직접 지정하면 month 의 경우, 0~11 까지의 값을 가진다.
-  const lastDate = new Date(2022, 11, 28, 9, 48, 25).getTime();
+  const lastDate = new Date(2022, 11, 28, 17, 59, 59).getTime();
   const diff = lastDate - Date.now();
 
   let diffDays: number = 0;
