@@ -1,13 +1,32 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import BtnSignOut from '../components/buttons/btn-sign-out';
 import { AiFillGithub, AiOutlineUser } from 'react-icons/ai';
 import GoodBye from '../public/goodbye.gif';
 import BtnToAdmin from '../components/buttons/btn-to-admin';
 import AuthApi from '../apis/auth.api';
+import ReactCanvasConfetti from 'react-canvas-confetti';
+
+function randomInRange(min: any, max: any) {
+  return Math.random() * (max - min) + min;
+}
+
+function getAnimationSettings(originXA: any, originXB: any) {
+  return {
+    startVelocity: 30,
+    spread: 360,
+    ticks: 60,
+    zIndex: 0,
+    particleCount: 150,
+    origin: {
+      x: randomInRange(originXA, originXB),
+      y: Math.random() - 0.2
+    }
+  };
+}
 
 const Home: NextPage = () => {
 
@@ -15,9 +34,12 @@ const Home: NextPage = () => {
   const [timeFormat, setTimeFormat] = useState<String>('hours');
   const [isFinished, setIsFinished] = useState<Boolean>(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [intervalId, setIntervalId] = useState<any>();
+
+  const refAnimationInstance = useRef<any>(null);
 
   // Date 에 인자를 직접 지정하면 month 의 경우, 0~11 까지의 값을 가진다.
-  const lastDate = new Date(2022, 11, 28, 17, 59, 59).getTime();
+  const lastDate = new Date(2022, 11, 28, 9, 48, 25).getTime();
   const diff = lastDate - Date.now();
 
   let diffDays: number = 0;
@@ -28,6 +50,7 @@ const Home: NextPage = () => {
   useEffect(() => {
     let timeout: any;
     if (diff < 0) {
+      startAnimation();
       setIsFinished(true);
       setLeftHours(`${diffHour}시간 ${diffMin}분 ${diffSec}초`);
     } else {
@@ -77,6 +100,30 @@ const Home: NextPage = () => {
     checkAdmin();
   }, []);
 
+  const getInstance = useCallback((instance: any) => {
+    refAnimationInstance.current = instance;
+  }, []);
+
+  const nextTickAnimation = useCallback<any>(() => {
+    if (refAnimationInstance.current) {
+      refAnimationInstance.current(getAnimationSettings(0.1, 0.3));
+      refAnimationInstance.current(getAnimationSettings(0.7, 0.9));
+    }
+  }, []);
+
+  const startAnimation = useCallback(() => {
+    if (!intervalId) {
+      setIntervalId(setInterval(nextTickAnimation, 400));
+    }
+  }, [intervalId, nextTickAnimation]);
+
+
+  useEffect(() => {
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [intervalId]);
+
   return (
     <div className={'flex min-h-screen flex-col items-center justify-center p-8'}>
       <Head>
@@ -84,6 +131,15 @@ const Home: NextPage = () => {
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap"
               rel="stylesheet"/>
       </Head>
+
+      <ReactCanvasConfetti refConfetti={getInstance} style={{
+        position: "fixed",
+        pointerEvents: "none",
+        width: "100%",
+        height: "100%",
+        top: 0,
+        left: 0
+      }} />
 
       <div className={'w-full flex flex-row justify-end gap-x-4'}>
         {
