@@ -24,6 +24,7 @@ import { PrismaService } from '../common/prisma/prisma.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Public } from '../auth/decorators/auth-public.decorator';
 import { R2Utils } from "../common/utils/r2.util";
+import { RequiredAdmin } from "../auth/decorators/auth-role.decorator";
 
 @ApiBearerAuth(HttpHeaders.AUTHORIZATION)
 @ApiTags('예제 API')
@@ -89,6 +90,8 @@ export class ExampleController {
     console.log(await this.prismaService.authToken.findMany());
   }
 
+  @Public()
+  @RequiredAdmin()
   @Get(':id')
   async findExample(@Param('id') id: string): Promise<ExampleModel> {
     return await this.exampleService.findExample({id: Number(id)});

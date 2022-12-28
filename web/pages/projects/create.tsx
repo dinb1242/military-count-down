@@ -23,12 +23,17 @@ export const ProjectsCreate = () => {
   const [imageUrl, setImageUrl] = useState<string>();
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isFileSizeModalOpen, setIsFileSizeModalOpen] = useState(false);
 
   const imgRef = useRef<any>();
 
   const handleModalOpen = () => {
     setIsModalOpen((prev) => !prev);
   };
+
+  const handleFileSizeModal = () => {
+    setIsFileSizeModalOpen((prev) => !prev);
+  }
 
   const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.currentTarget;
@@ -53,11 +58,29 @@ export const ProjectsCreate = () => {
     return !(!input.title || !input.content);
   };
 
+  const fileValidate = () => {
+    // 파일 검증 (2MB 제한)
+    const file: File = imgRef.current.files[0];
+    if (file) {
+      if (file.size > 2097152) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   const handleCreateClick = () => {
     setIsLoading(true);
     if (!validate()) {
       setIsModalOpen(true);
       setIsLoading(false);
+    }
+
+    if (!fileValidate()) {
+      setIsFileSizeModalOpen(true);
+      setIsLoading(false);
+      return;
     }
 
     // 생성 API 호출
@@ -98,8 +121,14 @@ export const ProjectsCreate = () => {
       <AlertModal
         handleModal={handleModalOpen}
         isOpen={isModalOpen}
-        title={"생성 오류"}
+        title={"생성 불가"}
         content={"필수 입력란을 모두 입력해주세요."}
+      />
+      <AlertModal
+        handleModal={ handleFileSizeModal }
+        isOpen={ isFileSizeModalOpen }
+        title={"생성 불가"}
+        content={"파일 사이즈는 2MB 이하여야합니다."}
       />
       <div className={"flex flex-row justify-between"}>
         <BtnBack where={"/projects"} />

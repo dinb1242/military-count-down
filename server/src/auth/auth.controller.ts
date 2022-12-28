@@ -1,10 +1,10 @@
-import { Controller, Headers, HttpCode, HttpStatus, Ip, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Headers, HttpCode, HttpStatus, Ip, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
 import {
   ApiBearerAuth,
-  ApiBody,
-  ApiHeaders,
+  ApiBody, ApiForbiddenResponse,
+  ApiHeaders, ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
@@ -15,6 +15,7 @@ import { LocalAuthGuard } from './guards/local-auth.guard';
 import { SignInResponseDto } from './dto/response/sign-in-response.dto';
 import { Public } from './decorators/auth-public.decorator';
 import { HttpHeaders } from '../common/enums/http-headers.enum';
+import { RequiredAdmin } from "./decorators/auth-role.decorator";
 
 @ApiTags('인증 API')
 @Controller('auth')
@@ -108,5 +109,27 @@ export class AuthController {
   @ApiUnauthorizedResponse({ description: '미유효' })
   async checkAccessToken(): Promise<boolean> {
     return true;
+  }
+
+  @ApiBearerAuth(HttpHeaders.AUTHORIZATION)
+  @Get('/admin/check')
+  @ApiOperation({
+    summary: '[관리자] 관리자 권한 확인 API',
+    description: 'JWT 토큰을 전달받아 관리자인지에 대한 상태를 체크한다. 만일 관리자일 경우, true 를 반환하고 아닐 경우 403 예외를 반환한다.'
+  })
+  @ApiOkResponse({
+    type: Boolean,
+    description: '확인 성공'
+  })
+  @ApiForbiddenResponse({
+    description: '확인 실패 - 관리자 아님'
+  })
+  @ApiNotFoundResponse({
+    description: '확인 실패 - 유저 미존재'
+  })
+  @RequiredAdmin()
+  async checkAdmin(@Req() request: Request): Promise<Boolean> {
+    const { id: userId }: any = request.user;
+    return this.authService.checkAdmin(userId);
   }
 }

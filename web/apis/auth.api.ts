@@ -24,5 +24,9 @@ export default {
 
   checkToken() {
     return axiosInstance.post('/auth/check', null);
+  },
+
+  checkAdmin() {
+    return axiosInstance.get('/auth/admin/check');
   }
 };

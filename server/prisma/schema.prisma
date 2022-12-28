@@ -37,6 +37,7 @@ model User {
   password      String
   name          String
   phone         String                 @unique
+  isAdmin       Boolean                @default(false)
   authToken     AuthToken[]
   accessHistory AccessHistory[]
   wikiRevision  WikiRevision[]
