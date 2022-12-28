@@ -45,6 +45,7 @@ export class FileController {
     @UploadedFile('file') file: Express.Multer.File,
   ): Promise<FileResponseDto> {
     const { user } = request;
+    file.originalname = file.originalname.replaceAll(' ', '');
     return this.fileService.uploadFile(user, bbsType, bbsId, file);
   }
 
@@ -65,6 +66,7 @@ export class FileController {
   })
   async markdownFileUpload(@Req() request: Request, @UploadedFile('file') file: Express.Multer.File) {
     const { user } = request;
+    file.originalname = file.originalname.replaceAll(' ', '');
     return this.fileService.markdownFileUpload(user, file);
   }
 }
